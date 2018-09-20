@@ -1,0 +1,8 @@
+<resources>
+
+    <dimen name="margin_main">30px</dimen>
+    <dimen name="text_height_main">60px</dimen>
+    <dimen name="text_width_main">265px</dimen>
+    <dimen name="text_big_width_main">530px</dimen>
+
+</resources>

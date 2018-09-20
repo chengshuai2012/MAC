@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MAC</string>
+    <string name="member">会员</string>
+    <string name="manager">管理员</string>
+    <string name="choose_lesson">选择课程</string>
+    <string name="lesson_in">团课进场</string>
+    <string name="register">注册绑定</string>
+    <string name="lesson_consume">私教消课</string>
+    <string name="buy">购买</string>
+</resources>
