@@ -1,11 +1,15 @@
 package com.link.cloud;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.link.cloud.base.BaseActivity;
+import com.link.cloud.fragment.LessonChoose_Fragment;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,6 +28,17 @@ public class MainActivity extends BaseActivity {
     LinearLayout chooseLessonContainer;
     @BindView(R.id.fg_container)
     FrameLayout fgContainer;
+    private FragmentTransaction fragmentTransaction;
+    private LessonChoose_Fragment lessonChoose_fragment;
+
+    @Override
+    protected void initViews() {
+        FragmentManager manager = getSupportFragmentManager();
+        fragmentTransaction = manager.beginTransaction();
+        lessonChoose_fragment = new LessonChoose_Fragment();
+        fragmentTransaction.replace(R.id.fg_container,lessonChoose_fragment);
+        fragmentTransaction.commit();
+    }
 
     @Override
     protected int setLayoutID() {

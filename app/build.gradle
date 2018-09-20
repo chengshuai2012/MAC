@@ -42,4 +42,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.android.support:design:26+'
+    compile 'com.shizhefei:ViewPagerIndicator:1.1.7'
 }

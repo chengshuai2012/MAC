@@ -21,7 +21,10 @@ public abstract class BaseActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(setLayoutID());
         bind = ButterKnife.bind(this);
+        initViews();
     }
+
+    protected abstract void initViews();
 
     protected abstract int setLayoutID();
 
