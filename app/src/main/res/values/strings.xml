@@ -7,12 +7,16 @@
     <string name="register">注册绑定</string>
     <string name="lesson_consume">私教消课</string>
     <string name="buy">购买</string>
-    <string name="listview_header_hint_normal">下拉刷新</string>
-    <string name="listview_header_hint_release">释放立即刷新</string>
-    <string name="listview_loading">正在加载...</string>
-    <string name="nomore_loading">没有了</string>
-    <string name="refreshing">正在刷新...</string>
-    <string name="refresh_done">刷新完成</string>
-    <string name="loading_done">加载完成</string>
-    <string name="listview_header_last_time">上次更新时间：</string>
+    <string name="lesson_pre">预约</string>
+    <string name="finish_loading">我是有底线的</string>
+    <string name="loading">正在加载...</string>
+    <string name="group_in_introduce">显示临近30分钟的数据,请确认入场</string>
+    <string name="wechat_name">微信昵称</string>
+    <string name="tel">电话</string>
+    <string name="lesson">课程</string>
+    <string name="status">状态</string>
+    <string name="status_not_in">待入场</string>
+    <string name="status_in">已入场</string>
+
+
 </resources>

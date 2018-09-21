@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/text_height_main"
+    android:paddingRight="@dimen/text_height_main"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <TextView
+        style="@style/TextView_Wrap"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/margin_main"
+        android:text="@string/group_in_introduce"
+        android:textColor="@color/almost_white"
+        android:textSize="@dimen/text_size_24" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/group_in_text_height"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        android:background="@drawable/border_red_gradient_10px"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/wechat_name"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/card_text_size"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/tel"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/card_text_size"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/lesson"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/card_text_size"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/status"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/card_text_size"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbarFadeDuration="1"
+            android:background="@drawable/border_white_gradient_10px"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager"></android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>
