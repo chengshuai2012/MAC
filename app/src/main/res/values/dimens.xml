@@ -6,6 +6,8 @@
     <dimen name="navigation_button_size">42dp</dimen>
 
     <dimen name="margin_main">30px</dimen>
+    <dimen name="margin_left_register">47px</dimen>
+    <dimen name="height_top_register">127px</dimen>
     <dimen name="keyboard_margin">30px</dimen>
     <dimen name="keyboard_edit_height">68px</dimen>
     <dimen name="margin_main_middle">15px</dimen>

@@ -4,7 +4,105 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_left_register"
     tools:context="com.link.cloud.activity.MainActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_top_register"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_marginTop="@dimen/margin_main_middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_40sp"
+                android:textColor="@color/red"
+                android:text="@string/binding"
+                />
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_main_middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    style="@style/TextView_Register_top"
+                    android:text="@string/register_introduce_one"
+                    android:id="@+id/register_introduce_one"
+                   />
+                <TextView
+                    style="@style/TextView_Register_top"
+                    android:text="@string/register_introduce_two"
+                    android:layout_marginLeft="@dimen/margin_main_middle"
+                    android:id="@+id/register_introduce_two"
+                   />
+                <TextView
+                    style="@style/TextView_Register_top"
+                    android:text="@string/register_introduce_three"
+                    android:layout_marginLeft="@dimen/margin_main_middle"
+                    android:id="@+id/register_introduce_three"
+                   />
+                <TextView
+                    style="@style/TextView_Register_top"
+                    android:layout_marginLeft="@dimen/margin_main_middle"
+                    android:text="@string/register_introduce_five"
+                    android:id="@+id/register_introduce_five"
+                   />
 
+            </LinearLayout>
 
+        </LinearLayout>
+        <TextView
+            android:layout_width="@dimen/height_top_register"
+            android:layout_height="@dimen/height_top_register"
+            android:background="@drawable/border_red_gradient"
+            android:layout_alignParentRight="true"
+            android:text="@string/back_home"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/margin_main"
+            android:gravity="center"
+            android:id="@+id/back"
+            android:layout_marginRight="@dimen/margin_main"
+            />
+
+    </RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_main"
+    android:layout_marginBottom="@dimen/margin_main"
+    >
+
+    <TextView
+        android:layout_width="@dimen/text_width_main"
+        android:layout_height="@dimen/text_height_main"
+        android:background="@drawable/border_red_gradient"
+        android:text="@string/bind_way"
+        android:textColor="@color/almost_white"
+        android:textSize="@dimen/margin_main"
+        android:gravity="center"
+        android:id="@+id/bind_way"
+        android:layout_marginRight="@dimen/margin_main"
+        />
+</RelativeLayout>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+  <include
+      layout="@layout/keyborad"
+    android:layout_alignParentRight="true"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+
+      ></include>
+</RelativeLayout>
 </LinearLayout>
