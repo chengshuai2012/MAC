@@ -1,0 +1,3554 @@
+Index: app/src/main/java/com/link/cloud/base/BaseActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/base/BaseActivity.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/base/BaseActivity.java	(date 1537625212000)
+@@ -1,39 +1,197 @@
+ package com.link.cloud.base;
+ 
++import android.annotation.TargetApi;
++import android.app.Dialog;
++import android.content.ActivityNotFoundException;
++import android.content.Context;
++import android.content.Intent;
++import android.content.pm.ActivityInfo;
++import android.os.Build;
+ import android.os.Bundle;
+-import android.support.annotation.Nullable;
+ import android.support.v7.app.AppCompatActivity;
+-import android.widget.Toast;
++import android.view.View;
++import android.view.Window;
++import android.view.WindowManager;
++
++import com.link.cloud.widget.SimpleStyleDialog;
++import com.orhanobut.logger.Logger;
++import com.tbruyelle.rxpermissions.RxPermissions;
++import com.zitech.framework.utils.ViewUtils;
+ 
+ import butterknife.ButterKnife;
+ import butterknife.Unbinder;
++import rx.functions.Action1;
+ 
+ /**
+  * Created by OFX002 on 2018/9/20.
+  */
+ 
+-public abstract class BaseActivity extends AppCompatActivity{
++public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+ 
+     private Unbinder bind;
++    private SimpleStyleDialog denyDialog;
+ 
+     @Override
+-    protected void onCreate(@Nullable Bundle savedInstanceState) {
++    protected void onCreate(Bundle savedInstanceState) {
++        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+         super.onCreate(savedInstanceState);
+-        setContentView(setLayoutID());
++        this.setContentView(this.getLayoutId());
+         bind = ButterKnife.bind(this);
+-        initViews();
+     }
+ 
+-    protected abstract void initViews();
+-
+-    protected abstract int setLayoutID();
++    protected abstract int getLayoutId();
+ 
+     @Override
+     protected void onDestroy() {
+         super.onDestroy();
+         bind.unbind();
+     }
+-    protected void showToast(String msg){
+-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
++    @Override
++    protected void onStop() {
++        super.onStop();
++        Logger.i("AVChatRestart", this.getClass() + " onStop");
++    }
++
++    protected void onResume() {
++        super.onResume();
++
++    }
++
++    protected void onPause() {
++        super.onPause();
++
++    }
++
++    /**
++     * @param cls 目标activity
++     *            跳转并finish当前activity
++     * @throws ActivityNotFoundException
++     */
++    public void skipActivity(Class<?> cls) {
++        showActivity(cls);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++        finish();
++    }
++
++    /**
++     * @param cls
++     * @param extras
++     */
++    public void skipActivity(Class<?> cls, Bundle extras) {
++        Intent intent = new Intent();
++        intent.putExtras(extras);
++        intent.setClass(this, cls);
++        startActivity(intent);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++        finish();
++    }
++
++    public void showActivityForResult(Class<?> cls, int requestCode) {
++        Intent intent = new Intent();
++        intent.setClass(this, cls);
++        super.startActivityForResult(intent, requestCode);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++    }
++
++    public void showActivityForResult(Class<?> cls, Bundle bundle, int requestCode) {
++        Intent intent = new Intent();
++        intent.setClass(this, cls);
++        intent.putExtras(bundle);
++        super.startActivityForResult(intent, requestCode);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++    }
++
++    public void showActivity(Class<?> cls) {
++        Intent intent = new Intent();
++        intent.setClass(this, cls);
++        super.startActivity(intent);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++
++    }
++
++    public void showActivity(Class<?> cls, Bundle extras) {
++        Intent intent = new Intent();
++        intent.setClass(this, cls);
++        intent.putExtras(extras);
++        super.startActivity(intent);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
++    }
++
++    @Override
++    public void finish() {
++        super.finish();
++        applyCloseTransition();
++    }
++
++    protected void applyCloseTransition() {
++        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
+     }
++
++    @Override
++    public void onClick(View v) {
++
++    }
++
++    //请求权限
++    protected void requestRxPermissions(final String denyText, final String... permissions) {
++        RxPermissions rxPermissions = new RxPermissions(this);
++        rxPermissions.request(permissions).subscribe(new Action1<Boolean>() {
++            @Override
++            public void call(Boolean granted) {
++                if (granted) {
++                    onPermissionGranted(permissions);
++                } else {
++                    showDeniedDialog(denyText, permissions);
++                }
++            }
++        }, new Action1<Throwable>() {
++            @Override
++            public void call(Throwable throwable) {
++
++            }
++        });
++    }
++
++    protected void onPermissionGranted(String... permissions) {
++
++    }
++
++
++    private void showDeniedDialog(final String denyText, final String... permissions) {
++        if (denyDialog == null) {
++            denyDialog = new SimpleStyleDialog(this, denyText);
++            denyDialog.setCancelButtonText("取消");
++            denyDialog.setOnPositiveButtonClickListener(new SimpleStyleDialog.OnPositiveButtonClickListener() {
++                @Override
++                public void onClick(Dialog dialog) {
++                    requestRxPermissions(denyText, permissions);
++                }
++            });
++            denyDialog.setPositiveButtonText("去开启");
++        } else {
++            denyDialog.setContent(denyText);
++        }
++        if (!denyDialog.isShowing()) {
++            denyDialog.show();
++        }
++    }
++
++    public Context getContext() {
++        return this;
++    }
++
++    @TargetApi(19)
++    protected void setTranslucentStatus(boolean on) {
++        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)) return;
++        Window win = getWindow();
++        WindowManager.LayoutParams winParams = win.getAttributes();
++        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
++        if (on) {
++            winParams.flags |= bits;
++        } else {
++            winParams.flags &= ~bits;
++        }
++        win.setAttributes(winParams);
++    }
++
+ }
+Index: app/src/main/java/com/link/cloud/base/BaseFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/base/BaseFragment.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/base/BaseFragment.java	(date 1537625212000)
+@@ -0,0 +1,239 @@
++package com.link.cloud.base;
++
++import android.content.Intent;
++import android.os.Bundle;
++import android.support.v4.app.Fragment;
++import android.support.v4.app.FragmentManager;
++import android.support.v4.app.FragmentTransaction;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++
++import com.zitech.framework.BaseApplication;
++import com.zitech.framework.Session;
++import com.zitech.framework.utils.NetworkUtil;
++import com.zitech.framework.utils.ViewUtils;
++
++/**
++ * 基本类
++ *
++ * @author Ludaiqian
++ */
++public abstract class BaseFragment extends Fragment implements View.OnClickListener {
++
++    protected Session mSession;
++    private BaseApplication mApplicationContext;
++    private View mLayoutView;
++    private boolean mCompleted = false;
++    private LayoutInflater mInflater;
++
++    @Override
++    public void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        mApplicationContext = BaseApplication.getInstance();
++        mSession = mApplicationContext.getSession();
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
++
++        if (mLayoutView == null) {
++            mLayoutView = inflate(inflater);
++            onInflateView(mLayoutView);
++            onPrepareData();
++            mCompleted = true;
++        } else {
++            ViewGroup parent = (ViewGroup) mLayoutView.getParent();
++            if (parent != null)
++                parent.removeView(mLayoutView);
++            onRefreshData();
++        }
++        mInflater = inflater;
++        return mLayoutView;
++
++    }
++
++
++    protected View inflate(LayoutInflater inflater) {
++        return inflater.inflate(getContentViewId(), null);
++    }
++
++    @Override
++    public void onStart() {
++        super.onStart();
++
++
++    }
++
++    @Override
++    public void onResume() {
++        super.onResume();
++    }
++
++    @Override
++    public void onPause() {
++        super.onPause();
++    }
++
++    public boolean isCompleted() {
++        return mCompleted;
++    }
++
++    protected LayoutInflater getInflater() {
++        return mInflater;
++    }
++
++    public View getContentView() {
++        return mLayoutView;
++    }
++
++    /**
++     * 只运行一次
++     */
++    public void onInflateView(View contentView) {
++
++    }
++
++    /**
++     * 只运行一次
++     */
++    public void onPrepareData() {
++    }
++
++    public void onRefreshData() {
++
++    }
++
++    protected abstract int getContentViewId();
++
++    public final boolean isNetworkAvailable() {
++        return NetworkUtil.isNetworkAvailable(getActivity());
++    }
++
++    public final Session getSession() {
++        return mSession;
++    }
++
++
++    protected void back() {
++        FragmentManager fragmentManager = getFragmentManager();
++        fragmentManager.popBackStack();
++    }
++
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param fragmentClass
++     * @param replaceLayoutId
++     * @param args
++     */
++    public static void replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, Bundle args) {
++        replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
++    }
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param replaceLayoutId
++     * @param fragmentClass
++     * @return
++     */
++    public static Fragment replace(FragmentManager fm, int replaceLayoutId, Class<? extends Fragment> fragmentClass) {
++        return replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), null);
++    }
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param fragmentClass
++     * @param tag
++     * @param args
++     * @return
++     */
++    public static Fragment replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, String tag,
++                                   Bundle args) {
++        // mIsCanEixt = false;
++        Fragment fragment = fm.findFragmentByTag(tag);
++        boolean isFragmentExist = true;
++        if (fragment == null) {
++            try {
++                isFragmentExist = false;
++                fragment = fragmentClass.newInstance();
++                if (args != null)
++                    fragment.setArguments(args);
++                else {
++                    fragment.setArguments(new Bundle());
++                }
++
++            } catch (java.lang.InstantiationException e) {
++                e.printStackTrace();
++            } catch (IllegalAccessException e) {
++                e.printStackTrace();
++            }
++        } else {
++            if (args != null) {
++                if (fragment.getArguments() != null)
++                    fragment.getArguments().putAll(args);
++                else
++                    fragment.setArguments(args);
++            }
++        }
++        if (fragment == null)
++            return null;
++        if (fragment.isAdded()) {
++            // fragment.onResume();
++            return fragment;
++        }
++        FragmentTransaction ft = fm.beginTransaction();
++        if (isFragmentExist) {
++            ft.replace(replaceLayoutId, fragment);
++        } else {
++            ft.replace(replaceLayoutId, fragment, tag);
++        }
++
++        ft.addToBackStack(tag);
++        ft.commitAllowingStateLoss();
++        return fragment;
++    }
++
++
++    public void showActivity(Class<?> cls) {
++        Intent intent = new Intent();
++        intent.setClass(getActivity(), cls);
++        super.startActivity(intent);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, getActivity());
++
++    }
++
++    public void showActivity(Class<?> cls, Bundle extras) {
++        Intent intent = new Intent();
++        intent.setClass(getActivity(), cls);
++        intent.putExtras(extras);
++        super.startActivity(intent);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, getActivity());
++    }
++
++    public void showActivityForResult(Class<?> cls, int requestCode) {
++        Intent intent = new Intent();
++        intent.setClass(getActivity(), cls);
++        super.startActivityForResult(intent, requestCode);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, getActivity());
++    }
++
++    public void showActivityForResult(Class<?> cls, Bundle bundle, int requestCode) {
++        Intent intent = new Intent();
++        intent.setClass(getActivity(), cls);
++        intent.putExtras(bundle);
++        super.startActivityForResult(intent, requestCode);
++        ViewUtils.anima(ViewUtils.RIGHT_IN, getActivity());
++    }
++    @Override
++    public void onClick(View v) {
++
++    }
++
++}
+Index: app/src/main/java/com/link/cloud/base/AppBarActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/base/AppBarActivity.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/base/AppBarActivity.java	(date 1537625212000)
+@@ -0,0 +1,215 @@
++package com.link.cloud.base;
++
++import android.graphics.drawable.Drawable;
++import android.os.Build;
++import android.os.Bundle;
++import android.support.annotation.LayoutRes;
++import android.support.v7.widget.Toolbar;
++import android.view.Menu;
++import android.view.MenuItem;
++import android.view.View;
++
++import com.link.cloud.R;
++import com.link.cloud.utils.Utils;
++import com.link.cloud.widget.ToolBarHelper;
++import com.readystatesoftware.systembartint.SystemBarTintManager;
++
++
++/**
++ * Created by lu on 2016/6/14.
++ */
++public abstract class AppBarActivity extends BaseActivity {
++    private ToolBarHelper toolBarHelper;
++
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setTranslucentStatus(true);
++        setSystemBarTintDrawableResource(R.drawable.bg_toolbar);
++    }
++
++    @Override
++    public void setContentView(@LayoutRes int layoutResID) {
++        toolBarHelper = new ToolBarHelper(this, layoutResID);
++        super.setContentView(toolBarHelper.getContentView());
++        /*把 toolbar 设置到Activity 中*/
++        setSupportActionBar(toolBarHelper.getToolBar());
++//        toolBarHelper.setTitle(getTitle());
++        initToolBarEvent();
++    }
++
++    /**
++     * use SytemBarTintManager
++     *
++     * @param tintDrawable
++     */
++    protected void setSystemBarTintDrawable(Drawable tintDrawable) {
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
++            SystemBarTintManager mTintManager = new SystemBarTintManager(this);
++            if (tintDrawable != null) {
++//                mTintManager.setStatusBarTintEnabled(true);
++//                mTintManager.setTintDrawable(tintDrawable);
++                mTintManager.setStatusBarTintEnabled(true);
++                mTintManager.setTintDrawable(tintDrawable);
++            } else {
++                mTintManager.setStatusBarTintEnabled(false);
++                mTintManager.setTintDrawable(null);
++            }
++        }
++    }
++
++    protected void setSystemBarTintDrawableResource(int resId) {
++        setSystemBarTintDrawable(getResources().getDrawable(resId));
++    }
++
++    @Override
++    protected void onPostCreate(Bundle savedInstanceState) {
++        super.onPostCreate(savedInstanceState);
++        //在Swipebacklayout里面的attachToActivity方法里面再用SystemBarTint设置一下状态栏的颜色即可。
++//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
++//        tintManager.setStatusBarTintEnabled(true);
++//        tintManager.setStatusBarTintResource(R.drawable.bg_toolbar);
++        setSystemBarTintDrawableResource(R.drawable.bg_toolbar);
++    }
++
++//    @Override
++//    public void setTitle(CharSequence title) {
++////        super.setTitle(title);
++//        if (toolBarHelper != null) {
++//            toolBarHelper.setTitle(title);
++//        }
++//    }
++
++    @Override
++    public void setTitle(int titleId) {
++        super.setTitle(titleId);
++        if (toolBarHelper != null) {
++            toolBarHelper.setTitle(titleId);
++        }
++    }
++
++
++    private void initToolBarEvent() {
++        toolBarHelper.setNavigationOnClickListener(onNavigationClickListener);
++        toolBarHelper.setNavigationTextClickListener(onNavigationClickListener);
++        toolBarHelper.setOnMenuTextClickListener(onMenuClickListener);
++    }
++
++    protected void hideNavigationIcon() {
++        toolBarHelper.hideNavigationIcon();
++    }
++
++    public void hideToolbar() {
++        getSupportActionBar().hide();
++        toolBarHelper.hideToolBar();
++    }
++
++    protected void setMenuIconVisible(boolean visible) {
++        toolBarHelper.setMenuIconVisible(visible);
++        supportInvalidateOptionsMenu();
++    }
++
++    protected void setMenuText(int textResId) {
++        toolBarHelper.setMenuTextVisibility(View.VISIBLE);
++        toolBarHelper.setMenuText(textResId);
++    }
++
++    protected void setMenuText(String title) {
++        toolBarHelper.setMenuTextVisibility(View.VISIBLE);
++        toolBarHelper.setMenuText(title);
++    }
++    protected void setMenuTextVisibility(int visibility) {
++        toolBarHelper.setMenuTextVisibility(visibility);
++    }
++
++
++    protected void setMenuIcon(int drawableResId) {
++        toolBarHelper.setMenuIcon(drawableResId);
++    }
++
++    protected void setNavigationIcon(int imgId) {
++        toolBarHelper.setNavigationTextVisibility(View.GONE);
++        toolBarHelper.setNavigationIcon(imgId);
++    }
++
++    public void setNavigationText(String text) {
++        toolBarHelper.setNavigationTextVisibility(View.VISIBLE);
++        toolBarHelper.setNavigationText(text);
++        toolBarHelper.setNavigationIcon(null);
++    }
++
++
++    public View.OnClickListener onNavigationClickListener = new View.OnClickListener() {
++        @Override
++        public void onClick(View view) {
++            onNavigationViewClick();
++        }
++    };
++
++    protected void onNavigationViewClick() {
++        back();
++    }
++
++    public View.OnClickListener onMenuClickListener = new View.OnClickListener() {
++        @Override
++        public void onClick(View view) {
++            onActionMenuViewClick();
++        }
++    };
++
++    protected void back() {
++        try {
++            onBackPressed();
++        } catch (Exception e) {
++            e.printStackTrace();
++        }
++    }
++
++
++    @Override
++    protected void onDestroy() {
++        super.onDestroy();
++    }
++
++    @Override
++    public boolean onCreateOptionsMenu(final Menu menu) {
++        if (toolBarHelper.hasMenuIcon()) {
++            menu.add(Menu.NONE, R.id.menu, 0, null)
++                    .setEnabled(true)
++                    .setIcon(toolBarHelper.getMenuIcon())
++                    .setActionView(null)
++//                    .setShowAsActionFlags()
++                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
++        }
++        Utils.ignoreMenuLongClick(this,R.id.menu);
++        return super.onCreateOptionsMenu(menu);
++
++    }
++
++    @Override
++    public boolean onPrepareOptionsMenu(Menu menu) {
++        if (toolBarHelper.hasMenuIcon()) {
++            menu.findItem(R.id.menu).setVisible(toolBarHelper.isMenuIconVisible());
++        }
++        return super.onPrepareOptionsMenu(menu);
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        if (toolBarHelper.hasMenuIcon()) {
++            if (item.getItemId() == R.id.menu) {
++                onActionMenuViewClick();
++            }
++        }
++        return super.onOptionsItemSelected(item);
++    }
++
++    protected void onActionMenuViewClick() {
++
++    }
++
++    public Toolbar getToolbar(){
++        return toolBarHelper.getToolBar();
++    }
++}
+Index: app/src/main/java/com/link/cloud/utils/Utils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/utils/Utils.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/utils/Utils.java	(date 1537625212000)
+@@ -0,0 +1,1178 @@
++package com.link.cloud.utils;
++
++import android.annotation.SuppressLint;
++import android.app.Activity;
++import android.app.ActivityManager;
++import android.content.ClipboardManager;
++import android.content.ComponentName;
++import android.content.Context;
++import android.content.Intent;
++import android.content.pm.PackageInfo;
++import android.content.pm.PackageManager;
++import android.graphics.Bitmap;
++import android.graphics.Canvas;
++import android.net.Uri;
++import android.os.Bundle;
++import android.os.Environment;
++import android.provider.MediaStore;
++import android.support.v4.app.Fragment;
++import android.support.v4.app.FragmentManager;
++import android.support.v4.app.FragmentTransaction;
++import android.text.TextUtils;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.EditText;
++import android.widget.TextView;
++
++import com.jakewharton.rxbinding.view.RxView;
++import com.link.cloud.MacApplication;
++import com.link.cloud.R;
++import com.mozillaonline.providers.DownloadManager;
++import com.mozillaonline.providers.downloads.DownloadInfo;
++import com.mozillaonline.providers.downloads.Downloads;
++import com.orhanobut.logger.Logger;
++import com.zitech.framework.Session;
++import com.zitech.framework.utils.ToastMaster;
++import com.zitech.framework.utils.ViewUtils;
++
++import java.io.ByteArrayOutputStream;
++import java.io.File;
++import java.io.FileInputStream;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++import java.math.BigDecimal;
++import java.math.RoundingMode;
++import java.security.MessageDigest;
++import java.text.DecimalFormat;
++import java.text.ParseException;
++import java.util.ArrayList;
++import java.util.Calendar;
++import java.util.GregorianCalendar;
++import java.util.List;
++import java.util.Locale;
++import java.util.concurrent.TimeUnit;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++import rx.functions.Action1;
++
++
++/**
++ * Created by ludaiqian on 16/7/7.
++ */
++public class Utils extends com.zitech.framework.utils.Utils {
++    private static final int DEFAULT_AVATAR_NOTIFICATION_ICON_SIZE = ViewUtils.dip2px(48);
++
++
++
++    public static String getVersionName(Context context){
++        PackageManager packageManager=context.getPackageManager();
++        PackageInfo packageInfo;
++        String versionName="";
++        try {
++            packageInfo=packageManager.getPackageInfo(context.getPackageName(),0);
++            versionName=packageInfo.versionName;
++        } catch (PackageManager.NameNotFoundException e) {
++            e.printStackTrace();
++        }
++        return versionName;
++    }
++
++
++
++    /**
++     * 防止过快点击
++     *
++     * @param view
++     * @param onClickListener
++     */
++    public static void setOnClickListener(final View view, final View.OnClickListener onClickListener) {
++        RxView.clicks(view)
++                .throttleFirst(500, TimeUnit.MILLISECONDS)
++                .subscribe(new Action1<Void>() {
++                    @Override
++                    public void call(Void aVoid) {
++                        onClickListener.onClick(view);
++                    }
++                }, new Action1<Throwable>() {
++                    @Override
++                    public void call(Throwable throwable) {
++
++                    }
++                });
++    }
++
++    /**
++     * 截取scrollview的屏幕
++     **/
++    public static Bitmap getScrollViewBitmap(View view, Context context, boolean isSave) {
++        if (view == null) {
++            return null;
++        }
++        Bitmap bitmap;
++        bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
++        Canvas c = new Canvas(bitmap);
++        c.translate(-view.getScrollX(), -view.getScrollY());
++        view.draw(c);
++
++        if (isSave)
++            saveImageToGallery(context, bitmap);
++        return bitmap;
++    }
++
++    public static Bitmap loadBitmapFromViewBySystem(View v) {
++        if (v == null) {
++            return null;
++        }
++        v.setDrawingCacheEnabled(true);
++        v.buildDrawingCache();
++        Bitmap bitmap = v.getDrawingCache();
++        return bitmap;
++    }
++
++
++    //保存文件到指定路径
++    public static boolean imageToGallery(Context context, Bitmap bmp) {
++        // 首先保存图片  dearxy是可以改的
++        String storePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "dearxy";
++        File appDir = new File(storePath);
++        if (!appDir.exists()) {
++            appDir.mkdir();
++        }
++        String fileName = System.currentTimeMillis() + ".jpg";
++        File file = new File(appDir, fileName);
++        try {
++            FileOutputStream fos = new FileOutputStream(file);
++            //通过io流的方式来压缩保存图片
++            boolean isSuccess = bmp.compress(Bitmap.CompressFormat.JPEG, 60, fos);
++            fos.flush();
++            fos.close();
++
++            //把文件插入到系统图库
++            //MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), fileName, null);
++
++            //保存图片后发送广播通知更新数据库
++            Uri uri = Uri.fromFile(file);
++            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
++            if (isSuccess) {
++                return true;
++            } else {
++                return false;
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++        return false;
++    }
++
++
++    public static void saveImageToGallery(Context context, Bitmap bmp) {
++        // 首先保存图片
++        File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
++        if (!appDir.exists()) {
++            appDir.mkdir();
++        }
++        String fileName = System.currentTimeMillis() + ".jpg";
++        File file = new File(appDir, fileName);
++        try {
++            FileOutputStream fos = new FileOutputStream(file);
++            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
++            fos.flush();
++            fos.close();
++        } catch (FileNotFoundException e) {
++            e.printStackTrace();
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++
++        // 其次把文件插入到系统图库
++        try {
++            MediaStore.Images.Media.insertImage(context.getContentResolver(),
++                    file.getAbsolutePath(), fileName, null);
++        } catch (FileNotFoundException e) {
++            e.printStackTrace();
++        }
++        // 最后通知图库更新
++        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir)));
++    }
++
++
++
++
++
++
++    /**
++     * dp转px
++     *
++     * @param dp
++     * @return
++     */
++    public static int Dp2Px(Context context, float dp) {
++        return (int) (dp * context.getResources().getDisplayMetrics().density + 0.5f);
++    }
++
++    /**
++     * px转dp
++     *
++     * @param px
++     * @return
++     */
++    public static int Px2Dp(Context context, float px) {
++        return (int) (px / context.getResources().getDisplayMetrics().density + 0.5f);
++
++    }
++
++    /**
++     * 检查手机上是否安装了指定的软件
++     *
++     * @param context
++     * @param packageName：应用包名
++     * @return
++     */
++    public static boolean isPackageInstalled(Context context, String packageName) {
++        // 获取packagemanager
++        final PackageManager packageManager = context.getPackageManager();
++        // 获取所有已安装程序的包信息
++        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
++        // 用于存储所有已安装程序的包名
++        List<String> packageNames = new ArrayList<String>();
++        // 从pinfo中将包名字逐一取出，压入pName list中
++        if (packageInfos != null) {
++            for (int i = 0; i < packageInfos.size(); i++) {
++                String packName = packageInfos.get(i).packageName;
++                packageNames.add(packName);
++            }
++        }
++        // 判断packageNames中是否有目标程序的包名，有TRUE，没有FALSE
++        return packageNames.contains(packageName);
++    }
++
++    public static String downloadAmr(String url) {
++        DownloadManager manager = Session.getInstance().getDownloadManager();
++        DownloadInfo info = manager.query(url);
++        String key = mappingAmrId(url);
++        if (info == null) {
++            String path = "/";
++            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
++            request.setTitle(key);
++            request.setShowRunningNotification(false);
++            request.setMimeType(com.mozillaonline.providers.downloads.Constants.MIMETYPE_AMR);
++            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, path);
++            request.setUid(url);
++            manager.enqueue(request);
++            return null;
++        }
++
++        return Downloads.isStatusSuccess(info.mStatus) ? info.mFileName : null;
++    }
++
++    private static String mappingAmrId(String path) {
++        return Utils.md5(path) + ".amr";
++    }
++
++    public static String readFromAssets(Context context, String name) {
++        try {
++            InputStream e = context.getResources().getAssets().open(name);
++            byte[] buffer = new byte[1];
++            ByteArrayOutputStream bout = new ByteArrayOutputStream(1024);
++            int len = -1;
++            while (-1 != (len = e.read(buffer))) {
++//                bIn.append(buffer, 0, buffer.length);
++                bout.write(buffer, 0, len);
++            }
++            e.close();
++            String res = new String(bout.toByteArray());
++            return res.trim();
++        } catch (IOException var6) {
++            var6.printStackTrace();
++        } catch (Exception var7) {
++            var7.printStackTrace();
++        }
++
++        return null;
++    }
++
++    public static boolean needUpdate(String minVersion) {
++        String currentVersion = Session.getInstance().getVersionName();
++        Logger.i("VERSION", "version:" + currentVersion + ",min version:" + minVersion);
++        if (!TextUtils.isEmpty(minVersion) && !TextUtils.isEmpty(currentVersion)) {
++            String currentVersions[] = currentVersion.split(".");
++            String minVersions[] = minVersion.split(".");
++            if (currentVersions.length == currentVersions.length) {
++                for (int i = 0; i < currentVersions.length; i++) {
++                    int current = Integer.parseInt(currentVersions[i]);
++                    int min = Integer.parseInt(minVersions[i]);
++                    if (current > min) {
++                        return false;
++                    } else if (current < min) {
++                        return true;
++                    }
++                }
++
++            }
++        }
++        return false;
++    }
++
++    public static boolean isPhoneNum(String phoneNumber) {
++        if (TextUtils.isEmpty(phoneNumber)) {
++            return false;
++        }
++        try {
++            Pattern p = Pattern.compile("^((13[0-9])|(14[0-9])|(15[^4,\\D])|(17[0-9])|(18[0-9])|(92[0-9])|(98[0-9])|(16[0-9])|(19[0-9]))\\d{8}$");
++            Matcher m = p.matcher(phoneNumber);
++            return m.matches();
++        } catch (Exception e) {
++            return false;
++        }
++    }
++
++
++    /**
++     * 密码大于等于6位
++     *
++     * @param password
++     * @return
++     */
++    public static boolean isPasswordValid(String password) {
++        return password.length() >= 6 && password.length() <= 18;
++    }
++
++
++    @SuppressWarnings({"rawtypes", "unchecked"})
++    public static List<?> wrap(Object value) {
++        ArrayList list = new ArrayList();
++        list.add(value);
++        return list;
++    }
++
++
++    public static final int INCOME_LIST = 1;
++    public static final int FEMALE_OCCUPATION_LIST = 2;
++    public static final int MALE_OCCUPATION_LIST = 3;
++    public static final int EMOTIONAL_STATE_LIST = 4;
++    public static final int DATE_OF_DEPARTURE_LIST = 5;
++    public static final int TAKE_TIME_LIST = 6;
++    public static final int GIRL_LABELS = 7;//男标签
++    public static final int BOY_LABELS = 8;//女标签
++    public static final int WHETHER_DRIVING_RO_NOT = 9;//是否开车
++    public static final int WHETHER_SMOKING_RO_NOT = 10;//是否抽烟
++    public static final int WHETHER_DRINKING_RO_NOT = 11;//是否喝酒
++    //
++    public static final int VIEWPOINT_FOR_SEX = 12;//对性的看法
++    public static final int GOOD_AT_SKILLS = 13;//擅长技能
++
++    public static final int REQUIREMENT_FOR_BOY = 14;//对男伴的要求
++    public static final int REQUIREMENT_FOR_GIRL = 15;//对女伴的要求
++    public static final int TARGET_PERSON_GIRL_LIST = 16;//邀请类型
++    public static final int TARGET_PERSON_BOY_LIST = 17;//邀请类型
++    public static final int TARGET_PERSON_LIST = 18;//邀请类型
++    public static final int DATE_PLAN_MESSAGE_LIST = 19;//邀请类型
++    public static final int PAYMENT_BY = 20;//由谁支付
++    public static final int TRAVEL_MODES = 21;//旅行方式
++
++
++    public static boolean hasEmpty(EditText tv1, EditText... tv2s) {
++        if (TextUtils.isEmpty(tv1.getText().toString().trim())) {
++            return true;
++        }
++        for (EditText tv2 : tv2s) {
++            if (TextUtils.isEmpty(tv2.getText().toString().trim())) {
++                return true;
++            }
++        }
++
++        return false;
++
++    }
++
++    public static boolean hasEmpty(TextView tv1, TextView... tv2s) {
++        if (TextUtils.isEmpty(tv1.getText().toString())) {
++            return true;
++        }
++        for (TextView tv2 : tv2s) {
++            if (TextUtils.isEmpty(tv2.getText().toString())) {
++                return true;
++            }
++        }
++
++        return false;
++
++    }
++
++    @SuppressLint("SimpleDateFormat")
++    public static Age caculateAge(String birthday) {
++        if (birthday == null) {
++            return new Age();
++        }
++        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
++        Calendar from = Calendar.getInstance();
++        try {
++            from.setTime(df.parse(birthday));
++        } catch (ParseException e) {
++            birthday = "";
++        }
++        if ("".equals(birthday)) {
++            Age brs = new Age();
++            brs.setDays(0);
++            brs.setMonth(0);
++            return brs;
++        } else {
++
++            int yearbirthday = from.get(Calendar.YEAR);
++            int monthbirthday = from.get(Calendar.MONTH);
++            int daysbirthday = from.get(Calendar.DAY_OF_MONTH);
++
++            GregorianCalendar to = (GregorianCalendar) Calendar.getInstance();
++
++            int yearTo = to.get(Calendar.YEAR);
++            int monthTo = to.get(Calendar.MONTH);
++            int daysTo = to.get(Calendar.DAY_OF_MONTH);
++            Age age = new Age();
++            if (from.getTimeInMillis() > to.getTimeInMillis()) {
++                age.setDays(0);
++                age.setMonth(0);
++            } else {
++                int monthResult = 12 * (yearTo - yearbirthday) + (monthTo - monthbirthday);
++                int daysResult = daysTo - daysbirthday;
++                if (daysResult < 0) {
++                    monthResult = monthResult - 1;
++                    int daysCount = getDaysOfMonth(monthTo - 1, to.isLeapYear(yearTo));
++
++                    daysResult = daysCount + daysResult;
++                }
++                age.setDays(daysResult);
++                age.setYear(monthResult / 12);
++                age.setMonth(monthResult % 12);
++            }
++            return age;
++        }
++    }
++
++
++    private static int getDaysOfMonth(int month, boolean isLeepYear) {
++        switch (month) {
++            case 0:
++            case 2:
++            case 4:
++            case 6:
++            case 7:
++            case 9:
++            case 11:
++                return 31;
++            case 1:
++                return isLeepYear ? 29 : 28;
++            default:
++                return 30;
++        }
++    }
++
++
++    /**
++     * 实现文本复制功能
++     *
++     * @param content
++     */
++    public static void copy(Context context, String content) {
++        // 得到剪贴板管理器
++        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
++        cmb.setText(content.trim());
++    }
++
++
++    public static boolean containEmpty(String... values) {
++        for (String value : values) {
++            if (TextUtils.isEmpty(value)) {
++                return true;
++            }
++        }
++        return false;
++    }
++
++    public static void call(Context context, String phoneNumber) {
++        Intent phoneIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
++        //启动
++        context.startActivity(phoneIntent);
++    }
++
++
++    public static int parseInt(String s) {
++        if (s == null) {
++            return 0;
++        }
++        try {
++            return Integer.parseInt(s);
++
++        } catch (Exception e) {
++            return 0;
++        }
++    }
++
++    public static void removeFromParent(View child) {
++        if (child.getParent() != null) {
++            ViewGroup parent = (ViewGroup) child.getParent();
++            parent.removeView(child);
++        }
++    }
++
++    public static String parseTitle(String text) {
++        String split = "\\n";
++        int pos = text.indexOf(split);
++        if (pos != -1) {
++            String title = text.substring(0, pos);
++            return title;
++        }
++        return text;
++    }
++
++    public static String splitLines(String text) {
++        String split = "\\n";
++        int pos = text.indexOf(split);
++        if (pos != -1) {
++            String title = text.substring(0, pos);
++            String content = text.substring(pos + split.length(), text.length());
++            return title + '\n' + content;
++        } else {
++            return text;
++        }
++    }
++
++    public static int countNotEmpty(TextView t1, TextView... t2s) {
++        int count = 0;
++        if (!TextUtils.isEmpty(t1.getText().toString())) {
++            count++;
++        }
++        for (TextView t : t2s) {
++            if (!TextUtils.isEmpty(t.getText().toString())) {
++                count++;
++            }
++        }
++        return count;
++    }
++
++    public static void ignoreMenuLongClick(final Activity context, final int menuId) {
++        MacApplication.getInstance().post(new Runnable() {
++            @Override
++            public void run() {
++                View v = context.findViewById(menuId);
++                if (v != null) {
++                    v.setOnLongClickListener(new View.OnLongClickListener() {
++                        @Override
++                        public boolean onLongClick(View v) {
++                            return true;
++                        }
++                    });
++                }
++            }
++        });
++
++    }
++
++
++    public static String pack(List<String> picUrls) {
++        StringBuilder buffer = new StringBuilder();
++        for (int i = 0; i < picUrls.size(); i++) {
++            buffer.append(picUrls.get(i));
++            if (i != picUrls.size() - 1) {
++                buffer.append("@X@");
++            }
++        }
++        return buffer.toString();
++    }
++
++    public static String getBlurUrl(String url) {
++        if (!TextUtils.isEmpty(url)) {
++
++            int position = url.indexOf("?");
++            if (position != -1) {
++                //?x-oss-process=image/resize,w_200/blur,r_3,s_2
++                String result = url.substring(0, position) + "?x-oss-process=image/resize,w_300/blur,r_8,s_8";
++                return result;
++            } else {
++                String result = url + "?x-oss-process=image/resize,w_300/blur,r_8,s_8";
++                return result;
++            }
++        }
++        return url;
++    }
++
++    private static final String COMPRESSED_PHOTO_NAME = "_saved.jpg";
++
++
++    public static String parseDistance(String distance) {
++        float distanceFloat = 10000f;
++        try {
++            distanceFloat = Float.parseFloat(!TextUtils.isEmpty(distance) ? distance : "0");
++        } catch (NumberFormatException e) {
++            e.printStackTrace();
++        }
++
++        if (distanceFloat >= 100) {
++            return String.valueOf(Math.round((float) distanceFloat / 1000f)) + "km";
++
++//            contentHolder.distanceTv.setText(String.valueOf(Math.round((float) distanceInt / 1000f)) + "km");
++        } else {
++            DecimalFormat formatter = new DecimalFormat("0.##");
++            return formatter.format(distanceFloat / 1000f) + "km";
++//            contentHolder.distanceTv.setText(String.format(Locale.CHINESE, "%.2f", + "km");
++
++        }
++    }
++
++
++    /**
++     * 获取当前进程名
++     *
++     * @param context
++     * @return 进程名
++     */
++    public static final String getProcessName(Context context) {
++        String processName = null;
++
++        // ActivityManager
++        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
++
++        while (true) {
++            for (ActivityManager.RunningAppProcessInfo info : am.getRunningAppProcesses()) {
++                if (info.pid == android.os.Process.myPid()) {
++                    processName = info.processName;
++
++                    break;
++                }
++            }
++
++            // go home
++            if (!TextUtils.isEmpty(processName)) {
++                return processName;
++            }
++
++            // take a rest and again
++            try {
++                Thread.sleep(100L);
++            } catch (InterruptedException ex) {
++                ex.printStackTrace();
++            }
++        }
++    }
++
++
++    public static String getPercentString(float percent) {
++        return String.format(Locale.US, "%d%%", (int) (percent * 100));
++    }
++
++
++    /**
++     * 坐标转换，百度地图坐标转换成腾讯地图坐标
++     *
++     * @param lat 百度坐标纬度
++     * @param lon 百度坐标经度
++     * @return 返回结果：纬度,经度
++     */
++    public static double[] map_bd2hx(double lat, double lon) {
++        double tx_lat;
++        double tx_lon;
++        double x_pi = 3.14159265358979324;
++        double x = lon - 0.0065, y = lat - 0.006;
++        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
++        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
++        tx_lon = z * Math.cos(theta);
++        tx_lat = z * Math.sin(theta);
++
++        double[] doubles = new double[]{tx_lat, tx_lon};
++        return doubles;
++    }
++
++
++    public static String getCurrentActivity(Context context) {
++        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
++        List<ActivityManager.RunningTaskInfo> runningTasks = manager.getRunningTasks(1);
++        ActivityManager.RunningTaskInfo cinfo = runningTasks.get(0);
++        ComponentName component = cinfo.topActivity;
++        return component.getClassName();
++    }
++
++    /**
++     * 获取单个文件的MD5值！
++     *
++     * @param file
++     * @return
++     */
++    public static String getFileMD5(File file) {
++        if (!file.isFile()) {
++            return null;
++        }
++        MessageDigest digest = null;
++        FileInputStream in = null;
++        byte buffer[] = new byte[1024];
++        int len;
++        try {
++            digest = MessageDigest.getInstance("MD5");
++            in = new FileInputStream(file);
++            while ((len = in.read(buffer, 0, 1024)) != -1) {
++                digest.update(buffer, 0, len);
++            }
++            in.close();
++        } catch (Exception e) {
++            e.printStackTrace();
++            return null;
++        }
++//        BigInteger bigInt = new BigInteger(1, digest.digest());
++        return bytesToHexString(digest.digest());
++    }
++
++    public static String bytesToHexString(byte[] src) {
++        StringBuilder stringBuilder = new StringBuilder("");
++        if (src == null || src.length <= 0) {
++            return null;
++        }
++        for (int i = 0; i < src.length; i++) {
++            int v = src[i] & 0xFF;
++            String hv = Integer.toHexString(v);
++            if (hv.length() < 2) {
++                stringBuilder.append(0);
++            }
++            stringBuilder.append(hv);
++        }
++        return stringBuilder.toString();
++    }
++
++
++    public static boolean contain(String[] valueArray, String value) {
++        for (String v : valueArray) {
++            if (value.equals(v)) {
++                return true;
++            }
++        }
++        return false;
++    }
++
++
++    public static class Age {
++        int days;
++        int month;
++        int year;
++
++        public int getYear() {
++            return year;
++        }
++
++        public void setYear(int year) {
++            this.year = year;
++        }
++
++        public int getDays() {
++            return days;
++        }
++
++        public void setDays(int days) {
++            this.days = days;
++        }
++
++        public int getMonth() {
++            return month;
++        }
++
++        public void setMonth(int month) {
++            this.month = month;
++        }
++
++    }
++
++    public static String hidePhoneNum(String phoneNum) {
++        String hideNum = "";
++        if (!TextUtils.isEmpty(phoneNum) && phoneNum.length() == 11) {
++            String first = phoneNum.substring(0, 3);
++            String sec = phoneNum.substring(7, 11);
++            hideNum = first + "****" + sec;
++        }
++        return hideNum;
++    }
++
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param fragmentClass
++     * @param replaceLayoutId
++     * @param args
++     */
++    public static void replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, Bundle args) {
++        replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
++    }
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param replaceLayoutId
++     * @param fragmentClass
++     * @return
++     */
++    public static Fragment replace(FragmentManager fm, int replaceLayoutId, Class<? extends Fragment> fragmentClass) {
++        return replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), null);
++    }
++
++    /**
++     * Fragment跳转， 将一个layout替换为新的fragment。
++     *
++     * @param fm
++     * @param fragmentClass
++     * @param tag
++     * @param args
++     * @return
++     */
++    public static Fragment replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, String tag,
++                                   Bundle args) {
++        // mIsCanEixt = false;
++        Fragment fragment = fm.findFragmentByTag(tag);
++        boolean isFragmentExist = true;
++        if (fragment == null) {
++            try {
++                isFragmentExist = false;
++                fragment = fragmentClass.newInstance();
++                if (args != null)
++                    fragment.setArguments(args);
++                else {
++                    fragment.setArguments(new Bundle());
++                }
++
++            } catch (InstantiationException e) {
++                e.printStackTrace();
++            } catch (IllegalAccessException e) {
++                e.printStackTrace();
++            }
++        } else {
++            if (args != null) {
++                if (fragment.getArguments() != null)
++                    fragment.getArguments().putAll(args);
++                else
++                    fragment.setArguments(args);
++            }
++        }
++        if (fragment == null)
++            return null;
++        if (fragment.isAdded()) {
++            // fragment.onResume();
++            return fragment;
++        }
++        FragmentTransaction ft = fm.beginTransaction();
++        if (isFragmentExist) {
++            ft.replace(replaceLayoutId, fragment);
++        } else {
++            ft.replace(replaceLayoutId, fragment, tag);
++        }
++
++        ft.addToBackStack(tag);
++        ft.commitAllowingStateLoss();
++        return fragment;
++    }
++
++    public static String formatMoney(float amounts) {
++        double doubleAmounts = Double.valueOf(String.valueOf(amounts));
++        DecimalFormat formater = new DecimalFormat();
++        formater.setMaximumFractionDigits(0);
++        formater.setGroupingSize(0);
++        formater.setRoundingMode(RoundingMode.FLOOR);
++        return formater.format(doubleAmounts);
++    }
++
++    public static float valueOfMoney(float value) {
++        return Float.valueOf(formatMoney(value));
++    }
++
++    /**
++     * 浮点数加法，计算金额时使用 a+b
++     *
++     * @param a
++     * @param b
++     * @return 返回String类型
++     */
++    public static String floatAddString(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).add(new BigDecimal(Float.toString(b)));
++        return result.toString();
++    }
++
++    /**
++     * 浮点数加法，计算金额时使用 a+b
++     *
++     * @param a
++     * @param b
++     * @return 返回float型
++     */
++    public static float floatAddFloat(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).add(new BigDecimal(Float.toString(b)));
++        return result.floatValue();
++    }
++
++    /**
++     * 浮点数减法，计算金额时使用 a-b
++     *
++     * @param a
++     * @param b
++     * @return 返回String类型
++     */
++    public static String floatSubString(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).subtract(new BigDecimal(Float.toString(b)));
++        return result.toString();
++    }
++
++    /**
++     * 浮点数减法，计算金额时使用 a-b
++     *
++     * @param a
++     * @param b
++     * @return 返回float型
++     */
++    public static float floatSubFloat(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).subtract(new BigDecimal(Float.toString(b)));
++        return result.floatValue();
++    }
++
++
++    /**
++     * 浮点数减法，计算金额时使用 a-b
++     *
++     * @param a
++     * @param b
++     * @return 返回float型
++     */
++    public static String floatSubFloat(String a, String b) {
++        BigDecimal result = new BigDecimal(a).subtract(new BigDecimal(b));
++        return result.toString();
++    }
++
++    public static String subZeroAndDot(String s){
++        if(s.indexOf(".") > 0){
++            s = s.replaceAll("0+?$", "");//去掉多余的0
++            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
++        }
++        return s;
++    }
++
++    /**
++     * 浮点数除法，计算金额使用 a/b
++     *
++     * @param a
++     * @param b
++     * @return 返回String类型
++     */
++    public static String floatDivideString(String a, String b) {
++        BigDecimal result = new BigDecimal(a).divide(new BigDecimal(b));
++        return result.toString();
++    }
++
++    /**
++     * 浮点数除法，计算金额使用 a/b
++     *
++     * @param a
++     * @param b
++     * @return 返回float类型
++     */
++    public static float floatDivideFloat(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).divide(new BigDecimal(Float.toString(b)));
++        return result.floatValue();
++    }
++
++    /**
++     * 浮点数乘法，计算金额时使用 a*b
++     *
++     * @param a
++     * @param b
++     * @return 返回String类型
++     */
++    public static String floatMultiplyString(String a, String b) {
++        BigDecimal result = new BigDecimal(a).multiply(new BigDecimal(b));
++        return result.toString();
++    }
++
++    /**
++     * 浮点数乘法，计算金额时使用 a*b
++     *
++     * @param a
++     * @param b
++     * @return 返回float类型
++     */
++    public static float floatMultiplyFloat(float a, float b) {
++        BigDecimal result = new BigDecimal(Float.toString(a)).multiply(new BigDecimal(Float.toString(b)));
++        return result.floatValue();
++    }
++
++    public static boolean isEmpty(List<?> list) {
++        return list == null || list.size() == 0;
++    }
++
++
++    public interface OnVisitorAccountCreatedListener {
++        public void onVistorAccountCreated(String id, String password);
++
++        public void onCreateFailed(String reason);
++    }
++
++
++    public static void createVisitorAccount(final OnVisitorAccountCreatedListener l) {
++        // TODO Auto-generated method stub
++//        RequestHeader header = new RequestHeader(Api.VISITOR_REGISTER, null);
++//        Request request = new Request(header, null);
++//        HttpTaskExecutor.getInstance().execute(request, new ResponseListener<ApiResponse<?>>() {
++//
++//            @Override
++//            public void onResponse(ApiResponse<?> result) {
++//                @SuppressWarnings("unchecked")
++//                Response<RegisterResultResponse> resp = (Response<RegisterResultResponse>) result;
++//                RegisterResultResponse data = resp.getData();
++//                if (l != null)
++//                    l.onVistorAccountCreated(data.getUser_id(), data.getPwd());
++//            }
++//
++//            @Override
++//            public void onError(HttpError paramHttpError) {
++//                if (l != null)
++//                    l.onCreateFailed(paramHttpError.getCauseMessage());
++//            }
++//        });
++
++    }
++
++
++    public static String hidePartCode(String code) {
++        if (TextUtils.isEmpty(code)) return "******";
++        if (code.length() == 1 || code.length() == 2) return code + "******";
++        return code.substring(0, 3) + "******";
++    }
++
++
++    public interface OnVideoCoverCallBack {
++        void onCoverResult(String coverPath);
++    }
++
++    private static String setVideoCachePath(String var0) {
++        File var1;
++        if (!(var1 = new File(var0)).exists()) {
++            var1.mkdirs();
++        }
++
++        File var3;
++        if (!(var3 = new File(var0, +System.currentTimeMillis() + "_cover.jpg")).exists()) {
++            try {
++                var3.createNewFile();
++                return var3.getPath();
++            } catch (IOException var2) {
++                var2.printStackTrace();
++            }
++        }
++        return var0 + "/" + System.currentTimeMillis() + "_cover.jpg";
++    }
++
++    public static String parseObjectId(String data) {
++//        data.replaceAll(" ","").replaceAll("\\s","");
++        Pattern pattern = Pattern.compile("\"{0,1}objectId\"{0,1}\\s*[:=]\\s*\"{0,1}([^\"}]+)\"{0,1}");
++        Matcher matcher = pattern.matcher(data);
++        if (matcher.find() && matcher.groupCount() > 0) {
++            String objectId = matcher.group(1);
++            //Config.get().storeObjectIdIfNull(objectId);
++            return objectId;
++        }
++        return null;
++    }
++
++
++
++
++    public static String getAreaName(String province, String city) {
++        if (province != null) {
++            if (province.endsWith("省") || province.equals("市")) {
++                province = province.substring(0, province.length() - 1);
++            } else if (province.endsWith("新疆维吾尔自治区")) {
++                province = "新疆";
++            } else if (province.endsWith("内蒙古自治区")) {
++                province = "内蒙古";
++            } else if (province.endsWith("广西壮族自治区")) {
++                province = "广西";
++            } else if (province.endsWith("宁夏回族自治区")) {
++                province = "宁夏";
++            } else if (province.endsWith("西藏自治区")) {
++                province = "西藏";
++            } else if (province.equals("香港特别行政区")) {
++                province = "香港";
++            } else if (province.equals("澳门特别行政区")) {
++                province = "澳门";
++            }
++        }
++
++        if (city != null) {
++            if (city.endsWith("市") || city.equals("县")) {
++                city = city.substring(0, city.length() - 1);
++            } else if (city.equals("延边朝鲜族自治州")) {
++                city = "延边";
++            } else if (city.equals("恩施土家族苗族自治州")) {
++                city = "恩施";
++            } else if (city.equals("湘西土家族苗族自治州")) {
++                city = "湘西";
++            } else if (city.equals("阿坝藏族羌族自治州")) {
++                city = "阿坝";
++            } else if (city.equals("甘孜藏族自治州")) {
++                city = "甘孜";
++            } else if (city.equals("凉山彝族自治州")) {
++                city = "凉山";
++            } else if (city.equals("黔东南苗族侗族自治州")) {
++                city = "黔东南";
++            } else if (city.equals("黔南布依族苗族自治州")) {
++                city = "黔南";
++            } else if (city.equals("黔西南布依族苗族自治州")) {
++                city = "黔西南";
++            } else if (city.equals("楚雄彝族自治州")) {
++                city = "楚雄";
++            } else if (city.equals("红河哈尼族彝族自治州")) {
++                city = "红河";
++            } else if (city.equals("文山壮族苗族自治州")) {
++                city = "文山";
++            } else if (city.equals("西双版纳傣族自治州")) {
++                city = "西双版纳";
++            } else if (city.equals("大理白族自治州")) {
++                city = "大理";
++            } else if (city.equals("德宏傣族景颇族自治州")) {
++                city = "德宏";
++            } else if (city.equals("怒江傈僳族自治州")) {
++                city = "怒江";
++            } else if (city.equals("迪庆藏族自治州")) {
++                city = "迪庆";
++            } else if (city.equals("临夏回族自治州")) {
++                city = "临夏";
++            } else if (city.equals("甘南藏族自治州")) {
++                city = "甘南";
++            } else if (city.equals("海南藏族自治州")) {
++                city = "海南";
++            } else if (city.equals("海北藏族自治州")) {
++                city = "海北";
++            } else if (city.equals("海西蒙古族藏族自治州")) {
++                city = "海西";
++            } else if (city.equals("黄南藏族自治州")) {
++                city = "黄南";
++            } else if (city.equals("果洛藏族自治州")) {
++                city = "果洛";
++            } else if (city.equals("玉树藏族自治州")) {
++                city = "玉树";
++            } else if (city.equals("伊犁哈萨克自治州")) {
++                city = "伊犁";
++            } else if (city.equals("博尔塔拉蒙古自治州")) {
++                city = "博尔塔拉";
++            } else if (city.equals("昌吉回族自治州")) {
++                city = "昌吉";
++            } else if (city.equals("巴音郭楞蒙古自治州")) {
++                city = "巴音郭楞";
++            } else if (city.equals("克孜勒苏柯尔克孜自治州")) {
++                city = "克孜勒苏";
++            }
++
++        }
++        if (TextUtils.equals(province, city)) {
++            return province;
++        }
++        return province + " " + city;
++    }
++
++}
++
+Index: app/src/main/java/com/link/cloud/widget/ToolBarHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/ToolBarHelper.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/ToolBarHelper.java	(date 1537625212000)
+@@ -0,0 +1,194 @@
++package com.link.cloud.widget;
++
++import android.content.Context;
++import android.graphics.drawable.Drawable;
++import android.support.v7.widget.Toolbar;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.FrameLayout;
++import android.widget.ImageView;
++import android.widget.TextView;
++
++import com.link.cloud.R;
++import com.zitech.framework.utils.ViewUtils;
++
++
++/**
++ * @author lidong on 2016/2/15.
++ * @ClassName ToolBarHelper
++ * @描述：用于处理ToolBar
++ */
++public class ToolBarHelper {
++
++    /*上下文，创建view的时候需要用到*/
++    private Context mContext;
++
++    /*base view*/
++    private FrameLayout mContentView;
++
++    /*用户定义的view*/
++    private View mUserView;
++
++    /*toolbar*/
++    private Toolbar mToolBar;
++
++
++    /*视图构造器*/
++    private LayoutInflater mInflater;
++
++    /*
++    * 两个属性
++    * 1、toolbar是否悬浮在窗口之上
++    * 2、toolbar的高度获取
++    * */
++    private static int[] ATTRS = {
++
++            R.attr.windowActionBarOverlay,
++            R.attr.actionBarSize
++    };
++
++    private ImageView mTitle;
++
++    private TextView mMenuText;
++    private TextView mNavigationText;
++    private boolean menuIconVisible=true;
++    private int menuIcon;
++
++    public ToolBarHelper(Context context, int layoutId) {
++        this.mContext = context;
++        mInflater = LayoutInflater.from(mContext);
++        init();
++        initAppBar();
++        initContentLayout(layoutId);
++
++
++    }
++
++    /*初始化整个内容*/
++    private void init() {
++        /*直接创建一个帧布局，作为视图容器的父容器*/
++        mContentView = new FrameLayout(mContext);
++        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
++                ViewGroup.LayoutParams.MATCH_PARENT);
++        mContentView.setLayoutParams(params);
++        mContentView.setFitsSystemWindows(true);
++    }
++
++    /*初始化用户定义的布局*/
++    private void initAppBar() {
++        /*通过inflater获取toolbar的布局文件*/
++        View toolbar = mInflater.inflate(R.layout.toolbar, mContentView);
++        mToolBar = (Toolbar) toolbar.findViewById(R.id.tool_bar);
++        mTitle= (ImageView) toolbar.findViewById(R.id.toolbar_title);
++        mToolBar.setTitle("");
++        mMenuText= (TextView) toolbar.findViewById(R.id.menuText);
++        mNavigationText= (TextView) toolbar.findViewById(R.id.navigationText);
++    }
++
++    /*初始化toolbar*/
++    private void initContentLayout(int id) {
++        mUserView = mInflater.inflate(id, null);
++        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
++        // TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(android.support.v7.appcompat.R.styleable.Theme);
++        /*获取主题中定义的悬浮标志*/
++        // boolean overly = typedArray.getBoolean(android.support.v7.appcompat.R.styleable.Theme_windowActionBarOverlay, false);
++        /*获取主题中定义的toolbar的高度*/
++        int toolBarSize = mContext.getResources().getDimensionPixelOffset(R.dimen.action_bar_size);
++        //(int) typedArray.getDimension(android.support.v7.appcompat.R.styleable.Theme_actionBarSize, (int) mContext.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
++        // typedArray.recycle();
++        params.topMargin = toolBarSize;
++        if(mUserView.getBackground()==null){
++            mUserView.setBackgroundResource(R.color.windowBackgroundLight);
++        }
++        mContentView.addView(mUserView, params);
++
++
++    }
++
++    public FrameLayout getContentView() {
++        return mContentView;
++    }
++
++    public Toolbar getToolBar() {
++        return  mToolBar;
++    }
++
++    public void hideToolBar() {
++        mToolBar.setVisibility(View.GONE);
++        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mUserView.getLayoutParams();
++        params.topMargin = 0;
++
++    }
++
++    public void setTitle(int  titleResId) {
++        mTitle.setImageResource(titleResId);
++    }
++
++    public void setNavigationOnClickListener(View.OnClickListener navigationOnClickListener) {
++        mToolBar.setNavigationOnClickListener(navigationOnClickListener);
++    }
++
++    public void hideNavigationIcon() {
++        mToolBar.setNavigationIcon(null);
++    }
++
++    public void setNavigationIcon(int navigationIcon) {
++        mToolBar.setNavigationIcon(navigationIcon);
++    }
++    public void setNavigationIcon(Drawable navigationIcon) {
++        mToolBar.setNavigationIcon(navigationIcon);
++    }
++
++    public void setMenuTextVisibility(int menuTextVisibility) {
++        this.mMenuText.setVisibility(menuTextVisibility);
++    }
++
++    public boolean isMenuIconVisible() {
++        return menuIcon!=0? menuIconVisible:false;
++    }
++
++    public void setMenuIconVisible(boolean menuIconVisible) {
++        this.menuIconVisible = menuIconVisible;
++    }
++
++    public void setMenuText(int textResId) {
++        mMenuText.setText(textResId);
++    }
++    public void setMenuText(String text) {
++        mMenuText.setText(text);
++    }
++
++    public void setOnMenuTextClickListener(View.OnClickListener onMenuTextClickListener) {
++        ViewUtils.setOnClickListener(mMenuText,onMenuTextClickListener);
++    }
++
++    public void setNavigationText(String navigationText) {
++        mNavigationText.setText(navigationText);
++    }
++
++    public void setNavigationText(int textResId) {
++        mNavigationText.setText(textResId);
++    }
++
++    public void setNavigationTextClickListener(View.OnClickListener navigationTextClickListener) {
++        mNavigationText.setOnClickListener(navigationTextClickListener);
++    }
++
++    public void setMenuIcon(int menuIconResId) {
++        this.menuIcon = menuIconResId;
++    }
++
++    public int getMenuIcon() {
++        return menuIcon;
++    }
++
++    public boolean hasMenuIcon() {
++        return menuIcon!=0;
++    }
++
++    public void setNavigationTextVisibility(int navigationTextVisible) {
++        mNavigationText.setVisibility(navigationTextVisible);
++    }
++}
++
+Index: app/src/main/java/com/link/cloud/widget/ContentViewHolder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/ContentViewHolder.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/ContentViewHolder.java	(date 1537625212000)
+@@ -0,0 +1,171 @@
++package com.link.cloud.widget;
++
++import android.content.Context;
++import android.util.AttributeSet;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.Button;
++import android.widget.ProgressBar;
++import android.widget.TextView;
++import android.widget.ViewAnimator;
++
++import com.link.cloud.R;
++import com.zitech.framework.data.network.exception.ApiException;
++import com.zitech.framework.utils.NetworkUtil;
++
++
++
++/**
++ * 用于数据的几种加载状态
++ */
++
++public class ContentViewHolder extends ViewAnimator {
++
++    public static final int LOADING = 0;
++    public static final int RETRY = 1;
++    public static final int NO_DATA = 2;
++    public static final int CONTENT = 3;
++    protected Button retry;
++    private boolean retryInNoData = false;
++    protected TextView noData;
++    protected TextView errorPromptView;
++    protected ProgressBar progressBar;
++    private static final int CHILD_SIZE = 4;
++    private String noDataHint;
++    private CharSequence defaultErrorPrompt;
++
++    public ContentViewHolder(Context context) {
++        super(context);
++        initView();
++    }
++
++    //    private ViewCo
++    public ContentViewHolder(Context context, AttributeSet attrs) {
++        super(context, attrs);
++        initView();
++    }
++
++    @Override
++    protected void onFinishInflate() {
++        super.onFinishInflate();
++
++    }
++
++    public void showNoData() {
++        if (retryInNoData) {
++            if (errorPromptView != null)
++                errorPromptView.setText(noDataHint);
++            setDisplayedChild(RETRY);
++        } else {
++            setDisplayedChild(NO_DATA);
++        }
++    }
++
++    protected void initView() {
++        View v = inflateLayout();
++        retry = (Button) v.findViewById(R.id.retry_btn);
++        noData = (TextView) v.findViewById(R.id.no_data);
++        errorPromptView = (TextView) findViewById(R.id.error_prompt_view);
++        progressBar = (ProgressBar) v.findViewById(R.id.loading_progress);
++        defaultErrorPrompt = errorPromptView.getText();
++    }
++
++    public void setContent(View content) {
++        if (getChildCount() == CHILD_SIZE) {
++            removeViewAt(CONTENT);
++        }
++        ViewGroup parent = (ViewGroup) content.getParent();
++        ViewGroup.LayoutParams contentLayoutParams = content.getLayoutParams();
++        int index = parent.indexOfChild(content);
++        parent.removeView(content);
++        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
++        addView(content, CONTENT, params);
++        parent.addView(this, index, contentLayoutParams);
++    }
++
++    public void setEmptyView(View emptyView) {
++        removeViewAt(NO_DATA);
++        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
++        addView(emptyView, NO_DATA, params);
++    }
++
++    protected View inflateLayout() {
++        return inflate(getContext(), R.layout.content_view_holder, this);
++    }
++
++    public void showContent() {
++        setDisplayedChild(CONTENT);
++        progressBar.invalidate();
++    }
++
++    public void showLoading() {
++        setDisplayedChild(LOADING);
++    }
++
++    public void showRetry() {
++        setDisplayedChild(RETRY);
++        if (NetworkUtil.isNetworkAvailable()) {
++            setErrorPrompt(R.string.common_error_msg);
++        } else {
++            setErrorPrompt(R.string.common_no_network_msg);
++        }
++    }
++
++    public void showRetry(Throwable e) {
++        setDisplayedChild(RETRY);
++        if (NetworkUtil.isNetworkAvailable()) {
++            if (e != null && e instanceof ApiException) {
++                setErrorPrompt(e.getMessage());
++            } else {
++                setErrorPrompt(R.string.common_error_msg);
++            }
++        } else {
++            setErrorPrompt(R.string.common_no_network_msg);
++        }
++    }
++
++    public void showRetry(String retryPrompt) {
++        setDisplayedChild(RETRY);
++        setErrorPrompt(retryPrompt);
++    }
++
++    public void showEmpty() {
++        setDisplayedChild(NO_DATA);
++    }
++
++    public void showEmpty(String noDataPrompt) {
++        setDisplayedChild(NO_DATA);
++        setNoDataPrompt(noDataPrompt);
++    }
++
++
++    public void setRetryListener(final OnClickListener listener) {
++        retry.setOnClickListener(new OnClickListener() {
++            @Override
++            public void onClick(View view) {
++                listener.onClick(view);
++            }
++        });
++    }
++
++
++    public void setDefaultEmptyImage(int resId) {
++        noData.setBackgroundResource(resId);
++    }
++
++    public void setNoDataPrompt(String noDataPrompt) {
++        noData.setText(noDataPrompt);
++    }
++
++    public void setErrorPrompt(int resId) {
++        errorPromptView.setText(resId);
++    }
++
++    public void setErrorPrompt(CharSequence errorPrompt) {
++        errorPromptView.setText(errorPrompt);
++    }
++
++    public int getCurrentViewIndex() {
++        return indexOfChild(getCurrentView());
++    }
++}
+Index: app/src/main/java/com/link/cloud/widget/SimpleStyleDialog.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/SimpleStyleDialog.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/SimpleStyleDialog.java	(date 1537625212000)
+@@ -0,0 +1,122 @@
++package com.link.cloud.widget;
++
++import android.app.Dialog;
++import android.content.Context;
++import android.view.View;
++import android.widget.Button;
++import android.widget.CheckBox;
++import android.widget.CompoundButton;
++import android.widget.TextView;
++
++import com.link.cloud.R;
++import com.zitech.framework.utils.ViewUtils;
++import com.zitech.framework.widget.ValidDialog;
++
++public class SimpleStyleDialog extends ValidDialog {
++    private TextView contentView;
++    private Button confirm;
++    private Button cancel;
++    private OnPositiveButtonClickListener onPositiveButtonClickListener;
++    private OnCancelButtonClickListener onCancelButtonClickListener;
++    private View divider;
++    private CheckBox agree;
++
++    public SimpleStyleDialog(Context context, int resId) {
++        this(context, context.getString(resId));
++    }
++
++
++    private TextView titleView;
++
++    public interface OnPositiveButtonClickListener {
++        public void onClick(Dialog dialog);
++    }
++
++    public interface OnCancelButtonClickListener {
++        public void onClick(Dialog dialog);
++    }
++
++    public SimpleStyleDialog(Context context, CharSequence content) {
++        super(context, R.style.CommonDialog);
++        setContentView(R.layout.dialog_simple_style);
++        contentView = (TextView) findViewById(R.id.content);
++        titleView = (TextView) findViewById(R.id.title);
++        divider = findViewById(R.id.divider);
++        // titleView.setText(title);
++        agree = (CheckBox) findViewById(R.id.agree);
++        contentView.setText(content);
++        confirm = (Button) findViewById(R.id.confirm);
++        cancel = (Button) findViewById(R.id.cancle);
++
++        ViewUtils.setOnClickListener(confirm, new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                dismiss();
++                if (onPositiveButtonClickListener != null)
++                    onPositiveButtonClickListener.onClick(SimpleStyleDialog.this);
++            }
++        });
++        ViewUtils.setOnClickListener(cancel, new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                if (onCancelButtonClickListener != null) {
++                    onCancelButtonClickListener.onClick(SimpleStyleDialog.this);
++                }
++                cancel();
++            }
++        });
++    }
++
++    public void setTitle(String title) {
++        titleView.setVisibility(View.VISIBLE);
++        titleView.setText(title);
++    }
++
++    public void setContent(String content) {
++        contentView.setText(content);
++    }
++
++    public void setContent(String content, int color) {
++        contentView.setText(content);
++        contentView.setTextColor(color);
++    }
++
++    public void setConfirmStyle(boolean confirmStyle) {
++        if (confirmStyle) {
++            cancel.setVisibility(View.GONE);
++            divider.setVisibility(View.GONE);
++        } else {
++            cancel.setVisibility(View.VISIBLE);
++            divider.setVisibility(View.VISIBLE);
++        }
++    }
++
++    public void setOnAgreeCheckedChangeListener(CompoundButton.OnCheckedChangeListener l) {
++        agree.setVisibility(View.VISIBLE);
++        agree.setOnCheckedChangeListener(l);
++    }
++
++    public void setPositiveButtonText(String text) {
++        confirm.setText(text);
++    }
++
++    public void setPositiveButtonTextColor(int textColor) {
++        confirm.setTextColor(textColor);
++    }
++
++    public void setPositiveButtonText(int resId) {
++        confirm.setText(resId);
++    }
++
++    public void setCancelButtonText(String text) {
++        cancel.setText(text);
++    }
++
++    public void setOnPositiveButtonClickListener(OnPositiveButtonClickListener onPositiveButtonClickListener) {
++        this.onPositiveButtonClickListener = onPositiveButtonClickListener;
++    }
++
++    public void setOnCancelButtonClickListener(OnCancelButtonClickListener onNegativeButtonClickListener) {
++        this.onCancelButtonClickListener = onNegativeButtonClickListener;
++    }
++}
+Index: app/src/main/java/com/link/cloud/widget/CircularProgressBar.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/CircularProgressBar.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/CircularProgressBar.java	(date 1537625212000)
+@@ -0,0 +1,101 @@
++/*
++ * Copyright (c) 2015 [1076559197@qq.com | tchen0707@gmail.com]
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License”);
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *    http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.link.cloud.widget;
++
++
++import android.content.Context;
++import android.content.res.Resources;
++import android.content.res.TypedArray;
++import android.graphics.drawable.Drawable;
++import android.util.AttributeSet;
++import android.widget.ProgressBar;
++
++import com.link.cloud.R;
++
++
++/**
++ * Created by castorflex on 11/10/13.
++ */
++public class CircularProgressBar extends ProgressBar {
++
++  public CircularProgressBar(Context context) {
++    this(context, null);
++  }
++
++  public CircularProgressBar(Context context, AttributeSet attrs) {
++    this(context, attrs, R.attr.cpbStyle);
++  }
++
++  public CircularProgressBar(Context context, AttributeSet attrs, int defStyle) {
++    super(context, attrs, defStyle);
++
++    if (isInEditMode()) {
++      setIndeterminateDrawable(new CircularProgressDrawable.Builder(context, true).build());
++      return;
++    }
++
++    Resources res = context.getResources();
++    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularProgressBar, defStyle, 0);
++
++
++    final int color = a.getColor(R.styleable.CircularProgressBar_cpb_color, res.getColor(R.color.cpb_default_color));
++    final float strokeWidth = a.getDimension(R.styleable.CircularProgressBar_cpb_stroke_width, res.getDimension(R.dimen.cpb_default_stroke_width));
++    final float sweepSpeed = a.getFloat(R.styleable.CircularProgressBar_cpb_sweep_speed, Float.parseFloat(res.getString(R.string.cpb_default_sweep_speed)));
++    final float rotationSpeed = a.getFloat(R.styleable.CircularProgressBar_cpb_rotation_speed, Float.parseFloat(res.getString(R.string.cpb_default_rotation_speed)));
++    final int colorsId = a.getResourceId(R.styleable.CircularProgressBar_cpb_colors, 0);
++    final int minSweepAngle = a.getInteger(R.styleable.CircularProgressBar_cpb_min_sweep_angle, res.getInteger(R.integer.cpb_default_min_sweep_angle));
++    final int maxSweepAngle = a.getInteger(R.styleable.CircularProgressBar_cpb_max_sweep_angle, res.getInteger(R.integer.cpb_default_max_sweep_angle));
++    a.recycle();
++
++    int[] colors = null;
++    //colors
++    if (colorsId != 0) {
++      colors = res.getIntArray(colorsId);
++    }
++
++    Drawable indeterminateDrawable;
++    CircularProgressDrawable.Builder builder = new CircularProgressDrawable.Builder(context)
++        .sweepSpeed(sweepSpeed)
++        .rotationSpeed(rotationSpeed)
++        .strokeWidth(strokeWidth)
++        .minSweepAngle(minSweepAngle)
++        .maxSweepAngle(maxSweepAngle);
++
++    if (colors != null && colors.length > 0)
++      builder.colors(colors);
++    else
++      builder.color(color);
++
++    indeterminateDrawable = builder.build();
++    setIndeterminateDrawable(indeterminateDrawable);
++  }
++
++  private CircularProgressDrawable checkIndeterminateDrawable() {
++     Drawable ret = getIndeterminateDrawable();
++     if (ret == null || !(ret instanceof CircularProgressDrawable))
++        throw new RuntimeException("The drawable is not a CircularProgressDrawable");
++     return (CircularProgressDrawable) ret;
++  }
++
++  public void progressiveStop() {
++    checkIndeterminateDrawable().progressiveStop();
++  }
++
++  public void progressiveStop(CircularProgressDrawable.OnEndListener listener) {
++    checkIndeterminateDrawable().progressiveStop(listener);
++  }
++}
+Index: app/src/main/java/com/link/cloud/widget/CircularProgressBarUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/CircularProgressBarUtils.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/CircularProgressBarUtils.java	(date 1537625212000)
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (c) 2015 [1076559197@qq.com | tchen0707@gmail.com]
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License”);
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *    http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.link.cloud.widget;
++
++
++
++
++import android.animation.ValueAnimator;
++
++import static java.lang.Math.min;
++
++/**
++ * Created by castorflex on 8/14/14.
++ */
++ class CircularProgressBarUtils {
++
++  private CircularProgressBarUtils() {
++  }
++
++  static void checkSpeed(float speed) {
++    if (speed <= 0f)
++      throw new IllegalArgumentException("Speed must be >= 0");
++  }
++
++  static void checkColors(int[] colors) {
++    if (colors == null || colors.length == 0)
++      throw new IllegalArgumentException("You must provide at least 1 color");
++  }
++
++  static void checkAngle(int angle) {
++    if (angle < 0 || angle > 360)
++      throw new IllegalArgumentException(String.format("Illegal angle %d: must be >=0 and <= 360", angle));
++  }
++
++  static void checkPositiveOrZero(float number, String name) {
++    if (number < 0)
++      throw new IllegalArgumentException(String.format("%s %d must be positive", name, number));
++  }
++
++  static void checkPositive(int number, String name) {
++    if (number <= 0)
++      throw new IllegalArgumentException(String.format("%s must not be null", name));
++  }
++
++  static void checkNotNull(Object o, String name) {
++    if (o == null)
++      throw new IllegalArgumentException(String.format("%s must be not null", name));
++  }
++
++  static float getAnimatedFraction(ValueAnimator animator) {
++    float fraction = animator.getDuration() > 0 ? ((float) animator.getCurrentPlayTime()) / animator.getDuration() : 0f;
++
++    fraction = min(fraction, 1f);
++    fraction = animator.getInterpolator().getInterpolation(fraction);
++    return fraction;
++  }
++}
+Index: app/src/main/java/com/link/cloud/widget/CircularProgressDrawable.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/widget/CircularProgressDrawable.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/widget/CircularProgressDrawable.java	(date 1537625212000)
+@@ -0,0 +1,511 @@
++/*
++ * Copyright (c) 2015 [1076559197@qq.com | tchen0707@gmail.com]
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License”);
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *    http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.link.cloud.widget;
++
++import android.animation.Animator;
++import android.animation.ArgbEvaluator;
++import android.animation.ValueAnimator;
++import android.annotation.TargetApi;
++import android.content.Context;
++import android.graphics.Canvas;
++import android.graphics.Color;
++import android.graphics.ColorFilter;
++import android.graphics.Paint;
++import android.graphics.PixelFormat;
++import android.graphics.Rect;
++import android.graphics.RectF;
++import android.graphics.drawable.Animatable;
++import android.graphics.drawable.Drawable;
++import android.os.Build;
++import android.view.animation.DecelerateInterpolator;
++import android.view.animation.Interpolator;
++import android.view.animation.LinearInterpolator;
++
++import com.link.cloud.R;
++
++
++@TargetApi(Build.VERSION_CODES.HONEYCOMB)
++public class CircularProgressDrawable extends Drawable
++        implements Animatable {
++
++    public enum Style {NORMAL, ROUNDED}
++
++    public interface OnEndListener {
++        public void onEnd(CircularProgressDrawable drawable);
++    }
++
++    private static final ArgbEvaluator COLOR_EVALUATOR = new ArgbEvaluator();
++    public static final Interpolator END_INTERPOLATOR = new LinearInterpolator();
++    private static final Interpolator DEFAULT_ROTATION_INTERPOLATOR = new LinearInterpolator();
++    private static final Interpolator DEFAULT_SWEEP_INTERPOLATOR = new DecelerateInterpolator();
++    private static final int ROTATION_ANIMATOR_DURATION = 2000;
++    private static final int SWEEP_ANIMATOR_DURATION = 600;
++    private static final int END_ANIMATOR_DURATION = 200;
++
++    private final RectF fBounds = new RectF();
++
++    private ValueAnimator mSweepAppearingAnimator;
++    private ValueAnimator mSweepDisappearingAnimator;
++    private ValueAnimator mRotationAnimator;
++    private ValueAnimator mEndAnimator;
++    private OnEndListener mOnEndListener;
++    private boolean mModeAppearing;
++    private Paint mPaint;
++    private boolean mRunning;
++    private int mCurrentColor;
++    private int mCurrentIndexColor;
++    private float mCurrentSweepAngle;
++    private float mCurrentRotationAngleOffset = 0;
++    private float mCurrentRotationAngle = 0;
++    private float mCurrentEndRatio = 1f;
++
++    //params
++    private Interpolator mAngleInterpolator;
++    private Interpolator mSweepInterpolator;
++    private float mBorderWidth;
++    private int[] mColors;
++    private float mSweepSpeed;
++    private float mRotationSpeed;
++    private int mMinSweepAngle;
++    private int mMaxSweepAngle;
++    private boolean mFirstSweepAnimation;
++
++    private CircularProgressDrawable(int[] colors,
++                                     float borderWidth,
++                                     float sweepSpeed,
++                                     float rotationSpeed,
++                                     int minSweepAngle,
++                                     int maxSweepAngle,
++                                     Style style,
++                                     Interpolator angleInterpolator,
++                                     Interpolator sweepInterpolator) {
++        mSweepInterpolator = sweepInterpolator;
++        mAngleInterpolator = angleInterpolator;
++        mBorderWidth = borderWidth;
++        mCurrentIndexColor = 0;
++        mColors = colors;
++        mCurrentColor = mColors[0];
++        mSweepSpeed = sweepSpeed;
++        mRotationSpeed = rotationSpeed;
++        mMinSweepAngle = minSweepAngle;
++        mMaxSweepAngle = maxSweepAngle;
++
++        mPaint = new Paint();
++        mPaint.setAntiAlias(true);
++        mPaint.setStyle(Paint.Style.STROKE);
++        mPaint.setStrokeWidth(borderWidth);
++        mPaint.setStrokeCap(style == Style.ROUNDED ? Paint.Cap.ROUND : Paint.Cap.BUTT);
++        mPaint.setColor(mColors[0]);
++
++        setupAnimations();
++    }
++
++    private void reinitValues() {
++        mFirstSweepAnimation = true;
++        mCurrentEndRatio = 1f;
++        mPaint.setColor(mCurrentColor);
++    }
++
++    @Override
++    public void draw(Canvas canvas) {
++        float startAngle = mCurrentRotationAngle - mCurrentRotationAngleOffset;
++        float sweepAngle = mCurrentSweepAngle;
++        if (!mModeAppearing) {
++            startAngle = startAngle + (360 - sweepAngle);
++        }
++        startAngle %= 360;
++        if (mCurrentEndRatio < 1f) {
++            float newSweepAngle = sweepAngle * mCurrentEndRatio;
++            startAngle = (startAngle + (sweepAngle - newSweepAngle)) % 360;
++            sweepAngle = newSweepAngle;
++        }
++        canvas.drawArc(fBounds, startAngle, sweepAngle, false, mPaint);
++    }
++
++    @Override
++    public void setAlpha(int alpha) {
++        mPaint.setAlpha(alpha);
++    }
++
++    @Override
++    public void setColorFilter(ColorFilter cf) {
++        mPaint.setColorFilter(cf);
++    }
++
++    @Override
++    public int getOpacity() {
++        return PixelFormat.TRANSLUCENT;
++    }
++
++    @Override
++    protected void onBoundsChange(Rect bounds) {
++        super.onBoundsChange(bounds);
++        fBounds.left = bounds.left + mBorderWidth / 2f + .5f;
++        fBounds.right = bounds.right - mBorderWidth / 2f - .5f;
++        fBounds.top = bounds.top + mBorderWidth / 2f + .5f;
++        fBounds.bottom = bounds.bottom - mBorderWidth / 2f - .5f;
++    }
++
++    private void setAppearing() {
++        mModeAppearing = true;
++        mCurrentRotationAngleOffset += mMinSweepAngle;
++    }
++
++    private void setDisappearing() {
++        mModeAppearing = false;
++        mCurrentRotationAngleOffset = mCurrentRotationAngleOffset + (360 - mMaxSweepAngle);
++    }
++
++    //////////////////////////////////////////////////////////////////////////////
++    ////////////////            Animation
++
++    private void setupAnimations() {
++        mRotationAnimator = ValueAnimator.ofFloat(0f, 360f);
++        mRotationAnimator.setInterpolator(mAngleInterpolator);
++        mRotationAnimator.setDuration((long) (ROTATION_ANIMATOR_DURATION / mRotationSpeed));
++        mRotationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
++            @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
++            @Override
++            public void onAnimationUpdate(ValueAnimator animation) {
++                float angle = animation.getAnimatedFraction() * 360f;
++                setCurrentRotationAngle(angle);
++            }
++        });
++        mRotationAnimator.setRepeatCount(ValueAnimator.INFINITE);
++        mRotationAnimator.setRepeatMode(ValueAnimator.RESTART);
++
++        mSweepAppearingAnimator = ValueAnimator.ofFloat(mMinSweepAngle, mMaxSweepAngle);
++        mSweepAppearingAnimator.setInterpolator(mSweepInterpolator);
++        mSweepAppearingAnimator.setDuration((long) (SWEEP_ANIMATOR_DURATION / mSweepSpeed));
++        mSweepAppearingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
++            @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
++            @Override
++            public void onAnimationUpdate(ValueAnimator animation) {
++                float animatedFraction = animation.getAnimatedFraction();
++                float angle;
++                if (mFirstSweepAnimation) {
++                    angle = animatedFraction * mMaxSweepAngle;
++                } else {
++                    angle = mMinSweepAngle + animatedFraction * (mMaxSweepAngle - mMinSweepAngle);
++                }
++                setCurrentSweepAngle(angle);
++            }
++        });
++        mSweepAppearingAnimator.addListener(new Animator.AnimatorListener() {
++            boolean cancelled = false;
++
++            @Override
++            public void onAnimationStart(Animator animation) {
++                cancelled = false;
++                mModeAppearing = true;
++            }
++
++            @Override
++            public void onAnimationEnd(Animator animation) {
++                if (!cancelled) {
++                    mFirstSweepAnimation = false;
++                    setDisappearing();
++                    mSweepDisappearingAnimator.start();
++                }
++            }
++
++            @Override
++            public void onAnimationCancel(Animator animation) {
++                cancelled = true;
++            }
++
++            @Override
++            public void onAnimationRepeat(Animator animation) {
++            }
++        });
++
++        mSweepDisappearingAnimator = ValueAnimator.ofFloat(mMaxSweepAngle, mMinSweepAngle);
++        mSweepDisappearingAnimator.setInterpolator(mSweepInterpolator);
++        mSweepDisappearingAnimator.setDuration((long) (SWEEP_ANIMATOR_DURATION / mSweepSpeed));
++        mSweepDisappearingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
++            @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
++            @Override
++            public void onAnimationUpdate(ValueAnimator animation) {
++                float animatedFraction = animation.getAnimatedFraction();
++                setCurrentSweepAngle(mMaxSweepAngle - animatedFraction * (mMaxSweepAngle - mMinSweepAngle));
++
++                long duration = animation.getDuration();
++                long played = animation.getCurrentPlayTime();
++                float fraction = (float) played / duration;
++                if (mColors.length > 1 && fraction > .7f) { //because
++                    int prevColor = mCurrentColor;
++                    int nextColor = mColors[(mCurrentIndexColor + 1) % mColors.length];
++                    int newColor = (Integer) COLOR_EVALUATOR.evaluate((fraction - .7f) / (1 - .7f), prevColor, nextColor);
++                    mPaint.setColor(newColor);
++                }
++            }
++        });
++        mSweepDisappearingAnimator.addListener(new Animator.AnimatorListener() {
++            boolean cancelled;
++
++            @Override
++            public void onAnimationStart(Animator animation) {
++                cancelled = false;
++            }
++
++            @Override
++            public void onAnimationEnd(Animator animation) {
++                if (!cancelled) {
++                    setAppearing();
++                    mCurrentIndexColor = (mCurrentIndexColor + 1) % mColors.length;
++                    mCurrentColor = mColors[mCurrentIndexColor];
++                    mPaint.setColor(mCurrentColor);
++                    mSweepAppearingAnimator.start();
++                }
++            }
++
++            @Override
++            public void onAnimationCancel(Animator animation) {
++                cancelled = true;
++            }
++
++            @Override
++            public void onAnimationRepeat(Animator animation) {
++            }
++        });
++        mEndAnimator = ValueAnimator.ofFloat(1f, 0f);
++        mEndAnimator.setInterpolator(END_INTERPOLATOR);
++        mEndAnimator.setDuration(END_ANIMATOR_DURATION);
++        mEndAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
++            @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
++            @Override
++            public void onAnimationUpdate(ValueAnimator animation) {
++                setEndRatio(1f - animation.getAnimatedFraction());
++
++            }
++        });
++        mEndAnimator.addListener(new Animator.AnimatorListener() {
++            private boolean cancelled;
++
++            @Override
++            public void onAnimationStart(Animator animation) {
++                cancelled = false;
++            }
++
++            @Override
++            public void onAnimationEnd(Animator animation) {
++                setEndRatio(0f);
++                if (!cancelled) stop();
++            }
++
++            @Override
++            public void onAnimationCancel(Animator animation) {
++                cancelled = true;
++            }
++
++            @Override
++            public void onAnimationRepeat(Animator animation) {
++
++            }
++        });
++    }
++
++    @Override
++    public void start() {
++        if (isRunning()) {
++            return;
++        }
++        mRunning = true;
++        reinitValues();
++        mRotationAnimator.start();
++        mSweepAppearingAnimator.start();
++        invalidateSelf();
++    }
++
++    @Override
++    public void stop() {
++        if (!isRunning()) {
++            return;
++        }
++        mRunning = false;
++        stopAnimators();
++        invalidateSelf();
++    }
++
++    private void stopAnimators() {
++        mRotationAnimator.cancel();
++        mSweepAppearingAnimator.cancel();
++        mSweepDisappearingAnimator.cancel();
++        mEndAnimator.cancel();
++    }
++
++    public void progressiveStop(OnEndListener listener) {
++        if (!isRunning() || mEndAnimator.isRunning()) {
++            return;
++        }
++        mOnEndListener = listener;
++        mEndAnimator.addListener(new Animator.AnimatorListener() {
++            @Override
++            public void onAnimationStart(Animator animation) {
++
++            }
++
++            @Override
++            public void onAnimationEnd(Animator animation) {
++                mEndAnimator.removeListener(this);
++                if (mOnEndListener != null) mOnEndListener.onEnd(CircularProgressDrawable.this);
++            }
++
++            @Override
++            public void onAnimationCancel(Animator animation) {
++
++            }
++
++            @Override
++            public void onAnimationRepeat(Animator animation) {
++
++            }
++        });
++        mEndAnimator.start();
++    }
++
++    public void progressiveStop() {
++        progressiveStop(null);
++    }
++
++    @Override
++    public boolean isRunning() {
++        return mRunning;
++    }
++
++    public void setCurrentRotationAngle(float currentRotationAngle) {
++        mCurrentRotationAngle = currentRotationAngle;
++        invalidateSelf();
++    }
++
++    public void setCurrentSweepAngle(float currentSweepAngle) {
++        mCurrentSweepAngle = currentSweepAngle;
++        invalidateSelf();
++    }
++
++    private void setEndRatio(float ratio) {
++        mCurrentEndRatio = ratio;
++        invalidateSelf();
++    }
++
++    public static class Builder {
++        private int[] mColors;
++        private float mSweepSpeed;
++        private float mRotationSpeed;
++        private float mStrokeWidth;
++        private int mMinSweepAngle;
++        private int mMaxSweepAngle;
++        private Style mStyle;
++        private Interpolator mSweepInterpolator = DEFAULT_SWEEP_INTERPOLATOR;
++        private Interpolator mAngleInterpolator = DEFAULT_ROTATION_INTERPOLATOR;
++
++        public Builder(Context context) {
++            this(context, false);
++        }
++
++        public Builder(Context context, boolean editMode) {
++            initValues(context, editMode);
++        }
++
++        private void initValues(Context context, boolean editMode) {
++            mStrokeWidth = context.getResources().getDimension(R.dimen.cpb_default_stroke_width);
++            mSweepSpeed = 1f;
++            mRotationSpeed = 1f;
++            if (editMode) {
++                mColors = new int[]{Color.BLUE};
++                mMinSweepAngle = 20;
++                mMaxSweepAngle = 300;
++            } else {
++                mColors = new int[]{context.getResources().getColor(R.color.cpb_default_color)};
++                mMinSweepAngle = context.getResources().getInteger(R.integer.cpb_default_min_sweep_angle);
++                mMaxSweepAngle = context.getResources().getInteger(R.integer.cpb_default_max_sweep_angle);
++            }
++            mStyle = Style.ROUNDED;
++        }
++
++        public Builder color(int color) {
++            mColors = new int[]{color};
++            return this;
++        }
++
++        public Builder colors(int[] colors) {
++            CircularProgressBarUtils.checkColors(colors);
++            mColors = colors;
++            return this;
++        }
++
++        public Builder sweepSpeed(float sweepSpeed) {
++            CircularProgressBarUtils.checkSpeed(sweepSpeed);
++            mSweepSpeed = sweepSpeed;
++            return this;
++        }
++
++        public Builder rotationSpeed(float rotationSpeed) {
++            CircularProgressBarUtils.checkSpeed(rotationSpeed);
++            mRotationSpeed = rotationSpeed;
++            return this;
++        }
++
++        public Builder minSweepAngle(int minSweepAngle) {
++            CircularProgressBarUtils.checkAngle(minSweepAngle);
++            mMinSweepAngle = minSweepAngle;
++            return this;
++        }
++
++        public Builder maxSweepAngle(int maxSweepAngle) {
++            CircularProgressBarUtils.checkAngle(maxSweepAngle);
++            mMaxSweepAngle = maxSweepAngle;
++            return this;
++        }
++
++        public Builder strokeWidth(float strokeWidth) {
++            CircularProgressBarUtils.checkPositiveOrZero(strokeWidth, "StrokeWidth");
++            mStrokeWidth = strokeWidth;
++            return this;
++        }
++
++        public Builder style(Style style) {
++            CircularProgressBarUtils.checkNotNull(style, "Style");
++            mStyle = style;
++            return this;
++        }
++
++        public Builder sweepInterpolator(Interpolator interpolator) {
++            CircularProgressBarUtils.checkNotNull(interpolator, "Sweep interpolator");
++            mSweepInterpolator = interpolator;
++            return this;
++        }
++
++        public Builder angleInterpolator(Interpolator interpolator) {
++            CircularProgressBarUtils.checkNotNull(interpolator, "Angle interpolator");
++            mAngleInterpolator = interpolator;
++            return this;
++        }
++
++        public CircularProgressDrawable build() {
++            return new CircularProgressDrawable(mColors,
++                    mStrokeWidth,
++                    mSweepSpeed,
++                    mRotationSpeed,
++                    mMinSweepAngle,
++                    mMaxSweepAngle,
++                    mStyle,
++                    mAngleInterpolator,
++                    mSweepInterpolator);
++        }
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/link/cloud/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/User.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/User.java	(date 1537625212000)
+@@ -0,0 +1,278 @@
++package com.link.cloud;
++
++
++import com.zitech.framework.SP;
++
++/**
++ * Created by ymh on 2016/7/1 0001.
++ */
++public class User {
++
++    private static final String CHANNEL = "channel";
++    private static final String CUSTOMERID = "customerId";
++    private static final String MOBILE = "mobile";
++    private static final String NICKNAME = "nickName";
++    private static final String HEADIMGURL = "headImgUrl";
++    private static final String REALNAME = "realName";
++    private static final String IDCARD = "idCard";
++    private static final String IDCARDIMG1 = "idcardImg1";
++    private static final String IDCARDIMG2 = "idcardImg2";
++    private static final String REALNAMESTATUS = "realNameStatus";
++    private static final String VIP = "vip";
++    private static final String TOKEN = "token";
++    private static final String VIPEXPENSES = "vipExpenses";//VIP会员费用
++    private static final String OUTFEE = "outfee";//提币手续费比例
++    private static final String COINPRICE = "coinprice";//虚拟币价格
++    private static final String ICONINTRO = "iconintro";//虚拟币介绍
++    private static final String ICONQRCODEURL = "iconqrcodeurl";
++    private static final String ICONADDRESS = "iconaddress";
++
++
++
++
++    private SP sp;
++    private String channel;
++    private int customerId;
++    private String mobile;
++    private String nickName;
++    private String headImgUrl;
++    private String realName;
++    private String idCard;
++    private String idcardImg1;
++    private String idcardImg2;
++    private int realNameStatus;
++    private boolean vip;
++    private String token;
++    private String vipExpenses;
++    private String outfee;
++    private String coinprice;
++    private String iconintro;
++    private String iconqrcodeurl;
++    private String iconaddress;
++
++
++    public static User get() {
++        return MacApplication.getInstance().getUser();
++    }
++
++    public User() {
++        super();
++        sp = new SP("USER_DATA");
++        token = sp.getString(TOKEN, "");
++        channel = sp.getString(CHANNEL, "");
++        customerId = sp.getInt(CUSTOMERID, 0);
++        mobile = sp.getString(MOBILE, "");
++        nickName = sp.getString(NICKNAME, "");
++        headImgUrl = sp.getString(HEADIMGURL, "");
++        realName = sp.getString(REALNAME, "");
++        idCard = sp.getString(IDCARD, "");
++        idcardImg1 = sp.getString(IDCARDIMG1, "");
++        idcardImg2 = sp.getString(IDCARDIMG2, "");
++        realNameStatus = sp.getInt(REALNAMESTATUS, 0);
++        vip = sp.getBoolean(VIP, false);
++        vipExpenses = sp.getString(VIPEXPENSES, "");
++        outfee = sp.getString(OUTFEE, "");
++        coinprice = sp.getString(COINPRICE, "");
++        iconintro = sp.getString(ICONINTRO, "");
++        iconqrcodeurl=sp.getString(ICONQRCODEURL,"");
++        iconaddress=sp.getString(ICONADDRESS,"");
++
++    }
++
++
++    public String getIconaddress() {
++        return iconaddress;
++    }
++
++    public void setIconaddress(String iconaddress) {
++        this.iconaddress = iconaddress;
++        sp.putString(ICONADDRESS,iconaddress);
++    }
++
++    public String getIconqrcodeurl() {
++        return iconqrcodeurl;
++    }
++
++    public void setIconqrcodeurl(String iconqrcodeurl) {
++        this.iconqrcodeurl = iconqrcodeurl;
++        sp.putString(ICONQRCODEURL, iconqrcodeurl);
++    }
++
++    public String getCoinprice() {
++        return coinprice;
++    }
++
++    public void setCoinprice(String coinprice) {
++        this.coinprice = coinprice;
++        sp.putString(COINPRICE, coinprice);
++    }
++
++    public String getIconintro() {
++        return iconintro;
++    }
++
++    public void setIconintro(String iconintro) {
++        this.iconintro = iconintro;
++        sp.putString(ICONINTRO, iconintro);
++    }
++
++    public String getOutfee() {
++        return outfee;
++    }
++
++    public void setOutfee(String outfee) {
++        this.outfee = outfee;
++        sp.putString(OUTFEE, outfee);
++    }
++
++    public String getVipExpenses() {
++        return vipExpenses;
++    }
++
++    public void setVipExpenses(String vipExpenses) {
++        this.vipExpenses = vipExpenses;
++        sp.putString(VIPEXPENSES, vipExpenses);
++    }
++
++    public String getChannel() {
++        return channel;
++    }
++
++    public void setChannel(String channel) {
++        this.channel = channel;
++        sp.putString(CHANNEL, channel);
++    }
++
++    public int getCustomerId() {
++        return customerId;
++
++    }
++
++    public void setCustomerId(int customerId) {
++        this.customerId = customerId;
++        sp.putInt(CUSTOMERID, customerId);
++    }
++
++    public String getMobile() {
++        return mobile;
++    }
++
++    public void setMobile(String mobile) {
++        this.mobile = mobile;
++        sp.putString(MOBILE, mobile);
++    }
++
++    public String getNickName() {
++        return nickName;
++    }
++
++    public void setNickName(String nickName) {
++        this.nickName = nickName;
++        sp.putString(NICKNAME, nickName);
++    }
++
++    public String getHeadImgUrl() {
++        return headImgUrl;
++    }
++
++    public void setHeadImgUrl(String headImgUrl) {
++        this.headImgUrl = headImgUrl;
++        sp.putString(HEADIMGURL, headImgUrl);
++    }
++
++    public String getRealName() {
++        return realName;
++    }
++
++    public void setRealName(String realName) {
++        this.realName = realName;
++        sp.putString(REALNAME, realName);
++    }
++
++    public String getIdCard() {
++        return idCard;
++    }
++
++    public void setIdCard(String idCard) {
++        this.idCard = idCard;
++        sp.putString(IDCARD, idCard);
++    }
++
++    public String getIdcardImg1() {
++        return idcardImg1;
++    }
++
++    public void setIdcardImg1(String idcardImg1) {
++        this.idcardImg1 = idcardImg1;
++        sp.putString(IDCARDIMG1, idcardImg1);
++    }
++
++    public String getIdcardImg2() {
++        return idcardImg2;
++    }
++
++    public void setIdcardImg2(String idcardImg2) {
++        this.idcardImg2 = idcardImg2;
++        sp.putString(IDCARDIMG2, idcardImg2);
++    }
++
++    public int getRealNameStatus() {
++        return realNameStatus;
++    }
++
++    public void setRealNameStatus(int realNameStatus) {
++        this.realNameStatus = realNameStatus;
++        sp.putInt(REALNAMESTATUS, realNameStatus);
++    }
++
++    public boolean isVip() {
++        return vip;
++    }
++
++    public void setVip(boolean vip) {
++        this.vip = vip;
++        sp.putBoolean(VIP, vip);
++
++    }
++
++    public String getToken() {
++        return token;
++    }
++
++    public void setToken(String token) {
++        this.token = token;
++        sp.putString(TOKEN, token);
++    }
++
++
++    public void clear() {
++
++        sp.remove(TOKEN);
++        token = "";
++
++        sp.remove(CHANNEL);
++        channel = "";
++        sp.remove(CUSTOMERID);
++        customerId = 0;
++        sp.remove(MOBILE);
++        mobile = "";
++        sp.remove(NICKNAME);
++        nickName = "";
++        sp.remove(HEADIMGURL);
++        headImgUrl = "";
++        sp.remove(REALNAME);
++        realName = "";
++        sp.remove(IDCARD);
++        idCard = "";
++        sp.remove(IDCARDIMG1);
++        idcardImg1 = "";
++        sp.remove(IDCARDIMG2);
++        idcardImg2 = "";
++        sp.remove(REALNAMESTATUS);
++        realNameStatus = 0;
++        sp.remove(VIP);
++        vip = false;
++
++
++    }
++}
+Index: app/src/main/java/com/link/cloud/MacApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/MacApplication.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/MacApplication.java	(date 1537625212000)
+@@ -0,0 +1,34 @@
++package com.link.cloud;
++
++import android.os.Handler;
++import android.os.Looper;
++
++import com.zitech.framework.BaseApplication;
++
++public class MacApplication extends BaseApplication {
++
++    private User user;
++    private Handler mainThreadHandler;
++
++    @Override
++    public void onCreate() {
++        super.onCreate();
++        user = new User();
++        mainThreadHandler = new Handler(Looper.getMainLooper());
++    }
++
++    public void post(Runnable r) {
++        mainThreadHandler.post(r);
++    }
++
++
++    public User getUser() {
++        return user;
++    }
++
++
++    public static MacApplication getInstance() {
++        return (MacApplication) BaseApplication.getInstance();
++    }
++
++}
+Index: app/src/main/java/com/link/cloud/activity/DemoActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/activity/DemoActivity.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/activity/DemoActivity.java	(date 1537625212000)
+@@ -0,0 +1,21 @@
++package com.link.cloud.activity;
++
++import android.annotation.SuppressLint;
++import android.os.Bundle;
++
++import com.link.cloud.R;
++import com.link.cloud.base.AppBarActivity;
++
++@SuppressLint("Registered")
++public class DemoActivity extends AppBarActivity {
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setTitle(R.mipmap.ic_no_data);
++    }
++
++    @Override
++    protected int getLayoutId() {
++        return R.layout.activity_demo;
++    }
++}
+Index: app/src/main/java/com/link/cloud/activity/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/activity/MainActivity.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/activity/MainActivity.java	(date 1537625212000)
+@@ -1,6 +1,7 @@
+ package com.link.cloud.activity;
+ 
+ import android.content.Intent;
++import android.os.Bundle;
+ import android.support.v4.app.FragmentManager;
+ import android.support.v4.app.FragmentTransaction;
+ import android.view.View;
+@@ -36,7 +37,18 @@
+     private Group_Lesson_Fragment group_lesson_fragment;
+ 
+     @Override
+-    protected void initViews() {
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        initViews();
++    }
++
++    @Override
++    protected int getLayoutId() {
++        return R.layout.activity_main;
++    }
++
++    private  void initViews() {
++
+         FragmentManager manager = getSupportFragmentManager();
+         FragmentTransaction fragmentTransaction = manager.beginTransaction();
+         lessonChoose_fragment = new LessonChoose_Fragment();
+@@ -44,10 +56,6 @@
+         fragmentTransaction.commit();
+     }
+ 
+-    @Override
+-    protected int setLayoutID() {
+-        return R.layout.activity_main;
+-    }
+ 
+     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
+     public void onClick(View v) {
+@@ -93,7 +101,7 @@
+                 break;
+ 
+             case R.id.buy:
+-
++                showActivity(DemoActivity.class);
+                 break;
+             case R.id.register:
+                 startActivity(new Intent(this,RegisterActivity.class));
+Index: app/src/main/java/com/link/cloud/activity/RegisterActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/activity/RegisterActivity.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/activity/RegisterActivity.java	(date 1537625212000)
+@@ -1,5 +1,7 @@
+ package com.link.cloud.activity;
+ 
++import android.os.Bundle;
++
+ import com.link.cloud.R;
+ import com.link.cloud.base.BaseActivity;
+ 
+@@ -8,13 +10,16 @@
+  */
+ 
+ public class RegisterActivity extends BaseActivity{
++
++
+     @Override
+-    protected void initViews() {
+-
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
+     }
+ 
+     @Override
+-    protected int setLayoutID() {
++    protected int getLayoutId() {
+         return R.layout.keyborad;
+     }
++
+ }
+Index: app/src/main/java/com/link/cloud/fragment/LessonChoose_Fragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/link/cloud/fragment/LessonChoose_Fragment.java	(date 1537625212000)
++++ app/src/main/java/com/link/cloud/fragment/LessonChoose_Fragment.java	(date 1537625212000)
+@@ -64,7 +64,7 @@
+         @Override
+         public View getViewForTab(int position, View convertView, ViewGroup container) {
+             if (convertView == null) {
+-                convertView = getLayoutInflater().inflate(R.layout.tab_top, container, false);
++                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_top, container, false);
+             }
+             TextView textView = (TextView) convertView;
+             int padding = DisplayUtil.dipToPix(getActivity(), 12);
