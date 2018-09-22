@@ -10,6 +10,9 @@ import com.link.cloud.base.AppBarActivity;
 public class DemoActivity extends AppBarActivity {
 
     String Tag = " ";
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
