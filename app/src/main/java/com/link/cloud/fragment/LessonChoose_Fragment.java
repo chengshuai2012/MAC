@@ -64,7 +64,7 @@ public class LessonChoose_Fragment extends Fragment {
         @Override
         public View getViewForTab(int position, View convertView, ViewGroup container) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.tab_top, container, false);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_top, container, false);
             }
             TextView textView = (TextView) convertView;
             int padding = DisplayUtil.dipToPix(getActivity(), 12);

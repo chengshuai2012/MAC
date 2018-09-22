@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/windowBackgroundLight">
+        <com.link.cloud.widget.CircularProgressBar
+            android:id="@+id/loading_progress"
+            android:layout_width="@dimen/w55"
+            android:layout_height="@dimen/w55"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateOnly="false"
+            app:cpb_colors="@array/gplus_colors" />
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@color/windowBackground"
+      >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/h200"
+            android:src="@mipmap/ic_load_error" />
+
+        <Button
+            android:id="@+id/retry_btn"
+            android:layout_width="@dimen/w170"
+            android:layout_height="@dimen/h74"
+            android:layout_marginBottom="@dimen/h18"
+            android:layout_marginTop="@dimen/h40"
+            android:background="@drawable/bg_gray_rectangle_corner_stroke_8e8e8e_r60"
+            android:text="刷新"
+            android:textColor="@color/textColorPrimaryGray"
+            android:textSize="@dimen/w30" />
+
+        <TextView
+            android:id="@+id/error_prompt_view"
+            style="@style/CommonText"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/h10"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="出错啦,点击重试"
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/w26" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/windowBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/h320"
+            android:src="@mipmap/ic_no_data" />
+
+        <TextView
+            android:id="@+id/no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/h30"
+            android:layout_marginLeft="@dimen/w48"
+            android:layout_marginRight="@dimen/w48"
+            android:gravity="center"
+            android:text="暂无数据"
+            android:textColor="@color/textColorSecondary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
+</merge>

@@ -1,5 +1,10 @@
 <resources>
 
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="action_bar_size" >45dp</dimen>
+    <dimen name="navigation_button_size">42dp</dimen>
+
     <dimen name="margin_main">30px</dimen>
     <dimen name="keyboard_margin">30px</dimen>
     <dimen name="keyboard_edit_height">68px</dimen>
