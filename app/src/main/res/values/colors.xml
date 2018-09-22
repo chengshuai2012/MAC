@@ -25,5 +25,6 @@
     <color name="divider_color">#E3E6E9</color>
     <color name="windowBackgroundLight">#FFFFFF</color>
     <color name="windowBackground">#F0F0F0</color>
+    <color name="text_register">#666666</color>
 
 </resources>

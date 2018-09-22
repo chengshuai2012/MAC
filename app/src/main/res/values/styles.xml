@@ -27,12 +27,74 @@
         <item name="android:textSize">38px</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/dark_black</item>
-</style>
+    </style>
+
     <style name="TextView_Register_top">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18px</item>
         <item name="android:textColor">@color/text_register</item>
-</style>
+    </style>
+    <!--普通的横线-->
+    <style name="DividerLineVertical">
+        <item name="android:layout_width">@dimen/h1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/divider_color</item>
+    </style>
+    <!--普通的竖线-->
+    <style name="DividerLineHorizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/h1</item>
+        <item name="android:background">@color/divider_color</item>
+    </style>
+
+
+    <style name="CommonText">
+        <item name="android:textSize">@dimen/w30</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textColorHint">@color/textColorSecondary</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- ToolBar pop弹出样式 -->
+    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorSecondary</item>
+        <!--<item name="android:colorBackground">@drawable/home_header_menu_bg</item>-->
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item> <!--新增一个item，用于控制menu-->
+    </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
+    </style>
+
+    <!-- ToolBar菜单样式 -->
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="toolbarNavigationButtonStyle">@style/toolbarNavigationButtonStyle</item>
+        <item name="actionMenuTextColor">@color/colorAccent</item> <!-- menu 字体颜色-->
+        <item name="android:textSize">14sp</item> <!-- menu 字体大小-->
+        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
+    </style>
+    <style name="UserHomeToolbarTheme" parent="ToolbarTheme">
+        <item name="actionOverflowButtonStyle">@style/UserHomeOverflowButtonStyle</item>
+    </style>
+
+    <style name="UserHomeOverflowButtonStyle" parent="OverflowButtonStyle">
+        <item name="android:src">@mipmap/ic_action_more</item>
+    </style>
+
+    <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:src">@mipmap/icon_more_light</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+    <style name="toolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">@dimen/navigation_button_size</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>
