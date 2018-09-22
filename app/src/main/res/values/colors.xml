@@ -6,6 +6,7 @@
     <color name="red">#D71718</color>
     <color name="light_gray">#E2E2E2</color>
     <color name="almost_white">#F3F3F3</color>
+    <color name="white">#FFFFFF</color>
     <color name="text_gray">#666666</color>
     <color name="dark_red">#D71740</color>
     <color name="black">#282828</color>
@@ -13,4 +14,5 @@
     <color name="orange">#FF6637</color>
     <color name="dark_gray">#999999</color>
     <color name="text_red">#E61515</color>
+    <color name="colorbutton">#D71718</color>
 </resources>

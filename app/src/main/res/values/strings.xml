@@ -7,7 +7,9 @@
     <string name="register">注册绑定</string>
     <string name="lesson_consume">私教消课</string>
     <string name="buy">购买</string>
+    <string name="please_input_tel">请输入手机号</string>
     <string name="lesson_pre">预约</string>
+    <string name="send">发送</string>
     <string name="finish_loading">我是有底线的</string>
     <string name="loading">正在加载...</string>
     <string name="group_in_introduce">显示临近30分钟的数据,请确认入场</string>
@@ -17,6 +19,17 @@
     <string name="status">状态</string>
     <string name="status_not_in">待入场</string>
     <string name="status_in">已入场</string>
-
+    <string name="digitKeyppad_clear">清空</string>
+    <string name="digitKeyppad_delect">退格</string>
+    <string name="digitKeyppad_zero">0</string>
+    <string name="digitKeyppad_nine">9</string>
+    <string name="digitKeyppad_eight">8</string>
+    <string name="digitKeyppad_seven">7</string>
+    <string name="digitKeyppad_six">6</string>
+    <string name="digitKeyppad_five">5</string>
+    <string name="digitKeyppad_four">4</string>
+    <string name="digitKeyppad_three">3</string>
+    <string name="digitKeyppad_two">2</string>
+    <string name="digitKeyppad_one">1</string>
 
 </resources>

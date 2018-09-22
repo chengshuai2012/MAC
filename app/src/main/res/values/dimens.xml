@@ -1,6 +1,8 @@
 <resources>
 
     <dimen name="margin_main">30px</dimen>
+    <dimen name="keyboard_margin">30px</dimen>
+    <dimen name="keyboard_edit_height">68px</dimen>
     <dimen name="margin_main_middle">15px</dimen>
     <dimen name="text_height_main">60px</dimen>
     <dimen name="text_width_main">265px</dimen>
@@ -17,6 +19,8 @@
     <dimen name="text_size_24">24px</dimen>
     <dimen name="group_in_text_height">88px</dimen>
     <dimen name="group_in_text_width">176px</dimen>
+    <dimen name="text_size_40sp">36px</dimen>
+    <dimen name="keyboard_size">105px</dimen>
 
 
 </resources>

@@ -15,6 +15,6 @@ public class RegisterActivity extends BaseActivity{
 
     @Override
     protected int setLayoutID() {
-        return R.layout.activity_register;
+        return R.layout.keyborad;
     }
 }
