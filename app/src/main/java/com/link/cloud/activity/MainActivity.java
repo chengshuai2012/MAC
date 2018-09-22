@@ -1,6 +1,7 @@
 package com.link.cloud.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -36,7 +37,18 @@ public class MainActivity extends BaseActivity {
     private Group_Lesson_Fragment group_lesson_fragment;
 
     @Override
-    protected void initViews() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initViews();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    private  void initViews() {
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         lessonChoose_fragment = new LessonChoose_Fragment();
@@ -44,10 +56,6 @@ public class MainActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
 
-    @Override
-    protected int setLayoutID() {
-        return R.layout.activity_main;
-    }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
     public void onClick(View v) {
@@ -93,7 +101,7 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.buy:
-
+                showActivity(DemoActivity.class);
                 break;
             case R.id.register:
                 startActivity(new Intent(this,RegisterActivity.class));

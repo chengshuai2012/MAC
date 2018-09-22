@@ -1,15 +1,5 @@
 package com.link.cloud.activity;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.style.AbsoluteSizeSpan;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
 
