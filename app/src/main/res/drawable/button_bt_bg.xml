@@ -9,7 +9,6 @@
             <!-- 边缘颜色 按钮四个圆角="" -->
             <corners android:radius="10dp" />
             <!-- 半径 内边距="" 按钮文字和边缘距离="" -->
-            <padding android:bottom="10dp" android:left="10dp" android:right="10dp" android:top="10dp" />
         </shape>
     </item>
     <item android:state_focused="true">
@@ -17,17 +16,15 @@
             <gradient android:angle="270" android:endColor="#7d5a7d" android:startColor="#7d5a7d" />
             <stroke android:width="1sp" android:color="#dcdcdc" />
             <corners android:radius="100dp" />
-            <padding android:bottom="10dp" android:left="10dp" android:right="10dp" android:top="10dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="oval">
             <gradient android:angle="270" android:endColor="#00000000" android:startColor="#00000000" />
-            <stroke android:width="3sp" android:color="@color/red" />
+            <stroke android:width="1sp" android:color="@color/red" />
            <size android:width="@dimen/margin_main"
                android:height="@dimen/margin_main"
                ></size>
-            <padding android:bottom="10dp" android:left="10dp" android:right="10dp" android:top="10dp" />
         </shape>
 
     </item>

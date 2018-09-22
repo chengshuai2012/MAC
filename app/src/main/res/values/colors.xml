@@ -15,4 +15,5 @@
     <color name="dark_gray">#999999</color>
     <color name="text_red">#E61515</color>
     <color name="colorbutton">#D71718</color>
+    <color name="text_register">#666666</color>
 </resources>
