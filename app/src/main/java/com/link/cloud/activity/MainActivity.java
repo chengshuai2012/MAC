@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
-    private  void initViews() {
+    protected   void initViews() {
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();

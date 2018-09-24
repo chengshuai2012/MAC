@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="460px"
-    android:layout_height="710px"
+    android:layout_width="@dimen/keyboard_width"
+    android:layout_height="@dimen/keyboard_height"
     android:orientation="vertical">
 
-<EditText
+<TextView
     android:layout_width="match_parent"
     android:layout_height="@dimen/keyboard_edit_height"
     android:background="@drawable/border_lesson"
@@ -12,6 +12,8 @@
     android:textColorHint="@color/red"
     android:id="@+id/input_tel"
     android:gravity="center"
+    android:text="@string/please_input_tel"
+    android:textSize="@dimen/text_size_36"
     />
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +22,7 @@
         android:layout_marginBottom="@dimen/keyboard_margin"
         android:gravity="center"
         >
-        <EditText
+        <TextView
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="@dimen/keyboard_edit_height"
@@ -29,6 +31,8 @@
             android:gravity="center"
             android:layout_marginRight="@dimen/keyboard_margin"
             android:id="@+id/verify_code"
+            android:text="@string/please_input_tel"
+            android:textSize="@dimen/text_size_30"
             />
         <TextView
             android:layout_width="0dp"
@@ -40,6 +44,7 @@
             android:textColor="@color/almost_white"
             android:id="@+id/send"
             android:gravity="center"
+
             />
     </LinearLayout>
     <LinearLayout
@@ -65,7 +70,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_one"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp" />
+                android:textSize="@dimen/text_size_36" />
 
             <Button
                 android:id="@+id/bind_keypad_2"
@@ -77,7 +82,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_two"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_3"
@@ -89,7 +94,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_three"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -108,7 +113,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_four"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_5"
@@ -120,7 +125,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_five"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_6"
@@ -132,7 +137,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_six"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -151,7 +156,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_seven"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_8"
@@ -163,7 +168,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_eight"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_9"
@@ -175,7 +180,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_nine"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -194,7 +199,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_delect"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_0"
@@ -206,7 +211,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_zero"
                 android:textColor="@color/colorbutton"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
 
             <Button
                 android:id="@+id/bind_keypad_ok"
@@ -218,7 +223,7 @@
                 android:gravity="center"
                 android:text="@string/digitKeyppad_clear"
                 android:textColor="@color/red"
-                android:textSize="@dimen/text_size_40sp"></Button>
+                android:textSize="@dimen/text_size_36"></Button>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

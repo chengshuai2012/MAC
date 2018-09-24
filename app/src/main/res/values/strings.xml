@@ -5,6 +5,8 @@
     <string name="choose_lesson">选择课程</string>
     <string name="lesson_in">团课进场</string>
     <string name="register">注册绑定</string>
+    <string name="bind_veune">指静脉绑定</string>
+    <string name="bind_face">人脸绑定</string>
     <string name="lesson_consume">私教消课</string>
     <string name="buy">购买</string>
     <string name="please_input_tel">请输入手机号</string>
@@ -33,12 +35,23 @@
     <string name="digitKeyppad_two">2</string>
     <string name="digitKeyppad_one">1</string>
     <string name="register_introduce_one">1.注册绑定</string>
-    <string name="register_introduce_two">2.选择绑定方式</string>
-    <string name="register_introduce_three">3.指静脉绑定</string>
+    <string name="register_introduce_two">1.选择绑定方式</string>
+    <string name="register_introduce_three">2.指静脉绑定</string>
     <string name="register_introduce_four">4.人脸绑定</string>
-    <string name="register_introduce_five">4.绑定完成</string>
+    <string name="register_introduce_five">3.绑定完成</string>
+    <string name="bind_finish">绑定完成</string>
     <string name="back">返回</string>
     <string name="back_home">返回首页</string>
     <string name="bind_way">选择绑定方式</string>
+    <string name="bind_way_1">方式1.</string>
+    <string name="bind_way_1_intro">扫码绑定</string>
+    <string name="bind_way_2">方式2.</string>
+    <string name="bind_way_2_intro">手机绑定</string>
+    <string name="code_intro">请使用微信扫描下方二维码完成验证绑定</string>
+    <string name="tel_intro">请在此输入手机号进行验证绑定</string>
+    <string name="confirm_bind">确认绑定</string>
+    <string name="right_finger">请正确放置手指</string>
+    <string name="bind_right">绑定成功请开启你的健身之旅</string>
+    <string name="now_card_num">当前卡号：159****5969</string>
 
 </resources>

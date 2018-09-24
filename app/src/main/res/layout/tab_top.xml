@@ -4,4 +4,4 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:textSize="@dimen/card_text_size_small" />
+    android:textSize="@dimen/text_size_26" />
