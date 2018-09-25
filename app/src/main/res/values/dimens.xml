@@ -7,6 +7,10 @@
     <dimen name="margin_main">30px</dimen>
     <dimen name="circleProgressBar_width">460px</dimen>
     <dimen name="margin_left_register">47px</dimen>
+    <dimen name="dialog_padding">44px</dimen>
+    <dimen name="dialog_imageView_height">344px</dimen>
+    <dimen name="dialog_icon">147px</dimen>
+    <dimen name="dialog_icon_margin">70px</dimen>
     <dimen name="height_top_register">127px</dimen>
     <dimen name="keyboard_margin">30px</dimen>
     <dimen name="keyboard_edit_height">68px</dimen>
@@ -38,10 +42,13 @@
     <dimen name="bind_intro_textView_height">162px</dimen>
     <dimen name="bind_intro_textView_width">760px</dimen>
     <dimen name="border_width">3px</dimen>
+    <dimen name="text_front">5px</dimen>
     <dimen name="card_width">665px</dimen>
     <dimen name="card_height">371px</dimen>
     <dimen name="bind_finish_width">632px</dimen>
     <dimen name="bind_finish_height">112px</dimen>
+    <dimen name="main_image_width">415px</dimen>
+    <dimen name="main_image_height">145px</dimen>
 
 
 </resources>

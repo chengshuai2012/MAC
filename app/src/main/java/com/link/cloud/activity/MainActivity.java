@@ -1,6 +1,5 @@
 package com.link.cloud.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -104,10 +103,10 @@ public class MainActivity extends BaseActivity {
                 showActivity(DemoActivity.class);
                 break;
             case R.id.register:
-                startActivity(new Intent(this,RegisterActivity.class));
+                showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-
+                showActivity(GroupInActivity.class);
                 break;
         }
     }

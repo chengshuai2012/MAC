@@ -1,0 +1,148 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <ScrollView
+
+        android:background="@drawable/message_border"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_main"
+        android:paddingLeft="@dimen/dialog_padding"
+        android:paddingRight="@dimen/dialog_padding"
+        android:paddingBottom="@dimen/margin_main_middle"
+        android:paddingTop="@dimen/margin_main_middle"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+            <TextView
+                android:id="@+id/coach_introduce"
+                android:layout_width="@dimen/activity_top_view_height"
+                android:layout_height="@dimen/dialog_padding"
+                android:background="@color/red"
+                android:gravity="center"
+                android:text="@string/coach_introduce"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_30" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:id="@+id/dialog_big_image"
+                android:layout_height="@dimen/dialog_imageView_height"
+                android:layout_below="@+id/coach_introduce"
+                android:layout_marginTop="@dimen/margin_main_middle"
+                android:background="@mipmap/ic_launcher" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/coach_image"
+                android:layout_marginLeft="@dimen/dialog_icon_margin"
+                android:layout_marginTop="@dimen/dialog_icon_margin"
+                android:layout_width="@dimen/dialog_icon"
+                android:layout_height="@dimen/dialog_icon"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="#00000000"
+                android:layout_below="@+id/dialog_big_image"
+                app:civ_border_width="1dp" />
+            <FrameLayout
+                android:layout_toRightOf="@+id/coach_image"
+                android:id="@+id/fl_desc"
+                android:layout_marginLeft="@dimen/margin_left_register"
+                android:layout_below="@+id/dialog_big_image"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdge="horizontal"
+                android:layout_marginTop="@dimen/dialog_icon_margin"
+                android:fadingEdgeLength="5dp">
+
+                <TextView
+                    android:id="@+id/tv_desc_short"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="5"
+                    android:text="11111111111111111111111111111111111111"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_desc_long"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/iv_more_line"
+                android:layout_width="@dimen/group_in_text_height"
+                android:layout_height="@dimen/group_in_text_height"
+                android:layout_below="@id/fl_desc"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/ic_launcher"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/advantage_lesson"
+                android:layout_width="@dimen/activity_top_view_height"
+                android:layout_height="@dimen/dialog_padding"
+                android:background="@color/red"
+                android:gravity="center"
+                android:layout_below="@id/iv_more_line"
+                android:text="@string/advantage_lesson"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/dialog_icon_margin"
+                android:textSize="@dimen/text_size_30" />
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/advantage_lesson"
+                android:id="@+id/advantage_lesson_detail"
+                android:dividerHeight="@dimen/margin_main"
+                android:layout_marginTop="@dimen/margin_main"
+                android:divider="@null"
+                >
+
+            </ListView>
+            <ImageView
+                android:layout_width="@dimen/group_in_text_height"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/advantage_lesson_detail_more"
+                android:layout_height="@dimen/group_in_text_height"
+                android:layout_below="@+id/advantage_lesson_detail"
+                android:layout_marginTop="@dimen/margin_main_middle"
+                android:background="@mipmap/ic_launcher" />
+            <TextView
+                android:id="@+id/coach_verify"
+                android:layout_width="@dimen/activity_top_view_height"
+                android:layout_height="@dimen/dialog_padding"
+                android:background="@color/red"
+                android:gravity="center"
+                android:layout_below="@id/advantage_lesson_detail_more"
+                android:text="@string/coach_verify"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/dialog_icon_margin"
+                android:textSize="@dimen/text_size_30" />
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coach_verify"
+                android:id="@+id/coach_verify_detail"
+                >
+
+            </ListView>
+        </RelativeLayout>
+    </ScrollView>
+    <ImageView
+        android:layout_width="@dimen/keyboard_edit_height"
+        android:layout_height="@dimen/keyboard_edit_height"
+        android:src="@drawable/close"
+        android:id="@+id/btn_delete"
+        />
+</RelativeLayout>
