@@ -108,6 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void showActivity(Class<?> cls) {
         Intent intent = new Intent();
 
+        
         intent.setClass(this, cls);
         super.startActivity(intent);
         ViewUtils.anima(ViewUtils.RIGHT_IN, this);
