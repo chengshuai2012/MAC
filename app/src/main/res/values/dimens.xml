@@ -32,11 +32,13 @@
     <dimen name="group_in_text_height">88px</dimen>
     <dimen name="group_in_text_width">176px</dimen>
     <dimen name="text_size_36">36px</dimen>
+    <dimen name="text_size_28">28px</dimen>
     <dimen name="text_size_30">30px</dimen>
     <dimen name="text_size_48">48px</dimen>
     <dimen name="keyboard_size">105px</dimen>
     <dimen name="activity_top_view_height">246px</dimen>
-    <dimen name="code_image_view_size">257px</dimen>
+    <dimen name="code_image_view_height">549px</dimen>
+    <dimen name="code_image_view_width">261px</dimen>
     <dimen name="keyboard_width">460px</dimen>
     <dimen name="keyboard_height">715px</dimen>
     <dimen name="bind_intro_textView_height">162px</dimen>

@@ -3,6 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="@dimen/activity_top_view_height"
     android:background="@color/red"
+    android:gravity="center"
     >
-
+    <ImageView
+        android:layout_width="@dimen/main_image_width"
+        android:layout_height="@dimen/main_image_height"
+        android:src="@drawable/handy_logo"
+        />
 </LinearLayout>

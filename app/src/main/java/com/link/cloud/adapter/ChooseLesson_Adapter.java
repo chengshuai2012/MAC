@@ -123,7 +123,8 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         switch (v.getId()){
             case R.id.coach_image:
                 View view = View.inflate(mContext,R.layout.coach_dialog,null);
-                DialogUtils.showIntroCoachDialog(view,mContext);
+                DialogUtils dialogUtils = new DialogUtils();
+                dialogUtils.showIntroCoachDialog(view,mContext);
                 break;
         }
     }

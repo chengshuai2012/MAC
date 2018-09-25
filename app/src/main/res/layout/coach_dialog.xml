@@ -5,21 +5,21 @@
     >
 
     <ScrollView
-
         android:background="@drawable/message_border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_main"
         android:layout_marginTop="@dimen/margin_main"
         android:paddingLeft="@dimen/dialog_padding"
-        android:paddingRight="@dimen/dialog_padding"
         android:paddingBottom="@dimen/margin_main_middle"
         android:paddingTop="@dimen/margin_main_middle"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/dialog_padding"
+            >
             
             <TextView
                 android:id="@+id/coach_introduce"
@@ -37,7 +37,7 @@
                 android:layout_height="@dimen/dialog_imageView_height"
                 android:layout_below="@+id/coach_introduce"
                 android:layout_marginTop="@dimen/margin_main_middle"
-                android:background="@mipmap/ic_launcher" />
+                android:background="@drawable/coach_main_img" />
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/coach_image"
@@ -45,7 +45,7 @@
                 android:layout_marginTop="@dimen/dialog_icon_margin"
                 android:layout_width="@dimen/dialog_icon"
                 android:layout_height="@dimen/dialog_icon"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/icon_coach"
                 app:civ_border_color="#00000000"
                 android:layout_below="@+id/dialog_big_image"
                 app:civ_border_width="1dp" />
@@ -67,25 +67,27 @@
                     android:maxLines="5"
                     android:text="11111111111111111111111111111111111111"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_size_30" />
 
                 <TextView
                     android:id="@+id/tv_desc_long"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </FrameLayout>
+                    android:textSize="@dimen/text_size_30" />
 
+            </FrameLayout>
             <ImageView
                 android:id="@+id/iv_more_line"
-                android:layout_width="@dimen/group_in_text_height"
-                android:layout_height="@dimen/group_in_text_height"
+                android:layout_width="@dimen/margin_main"
+                android:layout_height="@dimen/margin_main"
                 android:layout_below="@id/fl_desc"
-                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/keyboard_width"
+                android:layout_marginTop="@dimen/margin_main"
                 android:contentDescription="@string/app_name"
-                android:src="@mipmap/ic_launcher"
-                android:visibility="gone" />
+                android:src="@drawable/down"
+                />
+
             <TextView
                 android:id="@+id/advantage_lesson"
                 android:layout_width="@dimen/activity_top_view_height"
@@ -104,20 +106,22 @@
                 android:id="@+id/advantage_lesson_detail"
                 android:dividerHeight="@dimen/margin_main"
                 android:layout_marginTop="@dimen/margin_main"
+                android:scrollbars="none"
                 android:divider="@null"
+                android:focusable="false"
                 >
 
             </ListView>
             <ImageView
-                android:layout_width="@dimen/group_in_text_height"
+                android:layout_width="@dimen/margin_main"
                 android:layout_centerHorizontal="true"
                 android:contentDescription="@string/app_name"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/down"
                 android:id="@+id/advantage_lesson_detail_more"
-                android:layout_height="@dimen/group_in_text_height"
+                android:layout_height="@dimen/margin_main"
                 android:layout_below="@+id/advantage_lesson_detail"
                 android:layout_marginTop="@dimen/margin_main_middle"
-                android:background="@mipmap/ic_launcher" />
+                />
             <TextView
                 android:id="@+id/coach_verify"
                 android:layout_width="@dimen/activity_top_view_height"

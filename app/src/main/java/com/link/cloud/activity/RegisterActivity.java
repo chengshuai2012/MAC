@@ -153,8 +153,10 @@ public class RegisterActivity extends BaseActivity {
                 inputTel.setText(builder.toString());
                 break;
             case R.id.bind_keypad_delect:
-                    builder.deleteCharAt(builder.length()-1);
+                if(builder.length()>=1){
+                    builder.deleteCharAt(builder.length() - 1);
                     inputTel.setText(builder.toString());
+                }
                     break;
             case R.id.confirm_bind:
                 bindMiddleOne.setVisibility(View.INVISIBLE);
