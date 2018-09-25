@@ -78,6 +78,7 @@ public class RegisterActivity extends BaseActivity {
         SpannableString ss = new SpannableString(content);
 
         // 新建一个属性对象,设置文字的大小
+        
 
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
 
