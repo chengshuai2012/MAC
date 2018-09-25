@@ -80,6 +80,7 @@ public class RegisterActivity extends BaseActivity {
         // 新建一个属性对象,设置文字的大小
         
 
+
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
 
         // 附加属性到文本
