@@ -15,6 +15,11 @@ public class DemoActivity extends AppBarActivity {
     }
 
     @Override
+    protected void initViews() {
+
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_demo;
     }

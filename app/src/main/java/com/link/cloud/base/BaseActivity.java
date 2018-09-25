@@ -37,7 +37,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         this.setContentView(this.getLayoutId());
         bind = ButterKnife.bind(this);
+        initViews();
     }
+
+    protected abstract void initViews();
 
     protected abstract int getLayoutId();
 

@@ -1,108 +1,374 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_left_register"
     tools:context="com.link.cloud.activity.MainActivity">
-    <RelativeLayout
+
+    <include layout="@layout/activity_top_view">
+
+    </include>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_top_register"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_main_middle"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-            <TextView
-                android:layout_marginTop="@dimen/margin_main_middle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_40sp"
-                android:textColor="@color/red"
-                android:text="@string/binding"
-                />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_top_register"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_left_register">
+
             <LinearLayout
-                android:layout_marginTop="@dimen/margin_main_middle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="vertical">
+
                 <TextView
-                    style="@style/TextView_Register_top"
-                    android:text="@string/register_introduce_one"
-                    android:id="@+id/register_introduce_one"
-                   />
-                <TextView
-                    style="@style/TextView_Register_top"
-                    android:text="@string/register_introduce_two"
-                    android:layout_marginLeft="@dimen/margin_main_middle"
-                    android:id="@+id/register_introduce_two"
-                   />
-                <TextView
-                    style="@style/TextView_Register_top"
-                    android:text="@string/register_introduce_three"
-                    android:layout_marginLeft="@dimen/margin_main_middle"
-                    android:id="@+id/register_introduce_three"
-                   />
-                <TextView
-                    style="@style/TextView_Register_top"
-                    android:layout_marginLeft="@dimen/margin_main_middle"
-                    android:text="@string/register_introduce_five"
-                    android:id="@+id/register_introduce_five"
-                   />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_main_middle"
+                    android:text="@string/binding"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_36" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_main_middle"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/register_introduce_one"
+                        style="@style/TextView_Register_top"
+                        android:visibility="gone"
+                        android:text="@string/register_introduce_one" />
+
+                    <TextView
+                        android:id="@+id/register_introduce_two"
+                        style="@style/TextView_Register_top"
+                        android:layout_marginLeft="@dimen/margin_main_middle"
+                        android:text="@string/register_introduce_two" />
+
+                    <TextView
+                        android:id="@+id/register_introduce_three"
+                        style="@style/TextView_Register_top"
+                        android:layout_marginLeft="@dimen/margin_main_middle"
+                        android:text="@string/register_introduce_three" />
+
+                    <TextView
+                        android:id="@+id/register_introduce_five"
+                        style="@style/TextView_Register_top"
+                        android:layout_marginLeft="@dimen/margin_main_middle"
+                        android:text="@string/register_introduce_five" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-        <TextView
-            android:layout_width="@dimen/height_top_register"
-            android:layout_height="@dimen/height_top_register"
-            android:background="@drawable/border_red_gradient"
-            android:layout_alignParentRight="true"
-            android:text="@string/back_home"
-            android:textColor="@color/almost_white"
-            android:textSize="@dimen/margin_main"
-            android:gravity="center"
-            android:id="@+id/back"
-            android:layout_marginRight="@dimen/margin_main"
-            />
+            <TextView
+                android:id="@+id/back"
+                android:layout_width="@dimen/height_top_register"
+                android:layout_height="@dimen/height_top_register"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_main"
+                android:background="@drawable/border_red_gradient_round"
+                android:gravity="center"
+                android:text="@string/back_home"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_30" />
 
-    </RelativeLayout>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_main"
-    android:layout_marginBottom="@dimen/margin_main"
-    >
+        </RelativeLayout>
 
-    <TextView
-        android:layout_width="@dimen/text_width_main"
-        android:layout_height="@dimen/text_height_main"
-        android:background="@drawable/border_red_gradient"
-        android:text="@string/bind_way"
-        android:textColor="@color/almost_white"
-        android:textSize="@dimen/margin_main"
-        android:gravity="center"
-        android:id="@+id/bind_way"
-        android:layout_marginRight="@dimen/margin_main"
-        />
-</RelativeLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_main"
+            android:paddingLeft="@dimen/margin_left_register">
 
-    >
+            <TextView
+                android:id="@+id/bind_way"
+                android:layout_width="@dimen/text_width_main"
+                android:layout_height="@dimen/text_height_main"
+                android:layout_marginRight="@dimen/margin_main"
+                android:background="@drawable/border_red_gradient"
+                android:gravity="center"
+                android:text="@string/bind_way"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_30" />
 
-  <include
-      layout="@layout/keyborad"
-    android:layout_alignParentRight="true"
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/choose_bind_way"
+                android:layout_width="@dimen/text_big_width_main"
+                android:layout_height="@dimen/text_height_main"
+                android:background="@drawable/border_lesson"
+                android:visibility="gone"
+                android:orientation="horizontal">
 
-      ></include>
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/bind_veune"
+                    style="@style/TextView_Top_Main"
+                    android:background="@drawable/border_red_half_left"
+                    android:text="@string/bind_veune"
+                    android:textColor="@color/almost_white" />
+
+                <TextView
+                    android:id="@+id/bind_face"
+                    style="@style/TextView_Top_Main"
+                    android:text="@string/bind_face"
+                    android:textColor="@color/red" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+            <RelativeLayout
+                android:id="@+id/bind_middle_one"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/margin_left_register">
+
+
+                <LinearLayout
+                    android:id="@+id/bind_way_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_main_middle"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bind_way_1"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bind_way_1_intro"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_30"
+
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bind_way_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/key_board"
+                    android:layout_marginBottom="@dimen/margin_main_middle"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bind_way_2"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bind_way_2_intro"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_30"
+
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/code_intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/bind_way_one"
+                    android:layout_marginBottom="@dimen/margin_main_middle"
+                    android:text="@string/code_intro"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/text_size_22" />
+
+                <TextView
+                    android:id="@+id/tel_intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/key_board"
+                    android:layout_below="@+id/bind_way_one"
+                    android:layout_marginBottom="@dimen/margin_main_middle"
+                    android:text="@string/tel_intro"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/text_size_22" />
+
+                <include
+                    android:id="@+id/key_board"
+                    layout="@layout/keyborad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/confirm_bind"
+                    android:layout_below="@+id/tel_intro">
+
+                </include>
+
+                <ImageView
+                    android:layout_width="@dimen/code_image_view_size"
+                    android:layout_height="@dimen/code_image_view_size"
+                    android:layout_below="@+id/code_intro"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="@dimen/keyboard_width"
+                    android:layout_height="@dimen/keyboard_edit_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/key_board"
+                    android:layout_marginRight="@dimen/margin_main"
+                    android:layout_marginTop="@dimen/margin_main"
+                    android:background="@drawable/border_red_gradient"
+                    android:gravity="center"
+                    android:text="@string/confirm_bind"
+                    android:id="@+id/confirm_bind"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/bind_middle_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="17dp"
+                    android:visibility="gone"
+                    >
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/venue_image"
+                        android:layout_width="@dimen/circleProgressBar_width"
+                        android:layout_height="@dimen/circleProgressBar_width"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/margin_main"
+                        android:layout_marginTop="@dimen/margin_main"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="@color/red"
+                        app:civ_border_width="1dp" />
+
+                    <com.dinuscxj.progressbar.CircleProgressBar
+                        android:id="@+id/custom_progress"
+                        android:layout_width="@dimen/circleProgressBar_width"
+                        android:layout_height="@dimen/circleProgressBar_width"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/margin_main"
+                        android:layout_marginTop="@dimen/margin_main"
+                        android:background="@drawable/border_progress"
+                        app:progress_background_color="@color/translate"
+                        app:progress_end_color="@color/red"
+                        app:progress_start_color="@color/red"
+                        app:progress_start_degree="-180"
+                        app:progress_stroke_width="3dp"
+                        app:style="solid_line" />
+
+                    <TextView
+                        android:id="@+id/bind_venue_intro"
+                        android:layout_width="@dimen/bind_intro_textView_width"
+                        android:layout_height="@dimen/bind_intro_textView_height"
+                        android:layout_below="@+id/custom_progress"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/margin_main"
+                        android:layout_marginTop="@dimen/margin_main"
+                        android:background="@drawable/border_red_10px"
+                        android:gravity="center"
+                        android:text="@string/right_finger"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/text_size_48" />
+
+                    <TextView
+                        android:id="@+id/bind_venue_intro_below"
+                        android:layout_width="@dimen/keyboard_width"
+                        android:layout_height="@dimen/group_in_text_height"
+                        android:layout_below="@+id/bind_venue_intro"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_main"
+                        android:background="@drawable/border_red_gradient"
+                        android:gravity="center"
+                        android:text="@string/right_finger"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_36"
+
+                        />
+
+                </RelativeLayout>
+
+
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/bind_middle_three"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/card_info_re"
+                    android:layout_width="@dimen/card_width"
+                    android:layout_height="@dimen/card_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/text_height_main"
+                    android:background="@mipmap/ic_launcher">
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/card_num"
+                    android:layout_width="@dimen/bind_intro_textView_width"
+                    android:layout_height="@dimen/bind_intro_textView_height"
+                    android:layout_below="@+id/card_info_re"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/margin_main"
+                    android:layout_marginTop="@dimen/text_height_main"
+                    android:background="@drawable/border_red_10px"
+                    android:gravity="center"
+                    android:text="@string/now_card_num"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_48" />
+
+                <LinearLayout
+                    android:layout_width="@dimen/bind_finish_width"
+                    android:layout_height="@dimen/group_in_text_height"
+                    android:layout_below="@+id/card_num"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_main"
+                    android:background="@drawable/border_red_gradient"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/keyboard_edit_height"
+                        android:layout_height="@dimen/keyboard_edit_height"
+                        android:layout_marginLeft="@dimen/margin_main"
+                        android:layout_marginRight="@dimen/margin_main"
+                        android:src="@mipmap/ic_launcher" />
+
+                    <TextView
+                        android:id="@+id/bind_finish_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/bind_right"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_32"
+
+                        />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
 </LinearLayout>

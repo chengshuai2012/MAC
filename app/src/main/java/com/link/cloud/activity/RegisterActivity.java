@@ -1,18 +1,19 @@
 package com.link.cloud.activity;
 
-import android.content.Context;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.style.AbsoluteSizeSpan;
+import android.animation.ValueAnimator;
+import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by OFX002 on 2018/9/21.
@@ -32,9 +33,9 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.bind_way)
     TextView bindWay;
     @BindView(R.id.input_tel)
-    EditText inputTel;
+    TextView inputTel;
     @BindView(R.id.verify_code)
-    EditText verifyCode;
+    TextView verifyCode;
     @BindView(R.id.send)
     TextView send;
     @BindView(R.id.bind_keypad_1)
@@ -61,40 +62,118 @@ public class RegisterActivity extends BaseActivity {
     Button bindKeypad0;
     @BindView(R.id.bind_keypad_ok)
     Button bindKeypadOk;
+    @BindView(R.id.bind_way_one)
+    LinearLayout bindWayOne;
+    @BindView(R.id.bind_way_two)
+    LinearLayout bindWayTwo;
+    @BindView(R.id.code_intro)
+    TextView codeIntro;
+    @BindView(R.id.tel_intro)
+    TextView telIntro;
+    @BindView(R.id.custom_progress)
+    CircleProgressBar customProgress;
+    @BindView(R.id.bind_veune)
+    TextView bindVeune;
+    @BindView(R.id.bind_face)
+    TextView bindFace;
+    @BindView(R.id.choose_bind_way)
+    LinearLayout chooseBindWay;
+    @BindView(R.id.confirm_bind)
+    TextView confirmBind;
+    @BindView(R.id.bind_middle_one)
+    RelativeLayout bindMiddleOne;
+    @BindView(R.id.venue_image)
+    CircleImageView venueImage;
+    @BindView(R.id.bind_venue_intro)
+    TextView bindVenueIntro;
+    @BindView(R.id.bind_venue_intro_below)
+    TextView bindVenueIntroBelow;
+    @BindView(R.id.bind_middle_two)
+    RelativeLayout bindMiddleTwo;
+    @BindView(R.id.card_info_re)
+    RelativeLayout cardInfoRe;
+    @BindView(R.id.card_num)
+    TextView cardNum;
+    @BindView(R.id.bind_finish_info)
+    TextView bindFinishInfo;
+    @BindView(R.id.bind_middle_three)
+    RelativeLayout bindMiddleThree;
 
     protected void initViews() {
-        SetEditTextHintFontSize(this,inputTel,36,R.string.please_input_tel);
-        SetEditTextHintFontSize(this,verifyCode,30,R.string.please_input_tel);
+        customProgress.setProgressFormatter(null);
+        customProgress.setMax(999);
+        registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
     }
 
-//设置EditText的hint字体大小
-
-    public static void SetEditTextHintFontSize(Context context, EditText editText, int size, int contentID) {
-
-        String content = context.getString(contentID);
-
-        // 新建一个可以添加属性的文本对象
-
-        SpannableString ss = new SpannableString(content);
-
-        // 新建一个属性对象,设置文字的大小
-        
-
-
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
-
-        // 附加属性到文本
-
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // 设置hint
-
-        editText.setHint(new SpannedString(ss)); // 一定要进行转换,否则属性会消失
-
+    private void simulateProgress() {
+        ValueAnimator animator = ValueAnimator.ofInt(0, 1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int progress = (int) animation.getAnimatedValue();
+                if(customProgress!=null){
+                    customProgress.setProgress(progress);
+                    if(progress==999){
+                        finish();
+                    }
+                }
+            }
+        });
+        animator.setDuration(40000);
+        animator.start();
     }
-
+    StringBuilder builder = new StringBuilder();
     @Override
     protected int getLayoutId() {
         return R.layout.activity_register;
+    }
+
+    @OnClick({R.id.bind_keypad_0,R.id.bind_keypad_1,R.id.bind_keypad_2,R.id.bind_keypad_3,R.id.bind_keypad_4,R.id.bind_keypad_5,R.id.bind_keypad_6,R.id.bind_keypad_7,R.id.bind_keypad_8,
+            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.bind_venue_intro,R.id.back})
+    public void OnClick(View v){
+        switch (v.getId()){
+            case R.id.back:
+                finish();
+                break;
+            case R.id.bind_keypad_0:
+            case R.id.bind_keypad_1:
+            case R.id.bind_keypad_2:
+            case R.id.bind_keypad_3:
+            case R.id.bind_keypad_4:
+            case R.id.bind_keypad_5:
+            case R.id.bind_keypad_6:
+            case R.id.bind_keypad_7:
+            case R.id.bind_keypad_8:
+            case R.id.bind_keypad_9:
+                builder.append(((TextView)v).getText());
+                inputTel.setText(builder.toString());
+            break;
+            case R.id.bind_keypad_ok:
+                builder.delete(0,builder.length());
+                inputTel.setText(builder.toString());
+                break;
+            case R.id.bind_keypad_delect:
+                    builder.deleteCharAt(builder.length()-1);
+                    inputTel.setText(builder.toString());
+                    break;
+            case R.id.confirm_bind:
+                bindMiddleOne.setVisibility(View.INVISIBLE);
+                bindMiddleTwo.setVisibility(View.VISIBLE);
+                String tel = inputTel.getText().toString();
+                registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
+                registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+                bindWay.setText(getResources().getString(R.string.bind_veune));
+                simulateProgress();
+                break;
+            case R.id.bind_venue_intro:
+                bindMiddleTwo.setVisibility(View.INVISIBLE);
+                bindMiddleThree.setVisibility(View.VISIBLE);
+                registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+                registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+                bindWay.setText(getResources().getString(R.string.bind_finish));
+                break;
+
+
+        }
     }
 }

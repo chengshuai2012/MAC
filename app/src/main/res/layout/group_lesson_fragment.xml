@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:text="@string/wechat_name"
             android:textColor="@color/almost_white"
-            android:textSize="@dimen/card_text_size"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <TextView
@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:text="@string/tel"
             android:textColor="@color/almost_white"
-            android:textSize="@dimen/card_text_size"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:text="@string/lesson"
             android:textColor="@color/almost_white"
-            android:textSize="@dimen/card_text_size"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
         <TextView
@@ -57,7 +57,7 @@
             android:layout_height="match_parent"
             android:text="@string/status"
             android:textColor="@color/almost_white"
-            android:textSize="@dimen/card_text_size"
+            android:textSize="@dimen/text_size_34"
             android:gravity="center"
             />
     </LinearLayout>
