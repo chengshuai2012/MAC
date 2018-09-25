@@ -151,6 +151,7 @@ public class RegisterActivity extends BaseActivity {
             case R.id.bind_keypad_ok:
                 builder.delete(0,builder.length());
                 inputTel.setText(builder.toString());
+
                 break;
             case R.id.bind_keypad_delect:
                     builder.deleteCharAt(builder.length()-1);
