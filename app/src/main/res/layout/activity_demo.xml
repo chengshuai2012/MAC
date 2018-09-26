@@ -12,13 +12,12 @@
         android:layout_height="@dimen/h127"
         app:finish_text="@string/back_home"
         app:finish_text_color="@color/white"
+        app:finish_text_size="@dimen/w20"
         app:title_text="@string/warning_sdcard_unmounted"
         app:title_text_color="@color/red"
-        app:finish_text_size="@dimen/w20"
-        app:title_text_size="@dimen/w20"
+        app:title_text_size="@dimen/w20"/>
 
-        >
+    <include layout="@layout/private_edu_item_layout"></include>
 
-    </com.link.cloud.widget.PublicTitleView>
 
 </LinearLayout>

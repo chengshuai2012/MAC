@@ -17,7 +17,7 @@ public class ApiResponse<T> {
      * msg : ok
      */
     private int code;
-    private String msg;
+    private String message;
 
     public int getCode() {
         return code;
@@ -27,15 +27,14 @@ public class ApiResponse<T> {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
+
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
-
-
 
     public T getData() {
         return data;

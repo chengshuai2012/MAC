@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener {
                 break;
 
             case R.id.buy:
-                showActivity(DemoActivity.class);
+                showActivity(PrivateEducationActivity.class);
                 break;
             case R.id.register:
                 showActivity(RegisterActivity.class);
