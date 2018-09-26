@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.link.cloud.R;
-import com.link.cloud.utils.DialogUtils;
 
 import java.util.List;
 
@@ -37,7 +36,15 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         this.dataList = dataList;
         this.mContext=mContext;
     }
-
+    public interface onItemClickLister{
+        void OnClickCoachImage(int postion);
+        void OnClickPre(int postion);
+        void OnClickLesson(int postion);
+    }
+    onItemClickLister mListner;
+    public void setOnItemClickListner(onItemClickLister mListner){
+        this.mListner=mListner;
+    }
     @Override
     public int getItemViewType(int position) {
 
@@ -53,8 +60,6 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.choose_lesson_item, parent, false);
-            ImageView coach_image = view.findViewById(R.id.coach_image);
-            coach_image.setOnClickListener(this);
             return new RecyclerViewHolder(view);
 
         } else if (viewType == TYPE_FOOTER) {
@@ -69,8 +74,8 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-            //recyclerViewHolder.tvItem.setText(dataList.get(position));
-
+            recyclerViewHolder.coach_image.setTag(position);
+            recyclerViewHolder.lesson_pre_check.setTag(position);
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {
@@ -122,20 +127,25 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.coach_image:
-                View view = View.inflate(mContext,R.layout.coach_dialog,null);
-                DialogUtils dialogUtils = new DialogUtils();
-                dialogUtils.showIntroCoachDialog(view,mContext);
+                mListner.OnClickCoachImage((int)v.getTag());
                 break;
+                case R.id.lesson_pre_check:
+                mListner.OnClickPre((int)v.getTag());
+                break;
+
         }
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tvItem;
+        ImageView  coach_image;
+        TextView lesson_pre_check;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
-            //tvItem = (TextView) itemView.findViewById(R.id.tv_item);
+            coach_image = (ImageView) itemView.findViewById(R.id.coach_image);
+            lesson_pre_check = (TextView) itemView.findViewById(R.id.lesson_pre_check);
+            coach_image.setOnClickListener(ChooseLesson_Adapter.this);
+            lesson_pre_check.setOnClickListener(ChooseLesson_Adapter.this);
         }
     }
 

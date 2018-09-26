@@ -2,7 +2,6 @@ package com.link.cloud.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -38,22 +37,21 @@ public class DialogUtils implements View.OnClickListener {
     private ListView advantage_lesson_detail;
     private List<String> list;
     private Lesson_Advantager adapter;
-    private AlertDialog IntroCoachDialog;
     private DialogCancelListener listener;
-    private AlertDialog dialogVeune;
-    private AlertDialog dialogPsd;
+    private AlertDialog dialog;
     private ImageView close;
     StringBuilder builder = new StringBuilder();
-
-    public void showManagerDialog(View view, Activity context, DialogCancelListener listener) {
-        this.listener = listener;
+    public  DialogUtils(Activity context){
         this.context = context;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        dialogVeune = builder.create();
-        dialogVeune.setCancelable(false);
-        dialogVeune.setCanceledOnTouchOutside(false);
-        dialogVeune.show();
-        Window window = dialogVeune.getWindow();
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+    }
+    public void showManagerDialog(View view,  DialogCancelListener listener) {
+        this.listener=listener;
+        dialog.show();
+        Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
         TextView cancel = view.findViewById(R.id.cancel);
@@ -65,14 +63,35 @@ public class DialogUtils implements View.OnClickListener {
         params.leftMargin = 133;
         window.setContentView(view, params);
     }
+    public void showPreDialog(View view, DialogCancelListener listener) {
+        this.listener = listener;
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 373);
+        TextView cancel = view.findViewById(R.id.cancel_pre);
+        TextView psw_login = view.findViewById(R.id.cancel_pre_pay);
+        cancel.setOnClickListener(this);
+        psw_login.setOnClickListener(this);
+        params.leftMargin = 133;
+        window.setContentView(view, params);
+    }
+    public void showPayDialog(View view, DialogCancelListener listener) {
+        this.listener = listener;
+        dialog.show();
+        ImageView close_pay = view.findViewById(R.id.close_pay);
+        close_pay.setOnClickListener(this);
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
+        params.leftMargin = 133;
+        window.setContentView(view, params);
+    }
 
-    public void showPsdDialog(View view, Activity context, DialogCancelListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        dialogPsd = builder.create();
-        dialogPsd.setCancelable(false);
-        dialogPsd.setCanceledOnTouchOutside(false);
-        dialogPsd.show();
-        Window window = dialogPsd.getWindow();
+    public void showPsdDialog(View view, DialogCancelListener listener) {
+        dialog.show();
+        this.listener=listener;
+        Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 869);
         inputTel = view.findViewById(R.id.input_tel);
@@ -115,9 +134,8 @@ public class DialogUtils implements View.OnClickListener {
     boolean isShowShortText = false;
     Activity context;
 
-    public void showIntroCoachDialog(View view, final Activity context) {
-        this.context = context;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    public void showIntroCoachDialog(View view) {
+        dialog.show();
         FrameLayout fl_desc = (FrameLayout) view.findViewById(R.id.fl_desc);
         tv_desc_short = (TextView) view.findViewById(R.id.tv_desc_short);
         tv_desc_long = (TextView) view.findViewById(R.id.tv_desc_long);
@@ -151,11 +169,7 @@ public class DialogUtils implements View.OnClickListener {
                 return true;
             }
         });
-        IntroCoachDialog = builder.create();
-        IntroCoachDialog.setCancelable(false);
-        IntroCoachDialog.setCanceledOnTouchOutside(false);
-        IntroCoachDialog.show();
-        Window window = IntroCoachDialog.getWindow();
+        Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(850, 1750);
         params.leftMargin = 80;
@@ -226,31 +240,32 @@ public class DialogUtils implements View.OnClickListener {
                 isShowShortText = !isShowShortText;
                 break;
             case R.id.btn_delete:
-                IntroCoachDialog.dismiss();
-                break;
-            case R.id.cancel:
-                listener.dialogCancel();
-                dialogVeune.dismiss();
-                break;
-            case R.id.close:
-                listener.dialogCancel();
-                if (dialogVeune.isShowing()) {
-                    dialogVeune.dismiss();
-                } else {
-                    if (dialogPsd != null) {
-                        dialogPsd.dismiss();
-                    }
-                }
 
+            case R.id.cancel:
+
+            case R.id.close:
+                if(listener!=null){
+                    listener.dialogCancel();
+                }
+                dialog.dismiss();
+                break;
+            case R.id.close_pay:
+            case R.id.cancel_pre:
+                dialog.dismiss();
                 break;
             case R.id.psw_login:
-                dialogVeune.dismiss();
+                dialog.dismiss();
                 View psw_dialog = View.inflate(context, R.layout.psw_dialog, null);
-                showPsdDialog(psw_dialog, context, listener);
+                showPsdDialog(psw_dialog, listener);
                 break;
             case R.id.venue_login:
-                dialogPsd.dismiss();
-                dialogVeune.show();
+                dialog.dismiss();
+                View veune_dialog = View.inflate(context, R.layout.veune_dialog, null);
+                showManagerDialog(veune_dialog,listener);
+                break;
+
+                case R.id.cancel_pre_pay:
+                listener.dialogCancel();
                 break;
             case R.id.bind_keypad_0:
             case R.id.bind_keypad_1:
@@ -279,7 +294,7 @@ public class DialogUtils implements View.OnClickListener {
 
                 break;
             case R.id.confirm:
-                dialogPsd.dismiss();
+                dialog.dismiss();
                 ((BaseActivity) context).showActivity(DemoActivity.class);
                 listener.dialogCancel();
                 break;
