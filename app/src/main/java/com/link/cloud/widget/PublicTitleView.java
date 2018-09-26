@@ -59,11 +59,11 @@ public class PublicTitleView extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PublicTitleView);
 
         titleText = a.getString(R.styleable.PublicTitleView_title_text);
-        titleTextSize = a.getDimension(R.styleable.PublicTitleView_title_text_size, 20f);
+        titleTextSize = a.getDimension(R.styleable.PublicTitleView_title_text_size, ViewUtils.getDimen(R.dimen.w20));
         titleTextColor = a.getColor(R.styleable.PublicTitleView_title_text_color, res.getColor(R.color.red));
 
         finishText = a.getString(R.styleable.PublicTitleView_finish_text);
-        finishTextSize = a.getDimension(R.styleable.PublicTitleView_finish_text_size, 20f);
+        finishTextSize = a.getDimension(R.styleable.PublicTitleView_finish_text_size, ViewUtils.getDimen(R.dimen.w20));
         finishTextColor = a.getColor(R.styleable.PublicTitleView_finish_text_color, res.getColor(R.color.white));
 
     }
@@ -81,7 +81,7 @@ public class PublicTitleView extends LinearLayout {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerview.setLayoutManager(layoutManager);
 
-        title.setTextSize(titleTextSize);
+//        title.setTextSize(titleTextSize);
         title.setTextColor(titleTextColor);
         if (!TextUtils.isEmpty(titleText)) {
             title.setText(titleText);
@@ -89,7 +89,7 @@ public class PublicTitleView extends LinearLayout {
         if (!TextUtils.isEmpty(finishText)) {
             finsh.setText(finishText);
         }
-        finsh.setTextSize(finishTextSize);
+//        finsh.setTextSize(finishTextSize);
         finsh.setTextColor(finishTextColor);
         adapter = new PublicTitleAdapter(context);
         recyclerview.setAdapter(adapter);

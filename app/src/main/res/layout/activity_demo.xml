@@ -13,7 +13,11 @@
         app:finish_text="@string/back_home"
         app:finish_text_color="@color/white"
         app:title_text="@string/warning_sdcard_unmounted"
-        app:title_text_color="@color/red">
+        app:title_text_color="@color/red"
+        app:finish_text_size="@dimen/w20"
+        app:title_text_size="@dimen/w20"
+
+        >
 
     </com.link.cloud.widget.PublicTitleView>
 
