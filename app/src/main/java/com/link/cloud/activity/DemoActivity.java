@@ -31,7 +31,6 @@ public class DemoActivity extends AppBarActivity {
     }
 
     private void initialize() {
-
         rootView = (LinearLayout) findViewById(R.id.rootView);
         publicTitle= (PublicTitleView) findViewById(R.id.publicTitle);
         publicTitle.setTags("haha","asdjfhasd","asdfads");

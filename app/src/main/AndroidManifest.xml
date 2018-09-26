@@ -20,6 +20,7 @@
         <activity android:name=".activity.RegisterActivity"/>
         <activity android:name=".activity.DemoActivity" />
         <activity android:name=".activity.GroupInActivity" />
+        <activity android:name=".activity.PreGroupLessonActivity" />
     </application>
 
 </manifest>
