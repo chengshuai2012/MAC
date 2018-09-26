@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.R;
-import com.link.cloud.base.BaseActivity;
+import com.link.cloud.base.AppBarActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,7 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by OFX002 on 2018/9/21.
  */
 
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends AppBarActivity {
     @BindView(R.id.register_introduce_one)
     TextView registerIntroduceOne;
     @BindView(R.id.register_introduce_two)
@@ -103,6 +103,7 @@ public class RegisterActivity extends BaseActivity {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(999);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
+        hideToolbar();
     }
 
     private void simulateProgress() {

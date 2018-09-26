@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="770px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_main_middle"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        android:background="@drawable/message_border">
+
+        <TextView
+            android:layout_marginTop="@dimen/margin_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_main"
+            android:gravity="center_vertical"
+            android:text="@string/pay_restTime"
+            android:id="@+id/pay_restTime"
+            android:textColor="@color/dark_black"
+            android:textSize="@dimen/text_size_30" />
+        <LinearLayout
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_below="@+id/pay_restTime"
+            android:id="@+id/rest_time_container"
+            >
+            <ImageView
+                android:layout_width="@dimen/text_size_32"
+                android:layout_height="@dimen/text_size_32"
+                android:src="@drawable/close"
+                android:layout_gravity="center_vertical"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/pay_restTime"
+                android:textColor="@color/red"
+                android:id="@+id/pay_rest_time"
+                android:textSize="@dimen/text_size_30" />
+
+        </LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/rest_time_container"
+    android:id="@+id/pay_count_ll"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/text_size_28"
+        android:text="@string/pay_count"
+        android:gravity="center"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/red"
+            android:text="@string/confirm"
+            />
+
+</LinearLayout>
+        <TextView
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:layout_below="@+id/pay_count_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_size_28"
+            android:layout_alignStart="@+id/pay_count_ll"
+            android:text="@string/work_step"
+            android:id="@+id/work_step"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:layout_below="@+id/work_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_size_24"
+            android:layout_alignStart="@+id/pay_count_ll"
+            android:text="@string/work_intro"
+            android:id="@+id/work_introduce"
+            android:gravity="center"
+            />
+        <ImageView
+            android:layout_marginTop="@dimen/margin_main"
+            android:layout_width="@dimen/sqaure_code_size"
+            android:layout_height="@dimen/sqaure_code_size"
+            android:src="@drawable/veune_way"
+            android:layout_below="@+id/work_introduce"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close_pay"
+        android:layout_width="@dimen/text_size_36"
+        android:layout_height="@dimen/text_size_36"
+        android:src="@drawable/close" />
+</RelativeLayout>

@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.link.cloud.R;
-import com.link.cloud.base.BaseActivity;
+import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
@@ -18,7 +18,7 @@ import com.link.cloud.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity implements DialogCancelListener {
+public class MainActivity extends AppBarActivity implements DialogCancelListener {
 
     @BindView(R.id.member)
     TextView member;
@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener {
     }
 
     protected   void initViews() {
-
+        hideToolbar();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         lessonChoose_fragment = new LessonChoose_Fragment();
@@ -70,8 +70,8 @@ public class MainActivity extends BaseActivity implements DialogCancelListener {
                 break;
             case R.id.manager:
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
-                DialogUtils dialogUtils = new DialogUtils();
-                dialogUtils.showManagerDialog(view, this,this);
+                DialogUtils dialogUtils = new DialogUtils(this);
+                dialogUtils.showManagerDialog(view, this);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
                 member.setBackground(null);
                 member.setTextColor(getResources().getColor(R.color.text_gray));
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener {
                 showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-                showActivity(GroupInActivity.class);
+
                 break;
         }
     }

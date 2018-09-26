@@ -6,9 +6,10 @@
     android:orientation="horizontal">
 
     <ProgressBar
+        android:padding="3px"
         android:id="@+id/pb_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/text_size_36"
+        android:layout_height="@dimen/text_size_36"
         android:indeterminateDrawable="@drawable/progressbar_refresh" />
 
     <TextView

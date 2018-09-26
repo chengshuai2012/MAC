@@ -11,12 +11,13 @@
         android:layout_height="0dp"
         android:layout_weight="19"
         android:background="@color/red">
-<ImageView
-    android:layout_width="@dimen/main_image_width"
-    android:layout_height="@dimen/main_image_height"
-    android:layout_centerInParent="true"
-    android:src="@drawable/handy_logo"
-    />
+
+        <ImageView
+            android:layout_width="@dimen/main_image_width"
+            android:layout_height="@dimen/main_image_height"
+            android:layout_centerInParent="true"
+            android:src="@drawable/handy_logo" />
+
         <LinearLayout
             android:layout_width="@dimen/text_width_main"
             android:layout_height="@dimen/text_height_main"
@@ -106,13 +107,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="@dimen/bind_intro_textView_height"
                         android:layout_height="@dimen/bind_intro_textView_height"
-                        android:src="@drawable/register"
-                        />
+                        android:src="@drawable/register" />
+
                     <TextView
                         style="@style/TextView_Main_Bottom"
                         android:text="@string/register" />
@@ -123,13 +125,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="@dimen/bind_intro_textView_height"
                         android:layout_height="@dimen/bind_intro_textView_height"
-                        android:src="@drawable/lesson_consum"
-                        />
+                        android:src="@drawable/lesson_consum" />
+
                     <TextView
                         style="@style/TextView_Main_Bottom"
                         android:text="@string/lesson_consume" />
@@ -140,13 +143,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="@dimen/bind_intro_textView_height"
                         android:layout_height="@dimen/bind_intro_textView_height"
-                        android:src="@drawable/buy"
-                        />
+                        android:src="@drawable/buy" />
+
                     <TextView
                         style="@style/TextView_Main_Bottom"
                         android:text="@string/buy" />

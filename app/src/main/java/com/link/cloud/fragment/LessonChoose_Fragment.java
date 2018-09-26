@@ -13,10 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.link.cloud.R;
+import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.adapter.ChooseLesson_Adapter;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.EndlessRecyclerOnScrollListener;
+import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.DisplayUtil;
 import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
@@ -33,7 +37,7 @@ import java.util.TimerTask;
  * Created by 49488 on 2018/9/20.
  */
 
-public class LessonChoose_Fragment extends Fragment {
+public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adapter.onItemClickLister {
     private IndicatorViewPager indicatorViewPager;
     private LessonAdapter adapter;
     private String [] date = new String[]{"12月34日","9月5日","9月6日","9月7日","9月8日","9月10日"};
@@ -58,6 +62,24 @@ public class LessonChoose_Fragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void OnClickCoachImage(int postion) {
+        View view = View.inflate(getActivity(),R.layout.coach_dialog,null);
+        DialogUtils dialogUtils = new DialogUtils(getActivity());
+        dialogUtils.showIntroCoachDialog(view);
+        Toast.makeText(getActivity(),postion+"",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnClickPre(int postion) {
+        ((BaseActivity)getActivity()).showActivity(PreGroupLessonActivity.class);
+    }
+
+    @Override
+    public void OnClickLesson(int postion) {
+
     }
 
     private class LessonAdapter extends IndicatorViewPager.IndicatorViewPagerAdapter {
@@ -85,7 +107,7 @@ public class LessonChoose_Fragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(loadMoreAdapter);
             // 设置下拉刷新
-
+            loadMoreAdapter.setOnItemClickListner(LessonChoose_Fragment.this);
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
