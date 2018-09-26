@@ -38,10 +38,10 @@ public class ToolBarHelper {
     private LayoutInflater mInflater;
 
     /*
-    * 两个属性
-    * 1、toolbar是否悬浮在窗口之上
-    * 2、toolbar的高度获取
-    * */
+     * 两个属性
+     * 1、toolbar是否悬浮在窗口之上
+     * 2、toolbar的高度获取
+     * */
     private static int[] ATTRS = {
 
             R.attr.windowActionBarOverlay,
@@ -52,7 +52,7 @@ public class ToolBarHelper {
 
     private TextView mMenuText;
     private TextView mNavigationText;
-    private boolean menuIconVisible=true;
+    private boolean menuIconVisible = true;
     private int menuIcon;
 
     public ToolBarHelper(Context context, int layoutId) {
@@ -80,10 +80,10 @@ public class ToolBarHelper {
         /*通过inflater获取toolbar的布局文件*/
         View toolbar = mInflater.inflate(R.layout.toolbar, mContentView);
         mToolBar = (Toolbar) toolbar.findViewById(R.id.tool_bar);
-        mTitle= (ImageView) toolbar.findViewById(R.id.toolbar_title);
+        mTitle = (ImageView) toolbar.findViewById(R.id.toolbar_title);
         mToolBar.setTitle("");
-        mMenuText= (TextView) toolbar.findViewById(R.id.menuText);
-        mNavigationText= (TextView) toolbar.findViewById(R.id.navigationText);
+        mMenuText = (TextView) toolbar.findViewById(R.id.menuText);
+        mNavigationText = (TextView) toolbar.findViewById(R.id.navigationText);
     }
 
     /*初始化toolbar*/
@@ -98,7 +98,7 @@ public class ToolBarHelper {
         //(int) typedArray.getDimension(android.support.v7.appcompat.R.styleable.Theme_actionBarSize, (int) mContext.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         // typedArray.recycle();
         params.topMargin = toolBarSize;
-        if(mUserView.getBackground()==null){
+        if (mUserView.getBackground() == null) {
             mUserView.setBackgroundResource(R.color.windowBackgroundLight);
         }
         mContentView.addView(mUserView, params);
@@ -111,7 +111,7 @@ public class ToolBarHelper {
     }
 
     public Toolbar getToolBar() {
-        return  mToolBar;
+        return mToolBar;
     }
 
     public void hideToolBar() {
@@ -121,7 +121,18 @@ public class ToolBarHelper {
 
     }
 
-    public void setTitle(int  titleResId) {
+    public void setmToolBarHeight(int height) {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mUserView.getLayoutParams();
+        params.height = height;
+
+        ViewGroup.LayoutParams mToolBarParams = mToolBar.getLayoutParams();
+        mToolBarParams.height=height;
+
+        mToolBar.setLayoutParams(mToolBarParams);
+        mUserView.setLayoutParams(params);
+    }
+
+    public void setTitle(int titleResId) {
         mTitle.setImageResource(titleResId);
     }
 
@@ -136,6 +147,7 @@ public class ToolBarHelper {
     public void setNavigationIcon(int navigationIcon) {
         mToolBar.setNavigationIcon(navigationIcon);
     }
+
     public void setNavigationIcon(Drawable navigationIcon) {
         mToolBar.setNavigationIcon(navigationIcon);
     }
@@ -145,7 +157,7 @@ public class ToolBarHelper {
     }
 
     public boolean isMenuIconVisible() {
-        return menuIcon!=0? menuIconVisible:false;
+        return menuIcon != 0 ? menuIconVisible : false;
     }
 
     public void setMenuIconVisible(boolean menuIconVisible) {
@@ -155,12 +167,13 @@ public class ToolBarHelper {
     public void setMenuText(int textResId) {
         mMenuText.setText(textResId);
     }
+
     public void setMenuText(String text) {
         mMenuText.setText(text);
     }
 
     public void setOnMenuTextClickListener(View.OnClickListener onMenuTextClickListener) {
-        ViewUtils.setOnClickListener(mMenuText,onMenuTextClickListener);
+        ViewUtils.setOnClickListener(mMenuText, onMenuTextClickListener);
     }
 
     public void setNavigationText(String navigationText) {
@@ -184,7 +197,7 @@ public class ToolBarHelper {
     }
 
     public boolean hasMenuIcon() {
-        return menuIcon!=0;
+        return menuIcon != 0;
     }
 
     public void setNavigationTextVisibility(int navigationTextVisible) {

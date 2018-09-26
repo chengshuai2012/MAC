@@ -8,6 +8,7 @@ import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.widget.BottomBuyDialog;
 import com.link.cloud.widget.PublicTitleView;
+import com.zitech.framework.utils.ViewUtils;
 
 @SuppressLint("Registered")
 public class DemoActivity extends AppBarActivity {
@@ -18,6 +19,7 @@ public class DemoActivity extends AppBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initialize();
+        setToolBarHelperHeight(ViewUtils.getDimenPx(R.dimen.h300));
         setTitle(R.mipmap.ic_no_data);
     }
 
@@ -36,6 +38,12 @@ public class DemoActivity extends AppBarActivity {
         publicTitle= (PublicTitleView) findViewById(R.id.publicTitle);
         publicTitle.setTags("haha","asdjfhasd","asdfads");
         publicTitle.nextPosition();
+        publicTitle.setItemClickListener(new PublicTitleView.onItemClickListener() {
+            @Override
+            public void itemClickListener() {
+                setToolBarHelperHeight(ViewUtils.getDimenPx(R.dimen.h120));
+            }
+        });
         BottomBuyDialog dialog=new BottomBuyDialog(this);
         dialog.show();
     }
