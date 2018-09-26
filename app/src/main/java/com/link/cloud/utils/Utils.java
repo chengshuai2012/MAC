@@ -21,7 +21,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
@@ -32,7 +34,6 @@ import com.mozillaonline.providers.downloads.DownloadInfo;
 import com.mozillaonline.providers.downloads.Downloads;
 import com.orhanobut.logger.Logger;
 import com.zitech.framework.Session;
-import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.ViewUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -66,20 +67,39 @@ public class Utils extends com.zitech.framework.utils.Utils {
     private static final int DEFAULT_AVATAR_NOTIFICATION_ICON_SIZE = ViewUtils.dip2px(48);
 
 
+    public static void AddFinishButton(final Activity activity, LinearLayout view, String content) {
+        Button button = new Button(activity);
+        LinearLayout.LayoutParams layoutParams
+                = new LinearLayout.LayoutParams(ViewUtils.getDimenPx(R.dimen.w84), ViewUtils.getDimenPx(R.dimen.w84));
+        button.setText(content);
+        button.setTextColor(activity.getResources().getColor(R.color.white));
+        button.setTextSize( ViewUtils.getDimenPx(R.dimen.w15));
+        button.setBackground(activity.getResources().getDrawable(R.drawable.border_red_gradient_round));
+        layoutParams.leftMargin = ViewUtils.getDimenPx(R.dimen.w600);
+        layoutParams.topMargin = ViewUtils.getDimen(R.dimen.h22);
+        button.setLayoutParams(layoutParams);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.finish();
+            }
+        });
+        view.addView(button);
+    }
 
-    public static String getVersionName(Context context){
-        PackageManager packageManager=context.getPackageManager();
+
+    public static String getVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
         PackageInfo packageInfo;
-        String versionName="";
+        String versionName = "";
         try {
-            packageInfo=packageManager.getPackageInfo(context.getPackageName(),0);
-            versionName=packageInfo.versionName;
+            packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return versionName;
     }
-
 
 
     /**
@@ -197,10 +217,6 @@ public class Utils extends com.zitech.framework.utils.Utils {
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir)));
     }
-
-
-
-
 
 
     /**
@@ -944,8 +960,8 @@ public class Utils extends com.zitech.framework.utils.Utils {
         return result.toString();
     }
 
-    public static String subZeroAndDot(String s){
-        if(s.indexOf(".") > 0){
+    public static String subZeroAndDot(String s) {
+        if (s.indexOf(".") > 0) {
             s = s.replaceAll("0+?$", "");//去掉多余的0
             s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
         }
@@ -1077,8 +1093,6 @@ public class Utils extends com.zitech.framework.utils.Utils {
         }
         return null;
     }
-
-
 
 
     public static String getAreaName(String province, String city) {

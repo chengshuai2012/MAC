@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <com.link.cloud.widget.PublicTitleView
+        android:id="@+id/publicTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h127"
+        app:finish_text="@string/back_home"
+        app:finish_text_color="@color/white"
+        app:title_text="@string/warning_sdcard_unmounted"
+        app:title_text_color="@color/red">
+
+    </com.link.cloud.widget.PublicTitleView>
+
+</LinearLayout>
