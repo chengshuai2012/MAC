@@ -81,7 +81,7 @@ public class LessonChoose_Fragment extends Fragment {
             // 设置刷新控件颜色
             swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.red));
             // 模拟获取数据
-            final ChooseLesson_Adapter loadMoreAdapter = new ChooseLesson_Adapter(dataList);
+            final ChooseLesson_Adapter loadMoreAdapter = new ChooseLesson_Adapter(dataList,getActivity());
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(loadMoreAdapter);
             // 设置下拉刷新

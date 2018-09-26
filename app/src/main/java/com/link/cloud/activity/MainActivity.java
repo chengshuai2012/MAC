@@ -1,6 +1,5 @@
 package com.link.cloud.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,12 +12,13 @@ import com.link.cloud.R;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
+import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements DialogCancelListener {
 
     @BindView(R.id.member)
     TextView member;
@@ -70,7 +70,8 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.manager:
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
-                DialogUtils.showManagerDialog(view, this);
+                DialogUtils dialogUtils = new DialogUtils();
+                dialogUtils.showManagerDialog(view, this,this);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
                 member.setBackground(null);
                 member.setTextColor(getResources().getColor(R.color.text_gray));
@@ -104,11 +105,19 @@ public class MainActivity extends BaseActivity {
                 showActivity(DemoActivity.class);
                 break;
             case R.id.register:
-                startActivity(new Intent(this,RegisterActivity.class));
+                showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-
+                showActivity(GroupInActivity.class);
                 break;
         }
+    }
+
+    @Override
+    public void dialogCancel() {
+        member.setBackground(getResources().getDrawable(R.drawable.border_red));
+        manager.setBackground(null);
+        member.setTextColor(getResources().getColor(R.color.almost_white));
+        manager.setTextColor(getResources().getColor(R.color.text_gray));
     }
 }

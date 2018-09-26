@@ -221,10 +221,12 @@
                 </include>
 
                 <ImageView
-                    android:layout_width="@dimen/code_image_view_size"
-                    android:layout_height="@dimen/code_image_view_size"
-                    android:layout_below="@+id/code_intro"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_width="@dimen/code_image_view_width"
+                    android:layout_height="@dimen/code_image_view_height"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/key_board"
+                    android:src="@drawable/qcode_image"
+                    />
 
                 <TextView
                     android:layout_width="@dimen/keyboard_width"
@@ -237,6 +239,7 @@
                     android:gravity="center"
                     android:text="@string/confirm_bind"
                     android:id="@+id/confirm_bind"
+                    android:textSize="@dimen/text_size_36"
                     android:textColor="@color/white" />
             </RelativeLayout>
                 <RelativeLayout
@@ -257,7 +260,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/margin_main"
                         android:layout_marginTop="@dimen/margin_main"
-                        android:src="@mipmap/ic_launcher"
+                        android:src="@drawable/veune_way"
                         app:civ_border_color="@color/red"
                         app:civ_border_width="1dp" />
 
@@ -320,7 +323,7 @@
                     android:layout_height="@dimen/card_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/text_height_main"
-                    android:background="@mipmap/ic_launcher">
+                    android:background="@drawable/card_bg">
 
 
                 </RelativeLayout>
@@ -354,7 +357,7 @@
                         android:layout_height="@dimen/keyboard_edit_height"
                         android:layout_marginLeft="@dimen/margin_main"
                         android:layout_marginRight="@dimen/margin_main"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/pay_ol" />
 
                     <TextView
                         android:id="@+id/bind_finish_info"

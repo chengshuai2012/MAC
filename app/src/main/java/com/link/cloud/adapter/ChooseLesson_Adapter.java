@@ -1,19 +1,23 @@
 package com.link.cloud.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.link.cloud.R;
+import com.link.cloud.utils.DialogUtils;
 
 import java.util.List;
 
 
-public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private List<String> dataList;
 
@@ -28,9 +32,10 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
     public final int LOADING_COMPLETE = 2;
 
     public final int LOADING_END = 3;
-
-    public ChooseLesson_Adapter(List<String> dataList) {
+    Activity mContext;
+    public ChooseLesson_Adapter(List<String> dataList, Activity mContext) {
         this.dataList = dataList;
+        this.mContext=mContext;
     }
 
     @Override
@@ -48,6 +53,8 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.choose_lesson_item, parent, false);
+            ImageView coach_image = view.findViewById(R.id.coach_image);
+            coach_image.setOnClickListener(this);
             return new RecyclerViewHolder(view);
 
         } else if (viewType == TYPE_FOOTER) {
@@ -108,6 +115,17 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
                     return getItemViewType(position) == TYPE_FOOTER ? gridManager.getSpanCount() : 1;
                 }
             });
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.coach_image:
+                View view = View.inflate(mContext,R.layout.coach_dialog,null);
+                DialogUtils dialogUtils = new DialogUtils();
+                dialogUtils.showIntroCoachDialog(view,mContext);
+                break;
         }
     }
 

@@ -23,7 +23,8 @@
             android:orientation="horizontal">
 
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/coach_image"
                 android:layout_marginLeft="@dimen/margin_main"
                 android:layout_width="@dimen/card_imageView_height"
