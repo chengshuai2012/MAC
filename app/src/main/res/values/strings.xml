@@ -66,5 +66,10 @@
     <string name="bind_right">绑定成功请开启你的健身之旅</string>
     <string name="now_card_num">当前卡号：159****5969</string>
     <string name="more">更多</string>
+    <string name="last_text">上一步</string>
+    <string name="go_buy">去购买</string>
+    <string name="private_edu">私教课程</string>
+
+
 
 </resources>

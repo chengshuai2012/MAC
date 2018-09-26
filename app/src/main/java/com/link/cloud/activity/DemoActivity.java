@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.widget.BottomBuyDialog;
 import com.link.cloud.widget.PublicTitleView;
 
 @SuppressLint("Registered")
@@ -35,6 +36,7 @@ public class DemoActivity extends AppBarActivity {
         publicTitle= (PublicTitleView) findViewById(R.id.publicTitle);
         publicTitle.setTags("haha","asdjfhasd","asdfads");
         publicTitle.nextPosition();
-
+        BottomBuyDialog dialog=new BottomBuyDialog(this);
+        dialog.show();
     }
 }

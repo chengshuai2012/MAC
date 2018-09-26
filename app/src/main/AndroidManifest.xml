@@ -21,6 +21,7 @@
         <activity android:name=".activity.DemoActivity" />
         <activity android:name=".activity.GroupInActivity" />
         <activity android:name=".activity.PreGroupLessonActivity" />
+        <activity android:name=".activity.PrivateEducationActivity" />
     </application>
 
 </manifest>

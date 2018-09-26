@@ -3,6 +3,8 @@ package com.link.cloud;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.link.cloud.widget.MyLoadViewFactory;
+import com.shizhefei.mvc.MVCHelper;
 import com.zitech.framework.BaseApplication;
 
 public class MacApplication extends BaseApplication {
@@ -15,6 +17,7 @@ public class MacApplication extends BaseApplication {
         super.onCreate();
         user = new User();
         mainThreadHandler = new Handler(Looper.getMainLooper());
+        MVCHelper.setLoadViewFactory(new MyLoadViewFactory());
     }
 
     public void post(Runnable r) {

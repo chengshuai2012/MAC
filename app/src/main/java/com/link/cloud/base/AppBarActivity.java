@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.link.cloud.R;
 import com.link.cloud.utils.Utils;
@@ -27,6 +28,12 @@ public abstract class AppBarActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setTranslucentStatus(true);
         setSystemBarTintDrawableResource(R.drawable.bg_toolbar);
+    }
+
+    public void setToolBarHelperHeight(int helperHeight) {
+        ViewGroup.LayoutParams params = toolBarHelper.getToolBar().getLayoutParams();
+        params.height=helperHeight;
+        toolBarHelper.getToolBar().setLayoutParams(params);
     }
 
     @Override
@@ -119,6 +126,7 @@ public abstract class AppBarActivity extends BaseActivity {
         toolBarHelper.setMenuTextVisibility(View.VISIBLE);
         toolBarHelper.setMenuText(title);
     }
+
     protected void setMenuTextVisibility(int visibility) {
         toolBarHelper.setMenuTextVisibility(visibility);
     }
@@ -182,7 +190,7 @@ public abstract class AppBarActivity extends BaseActivity {
 //                    .setShowAsActionFlags()
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
-        Utils.ignoreMenuLongClick(this,R.id.menu);
+        Utils.ignoreMenuLongClick(this, R.id.menu);
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -209,7 +217,7 @@ public abstract class AppBarActivity extends BaseActivity {
 
     }
 
-    public Toolbar getToolbar(){
+    public Toolbar getToolbar() {
         return toolBarHelper.getToolBar();
     }
 }
