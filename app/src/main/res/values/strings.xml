@@ -99,4 +99,24 @@
     <string name="one_person">1人</string>
     <string name="cancel_pay">确认取消订单？</string>
     <string name="click_error">不，点错啦</string>
+    <string name="pay_time_sheng">剩余支付时间 : </string>
+    <string name="minute">分</string>
+    <string name="second">秒</string>
+    <string name="coachText">授课教练 : </string>
+    <string name="palce_address">授课地点 :</string>
+    <string name="amount_text">总计</string>
+    <string name="can_not_superposition">以上方式不可同时叠加使用</string>
+    <string name="renting_cabinet">智能租柜</string>
+    <string name="selecter_time">选择时间</string>
+    <string name="sure">确认</string>
+    <string name="input_info">填写信息</string>
+    <string name="rent_store">租用门店</string>
+    <string name="rent_time">租用门店</string>
+    <string name="return_time">归还时间</string>
+    <string name="cabinet_position">柜号位置</string>
+
+
+
+
+
 </resources>

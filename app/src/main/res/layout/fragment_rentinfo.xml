@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f5f5f5"
+    android:orientation="vertical">
+
+
+    <Button
+        android:layout_width="@dimen/w244"
+        android:layout_height="@dimen/h54"
+        android:layout_marginLeft="@dimen/w40"
+        android:layout_marginTop="@dimen/h40"
+        android:background="@drawable/border_red_gradient"
+        android:text="@string/input_info"
+        android:textColor="@color/white"
+        android:textSize="@dimen/w28" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w32"
+        android:layout_marginRight="@dimen/w32"
+        android:layout_marginTop="@dimen/h54"
+        android:background="@drawable/bg_white_rectangle_corner_r20"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/h68"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CommonText"
+            android:layout_marginLeft="@dimen/w12"
+            android:layout_weight="1"
+            android:text="@string/rent_store"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w22" />
+
+        <TextView
+            android:id="@+id/rentStore"
+            style="@style/CommonText"
+            android:layout_marginLeft="@dimen/w12"
+            android:layout_marginRight="@dimen/w12"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w22"
+            tools:text="@string/rent_store" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w32"
+        android:layout_marginRight="@dimen/w32"
+        android:layout_marginTop="@dimen/h10"
+        android:background="@drawable/bg_white_rectangle_corner_r20"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/h68"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/h68"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CommonText"
+                android:layout_marginLeft="@dimen/w12"
+                android:layout_weight="1"
+                android:text="@string/rent_time"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w22" />
+
+            <TextView
+                android:id="@+id/rentTime"
+                style="@style/CommonText"
+                android:layout_marginLeft="@dimen/w12"
+                android:layout_marginRight="@dimen/w12"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w22"
+                tools:text="@string/rent_store" />
+
+        </LinearLayout>
+
+        <View style="@style/DividerLineHorizontal"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/h68"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/CommonText"
+                android:layout_marginLeft="@dimen/w12"
+                android:layout_weight="1"
+                android:text="@string/return_time"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w22" />
+
+            <TextView
+                android:id="@+id/returnTimeText"
+                style="@style/CommonText"
+                android:layout_marginLeft="@dimen/w12"
+                android:layout_marginRight="@dimen/w12"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w22"
+                tools:text="@string/rent_store" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w32"
+        android:layout_marginRight="@dimen/w32"
+        android:layout_marginTop="@dimen/h10"
+        android:background="@drawable/bg_white_rectangle_corner_r20"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/h68"
+        android:orientation="horizontal">
+
+
+        <TextView
+            style="@style/CommonText"
+            android:layout_marginLeft="@dimen/w12"
+            android:layout_weight="1"
+            android:text="@string/cabinet_position"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w22" />
+
+        <TextView
+            android:id="@+id/cabinetPositionText"
+            style="@style/CommonText"
+            android:layout_marginLeft="@dimen/w12"
+            android:layout_marginRight="@dimen/w12"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w22"
+            tools:text="@string/rent_store" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/h150"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/w60"
+        android:paddingRight="@dimen/w60">
+
+
+        <Button
+            android:id="@+id/lastButton"
+            android:layout_width="@dimen/w244"
+            android:layout_height="@dimen/h54"
+            android:background="@drawable/border_lesson"
+            android:text="@string/last_text"
+            android:textColor="@color/red"
+            android:textSize="@dimen/w28" />
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="@dimen/w244"
+            android:layout_height="@dimen/h54"
+
+            android:layout_marginLeft="@dimen/w40"
+            android:background="@drawable/border_red_gradient"
+            android:text="@string/sure"
+            android:textColor="@color/white"
+            android:textSize="@dimen/w28" />
+    </LinearLayout>
+
+
+</LinearLayout>

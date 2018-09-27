@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h280"
+        android:layout_marginLeft="@dimen/w48"
+        android:layout_marginRight="@dimen/w48">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h50"
+                android:background="@drawable/border_red_gradient_r10"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/className"
+                    style="@style/CommonText"
+                    android:layout_marginLeft="@dimen/w48"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w22"
+                    tools:text="awdfasdfasd" />
+
+                <TextView
+                    android:id="@+id/costText"
+                    style="@style/CommonText"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w22"
+                    tools:text="塑形杠铃班" />
+
+                <TextView
+                    android:id="@+id/unitpriceText"
+                    style="@style/CommonText"
+                    android:layout_marginRight="@dimen/w48"
+                    android:layout_marginTop="@dimen/w2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w18"
+                    tools:text="塑形杠铃班" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/w48"
+                android:layout_marginRight="@dimen/w48"
+                android:layout_marginTop="@dimen/h38"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CommonText"
+                    android:text="@string/coachText"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w18" />
+
+                <TextView
+                    android:id="@+id/coachText"
+                    style="@style/CommonText"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w18"
+                    tools:text="塑形杠铃班" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/w48"
+                android:layout_marginRight="@dimen/w48"
+                android:layout_marginTop="@dimen/h38"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CommonText"
+                    android:text="@string/palce_address"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w18" />
+
+                <TextView
+                    android:id="@+id/placeAddressText"
+                    style="@style/CommonText"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w18"
+                    tools:text="塑形杠铃班" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/w48"
+                android:layout_marginRight="@dimen/w48"
+                android:layout_marginTop="@dimen/h38"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CommonText"
+                    android:layout_weight="1"
+                    android:text="@string/amount_text"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/w24"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/amountText"
+                    style="@style/CommonText"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/w24"
+                    android:textStyle="bold"
+                    tools:text="塑形杠铃班" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h372"
+        android:layout_marginLeft="@dimen/w48"
+        android:layout_marginRight="@dimen/w48"
+        android:layout_marginTop="@dimen/w24">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h50"
+                android:background="@drawable/border_red_gradient_r10"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CommonText"
+                    android:layout_marginLeft="@dimen/w48"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/pay_way"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w22" />
+
+                <TextView
+                    style="@style/CommonText"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w22"
+                    tools:text="@string/pay_time_sheng" />
+
+                <cn.iwgang.countdownview.CountdownView
+                    android:id="@+id/countDownView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:isHideTimeBackground="true"
+                    app:isShowMinute="true"
+                    app:isShowSecond="true"
+                    app:isTimeTextBold="true"
+                    app:suffixGravity="bottom"
+                    app:suffixMinute="@string/minute"
+                    app:suffixSecond="@string/second"
+                    app:suffixTextColor="@color/white"
+                    app:suffixTextSize="@dimen/w22"
+                    app:timeTextColor="@color/white"
+                    app:timeTextSize="@dimen/w22" />
+            </LinearLayout>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/w300"
+                android:layout_height="@dimen/h98"
+                android:layout_marginLeft="@dimen/w36"
+                android:layout_marginTop="@dimen/h22">
+
+
+                <ImageView
+                    android:layout_width="@dimen/w72"
+                    android:layout_height="@dimen/w72"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/handy_pay" />
+
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/w36"
+                android:layout_marginTop="@dimen/h50"
+                android:text="@string/can_not_superposition"
+                android:textColor="@color/text_register"
+                android:textSize="@dimen/w16" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="@dimen/w264"
+                    android:layout_height="@dimen/h78"
+                    android:layout_marginLeft="@dimen/w36"
+                    android:layout_marginTop="@dimen/h22"
+                    android:background="@drawable/pay_wechat"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/CommonText"
+                        android:text="asdfas"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/w18" />
+
+                    <TextView
+                        style="@style/CommonText"
+                        android:text="应付款：￥8911.00"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/w18" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/w264"
+                    android:layout_height="@dimen/h78"
+                    android:layout_marginTop="@dimen/h22"
+                    android:background="@drawable/pay_zhifubao"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/CommonText"
+                        android:text="asdfas"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/w18" />
+
+                    <TextView
+                        style="@style/CommonText"
+                        android:text="asdfas"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/w18" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w36"
+        android:layout_marginTop="@dimen/h22"
+        android:text="温馨提示：一经售出，此票恕不退款"
+        android:textColor="@color/color_gray_999999"
+        android:textSize="@dimen/w16" />
+
+
+    <Button
+        android:id="@+id/lastButton"
+        android:layout_width="@dimen/w244"
+        android:layout_height="@dimen/h54"
+        android:layout_marginTop="@dimen/h40"
+        android:background="@drawable/border_lesson"
+        android:text="@string/last_text"
+        android:textColor="@color/red"
+        android:textSize="@dimen/w28" />
+
+
+</LinearLayout>

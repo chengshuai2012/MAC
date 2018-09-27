@@ -21,6 +21,7 @@
         <activity android:name=".activity.DemoActivity" />
         <activity android:name=".activity.PreGroupLessonActivity" />
         <activity android:name=".activity.PrivateEducationActivity" />
+        <activity android:name=".activity.RentingActivity" />
     </application>
 
 </manifest>

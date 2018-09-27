@@ -8,11 +8,14 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.link.cloud.R;
+import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.SimpleStyleDialog;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -180,6 +183,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (!denyDialog.isShowing()) {
             denyDialog.show();
         }
+    }
+
+    public Fragment showFragment(Class<? extends Fragment> fragmentClass) {
+        return Utils.replace(getSupportFragmentManager(), R.id.content_frame, fragmentClass);
     }
 
     public Context getContext() {

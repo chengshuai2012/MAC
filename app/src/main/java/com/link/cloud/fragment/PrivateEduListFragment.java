@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2018/9/26.
  * GitHub：qiandailu
  * email：zar.l@qq.com
- * description：
+ * description：可购买的私教课程列表
  */
 public class PrivateEduListFragment extends BaseFragment {
     private RecyclerView recycleView;
