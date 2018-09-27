@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="770px"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_main_middle"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        android:background="@drawable/message_border">
+
+        <TextView
+            android:id="@+id/use_psw"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/keyboard_edit_height"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_main"
+            android:gravity="center_vertical"
+            android:textColor="@color/dark_black"
+            android:textSize="@dimen/text_size_30" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/use_psw"
+            android:background="@color/almost_white" />
+
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     android:id="@+id/ll_center"
+     android:layout_below="@+id/use_psw"
+     android:layout_marginTop="@dimen/text_height_main"
+     android:layout_marginBottom="@dimen/text_height_main"
+     android:gravity="center"
+     >
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textSize="@dimen/text_size_36"
+         android:text="@string/group_lesson_pay"
+         android:id="@+id/group_lesson_pay"
+         android:gravity="center"
+         android:textColor="@color/dark_black"
+         />
+     <TextView
+         android:layout_marginLeft="@dimen/margin_main_middle"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textSize="@dimen/text_size_60"
+         android:text="$:89"
+         android:id="@+id/lesson_price"
+         android:gravity="center"
+         android:textColor="@color/dark_black"
+         />
+ </LinearLayout>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/ll_center"
+            android:background="@color/almost_white" />
+        <TextView
+            android:layout_below="@+id/ll_center"
+            android:layout_marginTop="@dimen/text_height_main"
+            android:layout_width="@dimen/circleProgressBar_width"
+            android:layout_height="@dimen/keyboard_edit_height"
+            android:textSize="@dimen/text_size_36"
+            android:text="@string/confirm_pay"
+            android:id="@+id/confirm_pay"
+            android:gravity="center"
+            android:textColor="@color/almost_white"
+            android:background="@drawable/border_red_gradient"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close_pay"
+        android:layout_width="@dimen/keyboard_edit_height"
+        android:layout_height="@dimen/keyboard_edit_height"
+        android:src="@drawable/close" />
+</RelativeLayout>

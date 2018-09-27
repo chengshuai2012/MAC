@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.link.cloud.R;
 import com.link.cloud.activity.DemoActivity;
 import com.link.cloud.adapter.Lesson_Advantager;
+import com.link.cloud.adapter.Pay_GridView_Adapter_Black;
+import com.link.cloud.adapter.Pay_GridView_Adapter_Gray;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.DialogCancelListener;
 
@@ -41,6 +44,8 @@ public class DialogUtils implements View.OnClickListener {
     private AlertDialog dialog;
     private ImageView close;
     StringBuilder builder = new StringBuilder();
+    private Pay_GridView_Adapter_Black pay_gridView_adapter_black;
+
     public  DialogUtils(Activity context){
         this.context = context;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -56,6 +61,61 @@ public class DialogUtils implements View.OnClickListener {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
         TextView cancel = view.findViewById(R.id.cancel);
         TextView psw_login = view.findViewById(R.id.psw_login);
+        close = view.findViewById(R.id.close);
+        cancel.setOnClickListener(this);
+        psw_login.setOnClickListener(this);
+        close.setOnClickListener(this);
+        params.leftMargin = 133;
+        window.setContentView(view, params);
+    }
+    public void showPswPayDialog(View view,  DialogCancelListener listener) {
+        this.listener=listener;
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 1040);
+        GridView gray = view.findViewById(R.id.gray);
+        GridView black = view.findViewById(R.id.black);
+        gray.setAdapter(new Pay_GridView_Adapter_Gray(context));
+        pay_gridView_adapter_black = new Pay_GridView_Adapter_Black(context);
+        black.setAdapter(pay_gridView_adapter_black);
+        TextView bind_keypad_0 = view.findViewById(R.id.bind_keypad_0);
+        TextView bind_keypad_1 = view.findViewById(R.id.bind_keypad_1);
+        TextView bind_keypad_2 = view.findViewById(R.id.bind_keypad_2);
+        TextView bind_keypad_3 = view.findViewById(R.id.bind_keypad_3);
+        TextView bind_keypad_4 = view.findViewById(R.id.bind_keypad_4);
+        TextView bind_keypad_5 = view.findViewById(R.id.bind_keypad_5);
+        TextView bind_keypad_6 = view.findViewById(R.id.bind_keypad_6);
+        TextView bind_keypad_7 = view.findViewById(R.id.bind_keypad_7);
+        TextView bind_keypad_8 = view.findViewById(R.id.bind_keypad_8);
+        TextView bind_keypad_9 = view.findViewById(R.id.bind_keypad_9);
+        TextView bind_keypad_ok = view.findViewById(R.id.bind_keypad_ok);
+        TextView bind_keypad_delect = view.findViewById(R.id.bind_keypad_delect);
+        close = view.findViewById(R.id.close);
+        close.setOnClickListener(this);
+        bind_keypad_0.setOnClickListener(this);
+        bind_keypad_1.setOnClickListener(this);
+        bind_keypad_2.setOnClickListener(this);
+        bind_keypad_3.setOnClickListener(this);
+        bind_keypad_4.setOnClickListener(this);
+        bind_keypad_5.setOnClickListener(this);
+        bind_keypad_6.setOnClickListener(this);
+        bind_keypad_7.setOnClickListener(this);
+        bind_keypad_8.setOnClickListener(this);
+        bind_keypad_9.setOnClickListener(this);
+        bind_keypad_ok.setOnClickListener(this);
+        bind_keypad_delect.setOnClickListener(this);
+        params.leftMargin = 133;
+        window.setContentView(view, params);
+    }
+    public void showVeunePayDialog(View view,  DialogCancelListener listener) {
+        this.listener=listener;
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
+        TextView cancel = view.findViewById(R.id.cancel);
+        TextView psw_login = view.findViewById(R.id.psw_pay);
         close = view.findViewById(R.id.close);
         cancel.setOnClickListener(this);
         psw_login.setOnClickListener(this);
@@ -84,6 +144,19 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
+        params.leftMargin = 133;
+        window.setContentView(view, params);
+    }
+    public void showHanyPayDialog(View view, DialogCancelListener listener) {
+        this.listener = listener;
+        dialog.show();
+        ImageView close_pay = view.findViewById(R.id.close_pay);
+        TextView confirm_pay = view.findViewById(R.id.confirm_pay);
+        close_pay.setOnClickListener(this);
+        confirm_pay.setOnClickListener(this);
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 467);
         params.leftMargin = 133;
         window.setContentView(view, params);
     }
@@ -258,6 +331,11 @@ public class DialogUtils implements View.OnClickListener {
                 View psw_dialog = View.inflate(context, R.layout.psw_dialog, null);
                 showPsdDialog(psw_dialog, listener);
                 break;
+            case R.id.confirm_pay:
+                dialog.dismiss();
+                View pay_veune_dialog = View.inflate(context, R.layout.pay_veune_dialog, null);
+                showVeunePayDialog(pay_veune_dialog, listener);
+                break;
             case R.id.venue_login:
                 dialog.dismiss();
                 View veune_dialog = View.inflate(context, R.layout.veune_dialog, null);
@@ -266,6 +344,10 @@ public class DialogUtils implements View.OnClickListener {
 
                 case R.id.cancel_pre_pay:
                 listener.dialogCancel();
+                break;
+                case R.id.psw_pay:
+                    View psw_pay_dialog = View.inflate(context, R.layout.psw_pay_dialog, null);
+                    showPswPayDialog(psw_pay_dialog,listener);
                 break;
             case R.id.bind_keypad_0:
             case R.id.bind_keypad_1:
@@ -278,7 +360,13 @@ public class DialogUtils implements View.OnClickListener {
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
                 builder.append(((TextView) view).getText());
-                inputTel.setText(builder.toString());
+                if(inputTel!=null){
+                    inputTel.setText(builder.toString());
+                }
+                if(pay_gridView_adapter_black!=null){
+                    pay_gridView_adapter_black.setLength(builder.length());
+                }
+
                 break;
             case R.id.bind_keypad_ok:
                 builder.delete(0, builder.length());
