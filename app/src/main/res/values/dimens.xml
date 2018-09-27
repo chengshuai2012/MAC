@@ -2,7 +2,7 @@
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="action_bar_size" >246px</dimen>
+    <dimen name="action_bar_size" >360px</dimen>
     <dimen name="navigation_button_size">42dp</dimen>
     <dimen name="indicator_size">126px</dimen>
     <dimen name="margin_main">30px</dimen>
@@ -39,7 +39,7 @@
     <dimen name="text_size_48">48px</dimen>
     <dimen name="text_size_42">42px</dimen>
     <dimen name="keyboard_size">105px</dimen>
-    <dimen name="activity_top_view_height">246px</dimen>
+    <dimen name="activity_top_view_height">360px</dimen>
     <dimen name="code_image_view_height">549px</dimen>
     <dimen name="code_image_view_width">261px</dimen>
     <dimen name="keyboard_width">460px</dimen>
@@ -56,6 +56,7 @@
     <dimen name="main_image_height">145px</dimen>
     <dimen name="pre_pay_height">115px</dimen>
     <dimen name="text_size_56">56px</dimen>
+    <dimen name="text_size_60">60px</dimen>
     <dimen name="text_confirm">300px</dimen>
     <dimen name="sqaure_code_size">197px</dimen>
 

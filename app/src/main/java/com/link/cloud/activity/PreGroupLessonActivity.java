@@ -107,7 +107,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     }
     StringBuilder builder = new StringBuilder();
     @OnClick ({R.id.bind_keypad_0,R.id.bind_keypad_1,R.id.bind_keypad_2,R.id.bind_keypad_3,R.id.bind_keypad_4,R.id.bind_keypad_5,R.id.bind_keypad_6,R.id.bind_keypad_7,R.id.bind_keypad_8,
-            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.back,R.id.pre,R.id.pay_zhifubao,R.id.pay_wechat})
+            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.back,R.id.pre,R.id.pay_zhifubao,R.id.pay_wechat,R.id.handy_pay})
     public void OnClick(View v){
         switch (v.getId()){
             case R.id.back:
@@ -157,6 +157,11 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                 View pay_zhifubao = View.inflate(this,R.layout.pay_dialog,null);
                 dialogUtils.showPayDialog(pay_zhifubao,this);
                 break;
+                case R.id.handy_pay:
+                View handy_pay = View.inflate(this,R.layout.pay_conform_dialog,null);
+                dialogUtils.showHanyPayDialog(handy_pay,this);
+                break;
+
         }
     }
 
