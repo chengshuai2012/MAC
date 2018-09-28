@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="@dimen/w190"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="-15dp"
+        android:layout_marginTop="@dimen/h150"
+        android:orientation="vertical">
+
+
+        <RadioButton
+            android:id="@+id/singBuy"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/h50"
+            android:background="@drawable/singlepurchase_selector"
+            android:checked="true"
+            android:gravity="center"
+            android:text="@string/buy_sing_come"
+            android:textSize="@dimen/w20" />
+
+
+        <RadioButton
+            android:id="@+id/activiteCard"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/h50"
+            android:layout_marginTop="@dimen/h26"
+            android:background="@drawable/singlepurchase_selector"
+            android:gravity="center"
+            android:text="@string/activate_card"
+            android:textSize="@dimen/w20" />
+
+
+        <RadioButton
+            android:id="@+id/rechargeCard"
+            style="@style/RadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/h50"
+            android:layout_marginTop="@dimen/h26"
+            android:background="@drawable/singlepurchase_selector"
+            android:gravity="center"
+            android:text="@string/card_recharge"
+            android:textSize="@dimen/w20" />
+
+
+    </RadioGroup>
+
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+</LinearLayout>
