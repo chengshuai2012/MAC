@@ -53,6 +53,7 @@
     <dimen name="bind_finish_width">632px</dimen>
     <dimen name="bind_finish_height">112px</dimen>
     <dimen name="main_image_width">415px</dimen>
+    <dimen name="pay_image_ok">200px</dimen>
     <dimen name="main_image_height">145px</dimen>
     <dimen name="pre_pay_height">115px</dimen>
     <dimen name="text_size_56">56px</dimen>

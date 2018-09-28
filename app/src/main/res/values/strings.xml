@@ -38,6 +38,8 @@
     <string name="lesson">课程</string>
     <string name="status">状态</string>
     <string name="status_not_in">待入场</string>
+    <string name="has_bind">已绑定</string>
+    <string name="no_bind">未绑定</string>
     <string name="status_in">已入场</string>
     <string name="digitKeyppad_clear">清空</string>
     <string name="digitKeyppad_delect">退格</string>
@@ -67,6 +69,10 @@
     <string name="pay_time">剩余支付时间：9分48秒</string>
     <string name="pre">上一步</string>
     <string name="back_home">返回首页</string>
+    <string name="venue_ok">验证成功</string>
+    <string name="venue_fail">验证失败</string>
+    <string name="door_has_open">门禁已开启</string>
+    <string name="please_confirm_bind">请确认是否已绑定手指？</string>
     <string name="manager_pwd">输入管理员密码</string>
     <string name="bind_way">选择绑定方式</string>
     <string name="login_way">选择登录方式</string>
@@ -125,4 +131,5 @@
 
 
 
+    <string name="pay_ok">支付成功</string>
 </resources>
