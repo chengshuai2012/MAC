@@ -70,6 +70,12 @@
     <string name="pre">上一步</string>
     <string name="back_home">返回首页</string>
     <string name="venue_ok">验证成功</string>
+    <string name="back_system">返回系统设置</string>
+    <string name="back_app">返回程序主页</string>
+    <string name="back_system_main">返回系统主界面</string>
+    <string name="open_door">门禁开启</string>
+    <string name="close_door">门禁关闭</string>
+    <string name="device_id">设备ID：D5661331</string>
     <string name="venue_fail">验证失败</string>
     <string name="door_has_open">门禁已开启</string>
     <string name="please_confirm_bind">请确认是否已绑定手指？</string>
