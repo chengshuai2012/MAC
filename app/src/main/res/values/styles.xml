@@ -58,6 +58,17 @@
         <item name="android:background">@color/divider_color</item>
     </style>
 
+    <style name="RadioButton">
+        <item name="android:textColor">@color/menu_check_box_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/w22</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:button">@null</item>
+    </style>
+
 
     <style name="CommonText">
         <item name="android:textSize">@dimen/w30</item>
