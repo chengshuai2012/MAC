@@ -15,8 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.link.cloud.R;
-import com.link.cloud.activity.DemoActivity;
 import com.link.cloud.activity.RegisterActivity;
+import com.link.cloud.activity.SettingActivity;
 import com.link.cloud.adapter.Lesson_Advantager;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Black;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Gray;
@@ -457,7 +457,7 @@ public class DialogUtils implements View.OnClickListener {
                 break;
             case R.id.confirm:
                 dialog.dismiss();
-                ((BaseActivity) context).showActivity(DemoActivity.class);
+                ((BaseActivity) context).showActivity(SettingActivity.class);
                 listener.dialogCancel();
                 break;
             case R.id.back_home:

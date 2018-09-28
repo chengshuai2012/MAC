@@ -60,6 +60,8 @@
     <dimen name="text_size_60">60px</dimen>
     <dimen name="text_confirm">300px</dimen>
     <dimen name="sqaure_code_size">197px</dimen>
+    <dimen name="setting_text_view_width">377px</dimen>
+    <dimen name="setting_text_view_height">69px</dimen>
 
 
 </resources>
