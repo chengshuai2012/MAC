@@ -9,8 +9,8 @@
         android:id="@+id/radioGroup"
         android:layout_width="@dimen/w190"
         android:layout_height="match_parent"
-        android:layout_marginLeft="-15dp"
-        android:layout_marginTop="@dimen/h150"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="@dimen/h50"
         android:orientation="vertical">
 
 
@@ -56,5 +56,6 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/w14"
         android:layout_height="match_parent"></FrameLayout>
 </LinearLayout>

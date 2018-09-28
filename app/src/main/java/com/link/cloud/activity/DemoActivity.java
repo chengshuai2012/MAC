@@ -21,6 +21,7 @@ public class DemoActivity extends AppBarActivity {
         initialize();
         setToolBarHelperHeight(ViewUtils.getDimenPx(R.dimen.h300));
         setTitle(R.mipmap.ic_no_data);
+        showActivity(SinglePurchaseActivity.class);
     }
 
     @Override
