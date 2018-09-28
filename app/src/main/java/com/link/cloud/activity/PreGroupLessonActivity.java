@@ -98,7 +98,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         registerIntroduceThree.setVisibility(View.GONE);
         registerIntroduceFive.setText(getResources().getString(R.string.choose_pay_2));
         binding.setText(getResources().getString(R.string.pay_ticket));
-        dialogUtils = new DialogUtils(this);
+        dialogUtils = DialogUtils.getDialogUtils(this,this);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     }
     StringBuilder builder = new StringBuilder();
     @OnClick ({R.id.bind_keypad_0,R.id.bind_keypad_1,R.id.bind_keypad_2,R.id.bind_keypad_3,R.id.bind_keypad_4,R.id.bind_keypad_5,R.id.bind_keypad_6,R.id.bind_keypad_7,R.id.bind_keypad_8,
-            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.back,R.id.pre,R.id.pay_zhifubao,R.id.pay_wechat})
+            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.back,R.id.pre,R.id.pay_zhifubao,R.id.pay_wechat,R.id.handy_pay})
     public void OnClick(View v){
         switch (v.getId()){
             case R.id.back:
@@ -147,16 +147,21 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                 break;
             case R.id.pre:
                 View pre = View.inflate(this,R.layout.pre_dialog,null);
-                dialogUtils.showPreDialog(pre,this);
+                dialogUtils.showPreDialog(pre);
                 break;
                 case R.id.pay_wechat:
                 View pay_wechat = View.inflate(this,R.layout.pay_dialog,null);
-                dialogUtils.showPayDialog(pay_wechat,this);
+                dialogUtils.showPayDialog(pay_wechat);
                 break;
                 case R.id.pay_zhifubao:
                 View pay_zhifubao = View.inflate(this,R.layout.pay_dialog,null);
-                dialogUtils.showPayDialog(pay_zhifubao,this);
+                dialogUtils.showPayDialog(pay_zhifubao);
                 break;
+                case R.id.handy_pay:
+                View handy_pay = View.inflate(this,R.layout.pay_conform_dialog,null);
+                dialogUtils.showHanyPayDialog(handy_pay);
+                break;
+
         }
     }
 

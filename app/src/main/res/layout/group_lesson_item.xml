@@ -23,6 +23,7 @@
                 android:textColor="@color/text_red"
                 android:textSize="@dimen/text_size_34"
                 android:gravity="center"
+                android:id="@+id/memeber_name"
                 android:textStyle="bold"
                 />
             <TextView
@@ -50,6 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:id="@+id/lesson_in"
                 >
                 <TextView
                     android:background="@drawable/border_red_gradient"
