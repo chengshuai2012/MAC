@@ -45,7 +45,7 @@ public class Group_Lesson_Fragment extends Fragment {
 
         // 模拟获取数据
         getData();
-        loadMoreAdapter = new GroupLesson_Adapter(dataList);
+        loadMoreAdapter = new GroupLesson_Adapter(dataList,getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(loadMoreAdapter);
 

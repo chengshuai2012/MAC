@@ -35,6 +35,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
 
     private LessonChoose_Fragment lessonChoose_fragment;
     private Group_Lesson_Fragment group_lesson_fragment;
+    private DialogUtils dialogUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         lessonChoose_fragment = new LessonChoose_Fragment();
         fragmentTransaction.replace(R.id.fg_container, lessonChoose_fragment);
         fragmentTransaction.commit();
+        dialogUtils = DialogUtils.getDialogUtils(this,this);
     }
 
 
@@ -70,8 +72,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.manager:
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
-                DialogUtils dialogUtils = new DialogUtils(this);
-                dialogUtils.showManagerDialog(view, this);
+
+                dialogUtils.showManagerDialog(view);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
                 member.setBackground(null);
                 member.setTextColor(getResources().getColor(R.color.text_gray));

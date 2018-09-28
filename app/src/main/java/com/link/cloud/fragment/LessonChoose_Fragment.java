@@ -19,6 +19,7 @@ import com.link.cloud.R;
 import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.adapter.ChooseLesson_Adapter;
 import com.link.cloud.base.BaseActivity;
+import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.EndlessRecyclerOnScrollListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.DisplayUtil;
@@ -37,7 +38,7 @@ import java.util.TimerTask;
  * Created by 49488 on 2018/9/20.
  */
 
-public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adapter.onItemClickLister {
+public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adapter.onItemClickLister, DialogCancelListener {
     private IndicatorViewPager indicatorViewPager;
     private LessonAdapter adapter;
     private String [] date = new String[]{"12月34日","9月5日","9月6日","9月7日","9月8日","9月10日"};
@@ -67,7 +68,7 @@ public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adap
     @Override
     public void OnClickCoachImage(int postion) {
         View view = View.inflate(getActivity(),R.layout.coach_dialog,null);
-        DialogUtils dialogUtils = new DialogUtils(getActivity());
+        DialogUtils dialogUtils = DialogUtils.getDialogUtils(getActivity(),this);
         dialogUtils.showIntroCoachDialog(view);
         Toast.makeText(getActivity(),postion+"",Toast.LENGTH_SHORT).show();
     }
@@ -79,6 +80,11 @@ public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adap
 
     @Override
     public void OnClickLesson(int postion) {
+
+    }
+
+    @Override
+    public void dialogCancel() {
 
     }
 

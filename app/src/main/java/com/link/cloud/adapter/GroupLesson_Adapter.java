@@ -1,5 +1,6 @@
 package com.link.cloud.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,11 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.link.cloud.R;
+import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.utils.DialogUtils;
 
 import java.util.List;
 
 
-public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DialogCancelListener{
 
     private List<String> dataList;
 
@@ -29,9 +32,10 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public final int LOADING_COMPLETE = 2;
 
     public final int LOADING_END = 3;
-
-    public GroupLesson_Adapter(List<String> dataList) {
+    Activity activity;
+    public GroupLesson_Adapter(List<String> dataList, Activity activity) {
         this.dataList = dataList;
+        this.activity=activity;
     }
 
     @Override
@@ -62,8 +66,20 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
-//            RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-//            recyclerViewHolder.tvItem.setText(dataList.get(position));
+            RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
+            recyclerViewHolder.lesson_in.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View view =View.inflate(activity,R.layout.verify_success,null);
+                    DialogUtils.getDialogUtils(activity,GroupLesson_Adapter.this).showVeuneOkDialog(view);
+                }
+            });recyclerViewHolder.memeber_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View view =View.inflate(activity,R.layout.verify_fail,null);
+                    DialogUtils.getDialogUtils(activity,GroupLesson_Adapter.this).showVeuneFailDialog(view);
+                }
+            });
 
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
@@ -112,13 +128,21 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    @Override
+    public void dialogCancel() {
+
+    }
+
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvItem;
+        LinearLayout lesson_in;
+        TextView memeber_name;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
             //tvItem = (TextView) itemView.findViewById(R.id.tv_item);
+            lesson_in = (LinearLayout) itemView.findViewById(R.id.lesson_in);
+            memeber_name = (TextView) itemView.findViewById(R.id.memeber_name);
         }
     }
 
