@@ -80,7 +80,6 @@ public class DialogUtils implements View.OnClickListener {
         cancel.setOnClickListener(this);
         psw_login.setOnClickListener(this);
         close.setOnClickListener(this);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -93,7 +92,6 @@ public class DialogUtils implements View.OnClickListener {
         close_pay.setOnClickListener(this);
         back_home.setOnClickListener(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 540);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -134,7 +132,6 @@ public class DialogUtils implements View.OnClickListener {
         bind_keypad_9.setOnClickListener(this);
         bind_keypad_ok.setOnClickListener(this);
         bind_keypad_delect.setOnClickListener(this);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -162,7 +159,6 @@ public class DialogUtils implements View.OnClickListener {
         TextView psw_login = view.findViewById(R.id.cancel_pre_pay);
         cancel.setOnClickListener(this);
         psw_login.setOnClickListener(this);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -173,7 +169,6 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
     public void showVeuneOkDialog(View view) {
@@ -183,7 +178,6 @@ public class DialogUtils implements View.OnClickListener {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
     public void showVeuneFailDialog(View view) {
@@ -197,7 +191,6 @@ public class DialogUtils implements View.OnClickListener {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 630);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -210,7 +203,6 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 467);
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -252,7 +244,6 @@ public class DialogUtils implements View.OnClickListener {
         bind_keypad_delect.setOnClickListener(this);
         confirm.setOnClickListener(this);
         inputTel.setText(context.getResources().getString(R.string.manager_pwd));
-        params.leftMargin = 90;
         window.setContentView(view, params);
     }
 
@@ -298,7 +289,6 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(850, 1750);
-        params.leftMargin = 60;
         window.setContentView(view, params);
         btn_delete.setOnClickListener(this);
     }
@@ -463,10 +453,10 @@ public class DialogUtils implements View.OnClickListener {
             case R.id.back_home:
                 ((BaseActivity) context).finish();
                 break;
-                case R.id.no_bind:
+            case R.id.no_bind:
                 ((BaseActivity) context).showActivity(RegisterActivity.class);
                 break;
-                case R.id.has_bind:
+            case R.id.has_bind:
 
                 break;
         }

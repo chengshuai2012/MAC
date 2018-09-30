@@ -141,4 +141,7 @@
     <string name="sure_user_info">请确认会员信息</string>
 
 
+    <string name="buy_sing_come">单次入场券</string>
+    <string name="activate_card">汗的会员开卡</string>
+    <string name="card_recharge">会员充值</string>
 </resources>
