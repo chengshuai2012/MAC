@@ -8,6 +8,8 @@ import android.widget.RadioGroup;
 
 import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.fragment.OpenMembershipFragment;
+import com.link.cloud.fragment.RechargeFragment;
 import com.link.cloud.fragment.SingleBuyFragment;
 
 /**
@@ -39,6 +41,7 @@ public class SinglePurchaseActivity extends AppBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(R.drawable.handy_logo);
         initialize();
     }
 
@@ -50,5 +53,27 @@ public class SinglePurchaseActivity extends AppBarActivity {
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         contentframe = (FrameLayout) findViewById(R.id.content_frame);
         showFragment(SingleBuyFragment.class);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                intFragment(checkedId);
+            }
+        });
+
+    }
+
+    private void intFragment(int checkedId) {
+        switch (checkedId) {
+            case R.id.singBuy:
+                showFragment(SingleBuyFragment.class);
+                break;
+            case R.id.activiteCard:
+                showFragment(OpenMembershipFragment.class);
+                break;
+            case R.id.rechargeCard:
+                showFragment(RechargeFragment.class);
+                break;
+        }
+
     }
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:infiniteCard="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="@dimen/w177"
+            android:layout_height="@dimen/h39"
+            android:layout_marginLeft="@dimen/w32"
+            android:layout_marginTop="@dimen/h21"
+            android:background="@drawable/border_red_gradient"
+            android:text="@string/sure_info"
+            android:textColor="@color/white"
+            android:textSize="@dimen/w20" />
+
+    </FrameLayout>
+
+    <com.link.cloud.widget.TurnCardListView
+        android:id="@+id/card_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:background="#FFFFFF"
+        android:clipToPadding="false"/>
+
+    <Button
+        android:id="@+id/sureInfoButton"
+        android:layout_width="@dimen/w506"
+        android:layout_height="@dimen/h108"
+        android:layout_marginTop="@dimen/h70"
+        android:background="@drawable/bg_gray_rectangle_corner_stroke_8e8e8e_r20"
+        android:text="@string/sure_user_info"
+        android:textColor="@color/text_gray"
+        android:textSize="@dimen/w28" />
+
+    <Button
+        android:id="@+id/sureButton"
+        android:layout_width="@dimen/w302"
+        android:layout_height="@dimen/h55"
+        android:layout_marginTop="@dimen/h42"
+        android:background="@drawable/border_red_gradient"
+        android:text="@string/sure"
+        android:textColor="@color/white"
+        android:textSize="@dimen/w28" />
+
+</LinearLayout>
