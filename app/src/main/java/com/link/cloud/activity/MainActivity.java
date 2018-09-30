@@ -110,7 +110,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-
+                showActivity(PrivateEducationConsumActivity.class);
                 break;
         }
     }

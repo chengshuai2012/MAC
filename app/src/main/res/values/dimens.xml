@@ -45,6 +45,7 @@
     <dimen name="keyboard_width">460px</dimen>
     <dimen name="keyboard_height">715px</dimen>
     <dimen name="bind_intro_textView_height">162px</dimen>
+    <dimen name="main_bt_size">146px</dimen>
     <dimen name="bind_intro_textView_width">760px</dimen>
     <dimen name="border_width">3px</dimen>
     <dimen name="text_front">5px</dimen>

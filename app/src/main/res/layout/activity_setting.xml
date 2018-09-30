@@ -42,10 +42,22 @@ android:background="@color/red">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/setting_text_black"
+            android:gravity="center_horizontal"
+            android:layout_centerInParent="true"
+            android:layout_above="@+id/open_or_close"
+            android:text="@string/device_id"
+            android:textSize="@dimen/text_size_60"
+            android:layout_marginBottom="@dimen/margin_main"
+            />
         <LinearLayout
             android:background="@drawable/manager_text_bg"
             android:layout_width="@dimen/setting_text_view_width"
             android:layout_height="100px"
+            android:id="@+id/open_or_close"
             android:layout_above="@+id/back_system_setting"
             android:layout_centerHorizontal="true"
             >
