@@ -133,4 +133,15 @@
     <string name="buy_sing_come">单次入场券</string>
     <string name="activate_card">汗的会员开卡</string>
     <string name="card_recharge">会员充值</string>
+    <string name="single_buy_rules">1．本会所向会员免费提供WIFI、热水沐浴、沐浴用品、吹风机、体重秤、自助手机充电宝租借、休息区。\n2．会员会籍只限本人使用。\n3．会员单日单次入场使用费20元/次。\n4．当日预约私教课程及团操课程可免全日入场费，课程取消将自动扣除入场费。\n5．私教课程须提前至少24小时预约，取消需在上课前6小时，未取消及未上课系统自带扣除课时及费用。\n6．团操课程预约后，取消需在开课前2小时，未取消及未上课系统自带扣除课时及费用。\n7．团操课程开课后15分钟，会员不可进入课室上课，已缴纳费用无需退还。\n8．私教课程及团操课程收费需按照课程标准收费（详见各课程合同收费条款）</string>
+    <string name="admission_ticket">入场券</string>
+    <string name="go_login_text">已是会员，去登录</string>
+    <string name="open_card">会员开卡</string>
+    <string name="sure_info">确认信息</string>
+    <string name="sure_user_info">请确认会员信息</string>
+
+
+    <string name="buy_sing_come">单次入场券</string>
+    <string name="activate_card">汗的会员开卡</string>
+    <string name="card_recharge">会员充值</string>
 </resources>

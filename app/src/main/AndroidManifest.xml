@@ -22,7 +22,6 @@
         <activity android:name=".activity.PreGroupLessonActivity" />
         <activity android:name=".activity.PrivateEducationActivity" />
         <activity android:name=".activity.RentingActivity" />
-        <activity android:name=".activity.SettingActivity" />
     </application>
 
 </manifest>
