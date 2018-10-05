@@ -110,8 +110,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="@dimen/bind_intro_textView_height"
-                        android:layout_height="@dimen/bind_intro_textView_height"
+                        android:layout_width="@dimen/main_bt_size"
+                        android:layout_height="@dimen/main_bt_size"
                         android:src="@drawable/register" />
 
                     <TextView
@@ -128,8 +128,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="@dimen/bind_intro_textView_height"
-                        android:layout_height="@dimen/bind_intro_textView_height"
+                        android:layout_width="@dimen/main_bt_size"
+                        android:layout_height="@dimen/main_bt_size"
                         android:src="@drawable/lesson_consum" />
 
                     <TextView
@@ -146,8 +146,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="@dimen/bind_intro_textView_height"
-                        android:layout_height="@dimen/bind_intro_textView_height"
+                        android:layout_width="@dimen/main_bt_size"
+                        android:layout_height="@dimen/main_bt_size"
                         android:src="@drawable/buy" />
 
                     <TextView

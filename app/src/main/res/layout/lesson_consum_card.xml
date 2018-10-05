@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/card_info_re"
+        android:layout_width="@dimen/multi_card_width"
+        android:layout_height="@dimen/multi_card_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/text_height_main"
+        android:background="@drawable/lesson_consum_card_bg">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dialog_icon_margin"
+    android:layout_marginRight="@dimen/dialog_icon_margin"
+    android:layout_alignParentRight="true"
+    android:text="@string/member"
+    android:textSize="@dimen/text_size_36"
+    android:textColor="@color/almost_white"
+    android:textStyle="bold"
+    />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dialog_icon_margin"
+            android:text="@string/member"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/almost_white"
+            android:textStyle="bold"
+            android:layout_above="@+id/tel_multi"
+            android:id="@+id/name_multi"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_icon_margin"
+            android:layout_marginLeft="@dimen/dialog_icon_margin"
+            android:layout_alignParentBottom="true"
+            android:text="@string/member"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/almost_white"
+            android:textStyle="bold"
+            android:id="@+id/tel_multi"
+            />
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

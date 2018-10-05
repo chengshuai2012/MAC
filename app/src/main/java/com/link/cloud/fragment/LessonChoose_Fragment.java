@@ -41,7 +41,7 @@ import java.util.TimerTask;
 public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adapter.onItemClickLister, DialogCancelListener {
     private IndicatorViewPager indicatorViewPager;
     private LessonAdapter adapter;
-    private String [] date = new String[]{"12月34日","9月5日","9月6日","9月7日","9月8日","9月10日"};
+    private String [] date = new String[]{"12月34日","9月5日","9月6日"};
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

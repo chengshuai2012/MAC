@@ -45,6 +45,7 @@
     <dimen name="keyboard_width">460px</dimen>
     <dimen name="keyboard_height">715px</dimen>
     <dimen name="bind_intro_textView_height">162px</dimen>
+    <dimen name="main_bt_size">146px</dimen>
     <dimen name="bind_intro_textView_width">760px</dimen>
     <dimen name="border_width">3px</dimen>
     <dimen name="text_front">5px</dimen>
@@ -62,6 +63,10 @@
     <dimen name="sqaure_code_size">197px</dimen>
     <dimen name="setting_text_view_width">377px</dimen>
     <dimen name="setting_text_view_height">69px</dimen>
+    <dimen name="multi_card_width">750px</dimen>
+    <dimen name="multi_card_height">442px</dimen>
+    <dimen name="consume_lesson_height">230px</dimen>
+    <dimen name="consume_lesson_width">500px</dimen>
 
 
 </resources>

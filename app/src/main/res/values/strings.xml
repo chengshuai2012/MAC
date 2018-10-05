@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MAC</string>
     <string name="member">会员</string>
+    <string name="consume_lesson_today">今日上课</string>
+    <string name="had_consume_lesson">已上课</string>
     <string name="manager">管理员</string>
     <string name="choose_lesson">选择课程</string>
     <string name="lesson_in">团课进场</string>
@@ -61,6 +63,7 @@
     <string name="bind_finish">绑定完成</string>
     <string name="back">返回</string>
     <string name="confirm">确定</string>
+    <string name="confirm_consume_lesson">确认消课</string>
     <string name="pay_count">支付金额：</string>
     <string name="work_step">操作步骤：</string>
     <string name="work_intro">打开支付宝，扫描下面二维码</string>
@@ -94,6 +97,7 @@
     <string name="right_finger">请正确放置手指</string>
     <string name="bind_right">绑定成功请开启你的健身之旅</string>
     <string name="now_card_num">当前卡号：159****5969</string>
+    <string name="confirm_member_info">请确认会员信息</string>
     <string name="more">更多</string>
     <string name="last_text">上一步</string>
     <string name="go_buy">去购买</string>
@@ -144,4 +148,5 @@
     <string name="buy_sing_come">单次入场券</string>
     <string name="activate_card">汗的会员开卡</string>
     <string name="card_recharge">会员充值</string>
+    <string name="lesson_consum">私教消课</string>
 </resources>
