@@ -1,7 +1,6 @@
 package com.link.cloud.activity;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -14,7 +13,6 @@ import com.link.cloud.R;
 import com.link.cloud.adapter.LessonConsumeAdapter;
 import com.link.cloud.adapter.LessonLeftAdapter;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.utils.SpaceItemDecoration;
 import com.link.cloud.widget.CardConfig;
 import com.link.cloud.widget.PublicTitleView;
 import com.link.cloud.widget.SwipeCardCallBack;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
