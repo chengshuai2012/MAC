@@ -4,8 +4,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.link.cloud.Constants;
 import com.link.cloud.R;
+import com.link.cloud.activity.RentingActivity;
+import com.link.cloud.api.bean.RentTimeBean;
 import com.link.cloud.base.BaseFragment;
+import com.zitech.framework.utils.ViewUtils;
 
 /**
  * @author qianlu
@@ -23,6 +27,7 @@ public class RentInfoFragment extends BaseFragment {
     private TextView cabinetPositionText;
     private Button lastButton;
     private Button nextButton;
+    private RentTimeBean rentTimeBean;
 
     @Override
     protected int getContentViewId() {
@@ -33,6 +38,8 @@ public class RentInfoFragment extends BaseFragment {
     public void onInflateView(View contentView) {
         super.onInflateView(contentView);
         initialize(contentView);
+        rentTimeBean = (RentTimeBean) getArguments().getSerializable(Constants.FragmentExtra.BEAN);
+
     }
 
     private void initialize(View contentView) {
@@ -43,6 +50,21 @@ public class RentInfoFragment extends BaseFragment {
         cabinetPositionText = (TextView) contentView.findViewById(R.id.cabinetPositionText);
         lastButton = (Button) contentView.findViewById(R.id.lastButton);
         nextButton = (Button) contentView.findViewById(R.id.nextButton);
+
+
+        ViewUtils.setOnClickListener(lastButton, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((RentingActivity) getActivity()).showPosition();
+                getActivity().onBackPressed();
+            }
+        });
+        ViewUtils.setOnClickListener(nextButton, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((RentingActivity) getActivity()).showBuyDate();
+            }
+        });
     }
 
 }

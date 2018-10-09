@@ -189,6 +189,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return Utils.replace(getSupportFragmentManager(), R.id.content_frame, fragmentClass);
     }
 
+    public Fragment showFragment(Class<? extends Fragment> fragmentClass,Bundle bundle) {
+        return Utils.replace(getSupportFragmentManager(),fragmentClass, R.id.content_frame, bundle);
+    }
+
     public Context getContext() {
         return this;
     }

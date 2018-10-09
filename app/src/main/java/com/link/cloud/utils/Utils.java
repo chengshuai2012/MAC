@@ -815,8 +815,8 @@ public class Utils extends com.zitech.framework.utils.Utils {
      * @param replaceLayoutId
      * @param args
      */
-    public static void replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, Bundle args) {
-        replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
+    public static Fragment replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, Bundle args) {
+       return replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
     }
 
     /**

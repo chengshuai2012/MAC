@@ -60,6 +60,8 @@ public class SinglePurchaseActivity extends AppBarActivity {
             }
         });
 
+
+
     }
 
     private void intFragment(int checkedId) {

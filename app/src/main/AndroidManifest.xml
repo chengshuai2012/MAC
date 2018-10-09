@@ -24,7 +24,7 @@
         <activity android:name=".activity.RentingActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.PrivateEducationConsumActivity" />
-        <!--<activity android:name=".activity.SinglePurchaseActivity" />-->
+        <activity android:name=".activity.SinglePurchaseActivity" />
     </application>
 
 </manifest>

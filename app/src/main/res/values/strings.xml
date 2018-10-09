@@ -125,13 +125,13 @@
     <string name="coachText">授课教练 : </string>
     <string name="palce_address">授课地点 :</string>
     <string name="amount_text">总计</string>
-    <string name="can_not_superposition">以上方式不可同时叠加使用</string>
+    <string name="can_not_superposition">以上方式不可同时叠加使用</string>`
     <string name="renting_cabinet">智能租柜</string>
     <string name="selecter_time">选择时间</string>
     <string name="sure">确认</string>
     <string name="input_info">填写信息</string>
     <string name="rent_store">租用门店</string>
-    <string name="rent_time">租用门店</string>
+    <string name="rent_time">租柜时间</string>
     <string name="return_time">归还时间</string>
     <string name="cabinet_position">柜号位置</string>
     <string name="buy_sing_come">单次入场券</string>
@@ -144,4 +144,9 @@
     <string name="sure_info">确认信息</string>
     <string name="sure_user_info">请确认会员信息</string>
     <string name="lesson_consum">私教消课</string>
+    <string name="rent_address">租用地点：</string>
+    <string name="rent_times">租用时间：</string>
+    <string name="rent_location">租用位置：</string>
+
+
 </resources>

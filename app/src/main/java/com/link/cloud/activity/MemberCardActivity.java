@@ -9,6 +9,7 @@ import com.link.cloud.fragment.MemberCardFragment;
 /**
  * 作者：qianlu on 2018/9/30 15:31
  * 邮箱：zar.l@qq.com
+ * 会员开卡
  */
 public class MemberCardActivity extends AppBarActivity {
     @Override

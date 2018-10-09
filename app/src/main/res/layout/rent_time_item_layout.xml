@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/h140"
+    android:gravity="center">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/rootViewLayout"
+        android:layout_width="@dimen/w433"
+        android:layout_height="@dimen/h112"
+        android:background="@drawable/border_lesson"
+        app:cardCornerRadius="@dimen/w56"
+        app:cardElevation="@dimen/w10">
+
+        <LinearLayout
+            android:layout_width="@dimen/w433"
+            android:layout_height="@dimen/h112"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/timeText"
+                style="@style/CommonText"
+                android:layout_marginLeft="@dimen/w54"
+                android:textColor="@color/red"
+                tools:text="adfasdf" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/rentMoney"
+                    style="@style/CommonText"
+                    android:layout_marginLeft="@dimen/w54"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/w16"
+                    tools:text="adfasdf" />
+
+                <TextView
+                    android:id="@+id/sureButton"
+                    style="@style/CommonText"
+                    android:layout_width="@dimen/w129"
+                    android:layout_height="@dimen/h33"
+                    android:layout_marginLeft="@dimen/w54"
+                    android:layout_marginTop="@dimen/h11"
+                    android:background="@drawable/border_red_gradient"
+                    android:gravity="center"
+                    android:text="确认租柜"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/w16" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
