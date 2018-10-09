@@ -10,8 +10,8 @@
         android:id="@+id/publicTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="私教课程" />
-
+        app:finish_text="@string/back_home"
+        app:title_text="@string/private_edu" />
 
     <FrameLayout
         android:id="@+id/content_frame"

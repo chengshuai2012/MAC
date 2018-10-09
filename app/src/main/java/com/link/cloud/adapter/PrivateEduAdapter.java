@@ -1,5 +1,6 @@
 package com.link.cloud.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -25,11 +26,17 @@ public class PrivateEduAdapter extends RecyclerView.Adapter implements IDataAdap
     private List<PrivateEduBean> items = new ArrayList<>();
     private BaseViewHolder.OnItemClickListener onItemClickListener;
     private Context context;
-    public static HashMap<Integer, Boolean> isSelected;
+    public static HashMap<Integer, Boolean> isSelected= new HashMap<Integer, Boolean>();
 
 
     public PrivateEduAdapter(Context context) {
         this.context = context;
+        items.add(new PrivateEduBean());
+        items.add(new PrivateEduBean());
+        items.add(new PrivateEduBean());
+        items.add(new PrivateEduBean());
+        items.add(new PrivateEduBean());
+        init(false,-1);
     }
 
     public void setOnItemClickListener(BaseViewHolder.OnItemClickListener onItemClickListener) {
@@ -47,13 +54,13 @@ public class PrivateEduAdapter extends RecyclerView.Adapter implements IDataAdap
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//        final PrivateEduBean privateEduBean = items.get(position);
-//        ((PrivateEduViewHolder) holder).setDates((Activity) context, privateEduBean, position, isSelected.get(position));
+        final PrivateEduBean privateEduBean = items.get(position);
+        ((PrivateEduViewHolder) holder).setDates((Activity) context, privateEduBean, position, isSelected.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return items.size()+10;
+        return items.size();
     }
 
     @Override
@@ -74,19 +81,17 @@ public class PrivateEduAdapter extends RecyclerView.Adapter implements IDataAdap
         } else {
             notifyItemRangeInserted(size, items.size());
         }
-        init(false, true);
+        init(false,-1);
     }
 
     // 初始化 设置所有item都为未选择
-    public void init(boolean isSelecter, boolean isFirst) {
-        isSelected = new HashMap<Integer, Boolean>();
+    public void init(boolean isSelecter, int position) {
         for (int i = 0; i < items.size(); i++) {
-            if (i == 0 && isFirst) {
+            if (i == position) {
                 isSelected.put(i, true);
             } else {
                 isSelected.put(i, isSelecter);
             }
-
         }
     }
 

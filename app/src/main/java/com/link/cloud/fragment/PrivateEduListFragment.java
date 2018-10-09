@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.link.cloud.R;
+import com.link.cloud.activity.PrivateEducationActivity;
 import com.link.cloud.adapter.PrivateEduAdapter;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.dataSourse.PrivateEduListDataSource;
 import com.link.cloud.base.BaseFragment;
+import com.link.cloud.base.BaseViewHolder;
 import com.link.cloud.widget.MVCSwipeRefreshHelper;
 
 import java.util.List;
@@ -41,7 +43,6 @@ public class PrivateEduListFragment extends BaseFragment {
     }
 
     private void initialize(View contentView) {
-
         recycleView = (RecyclerView) contentView.findViewById(R.id.recycleView);
         swipeLayout = (SwipeRefreshLayout) contentView.findViewById(R.id.swipeLayout);
         initDate();
@@ -57,6 +58,20 @@ public class PrivateEduListFragment extends BaseFragment {
         mvcHelper.setAdapter(privateEduAdapter);
         // 加载数据
         mvcHelper.refresh();
+
+        privateEduAdapter.setOnItemClickListener(new BaseViewHolder.OnItemClickListener() {
+            @Override
+            public void onItemClick(Object data, int position) {
+                ((PrivateEducationActivity) getActivity()).showDate((PrivateEduBean) data);
+                privateEduAdapter.init(false,position);
+                privateEduAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCheackClick(int position) {
+
+            }
+        });
     }
 
 }

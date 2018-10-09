@@ -68,6 +68,10 @@ public class PrivateEducationActivity extends AppBarActivity {
     }
 
 
+    public void showPosition() {
+        publicTitle.lastPosition();
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_privateeducation;
