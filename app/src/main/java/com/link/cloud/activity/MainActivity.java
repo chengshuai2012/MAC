@@ -1,6 +1,5 @@
 package com.link.cloud.activity;
 
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,12 +38,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private DialogUtils dialogUtils;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initViews();
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
@@ -56,6 +50,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         fragmentTransaction.replace(R.id.fg_container, lessonChoose_fragment);
         fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this,this);
+
     }
 
 

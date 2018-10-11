@@ -65,8 +65,6 @@ import rx.functions.Action1;
  */
 public class Utils extends com.zitech.framework.utils.Utils {
     private static final int DEFAULT_AVATAR_NOTIFICATION_ICON_SIZE = ViewUtils.dip2px(48);
-
-
     public static void AddFinishButton(final Activity activity, LinearLayout view, String content) {
         Button button = new Button(activity);
         LinearLayout.LayoutParams layoutParams
@@ -217,8 +215,6 @@ public class Utils extends com.zitech.framework.utils.Utils {
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir)));
     }
-
-
     /**
      * dp转px
      *

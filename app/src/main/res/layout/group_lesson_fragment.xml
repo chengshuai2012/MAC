@@ -9,13 +9,34 @@
     android:paddingRight="@dimen/text_height_main"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/text_height_main"
+    android:gravity="center"
+    android:layout_marginTop="45px"
+    android:layout_marginBottom="@dimen/margin_main"
+    >
+    
     <TextView
-        style="@style/TextView_Wrap"
-        android:layout_gravity="right"
-        android:layout_marginTop="@dimen/margin_main"
-        android:text="@string/group_in_introduce"
-        android:textColor="@color/almost_white"
-        android:textSize="@dimen/text_size_24" />
+        android:layout_width="@dimen/activity_top_view_height"
+        android:layout_height="match_parent"
+        android:background="@drawable/group_lesson_now"
+        android:layout_marginRight="@dimen/text_height_main"
+        android:textColor="@color/color_black_333333"
+        android:textSize="@dimen/text_size_32"
+        android:gravity="center"
+        android:text="@string/advantage_name"
+        />
+    <TextView
+        android:layout_width="@dimen/activity_top_view_height"
+        android:layout_height="match_parent"
+        android:background="@drawable/group_lesson_now"
+        android:textColor="@color/color_black_333333"
+        android:textSize="@dimen/text_size_32"
+        android:gravity="center"
+        android:text="@string/advantage_name"
+        />
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         >
 
         <android.support.v7.widget.RecyclerView
@@ -77,6 +99,7 @@
             android:scrollbarFadeDuration="1"
             android:background="@drawable/border_white_gradient_10px"
             android:scrollbars="vertical"
+
             app:layoutManager="LinearLayoutManager"></android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>

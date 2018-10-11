@@ -12,6 +12,8 @@
         android:id="@+id/lesson_indicator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/indicator_size"
+        android:paddingLeft="@dimen/margin_main"
+        android:paddingRight="@dimen/margin_main"
         android:layout_gravity="center_horizontal"
         />
 
