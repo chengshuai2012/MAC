@@ -6,14 +6,14 @@
 
 
     <Button
-        android:layout_width="@dimen/w244"
-        android:layout_height="@dimen/h54"
+        android:layout_width="@dimen/w177"
+        android:layout_height="@dimen/h39"
         android:layout_marginLeft="@dimen/w40"
         android:layout_marginTop="@dimen/h40"
         android:background="@drawable/border_red_gradient"
         android:text="@string/selecter_time"
         android:textColor="@color/white"
-        android:textSize="@dimen/w28" />
+        android:textSize="@dimen/w20" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
@@ -34,7 +34,7 @@
         <Button
             android:id="@+id/lastButton"
             android:layout_width="@dimen/w244"
-            android:layout_height="@dimen/h54"
+            android:layout_height="@dimen/h55"
             android:background="@drawable/border_lesson"
             android:text="@string/last_text"
             android:textColor="@color/red"
@@ -43,8 +43,7 @@
         <Button
             android:id="@+id/nextButton"
             android:layout_width="@dimen/w244"
-            android:layout_height="@dimen/h54"
-
+            android:layout_height="@dimen/h55"
             android:layout_marginLeft="@dimen/w40"
             android:background="@drawable/border_red_gradient"
             android:text="@string/sure"

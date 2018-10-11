@@ -9,7 +9,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/h280"
+        android:layout_height="@dimen/h225"
         android:layout_marginLeft="@dimen/w48"
         android:layout_marginRight="@dimen/w48">
 
@@ -20,7 +20,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/h50"
+                android:layout_height="@dimen/h57"
                 android:background="@drawable/border_red_gradient_r10"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -40,17 +40,10 @@
                     android:id="@+id/costText"
                     style="@style/CommonText"
                     android:textColor="@color/white"
+                    android:layout_marginRight="@dimen/w36"
                     android:textSize="@dimen/w24"
                     tools:text="塑形杠铃班" />
 
-                <TextView
-                    android:id="@+id/unitpriceText"
-                    style="@style/CommonText"
-                    android:layout_marginRight="@dimen/w48"
-                    android:layout_marginTop="@dimen/w2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/w16"
-                    tools:text="塑形杠铃班" />
             </LinearLayout>
 
             <LinearLayout
@@ -58,20 +51,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/w48"
                 android:layout_marginRight="@dimen/w48"
-                android:layout_marginTop="@dimen/h38"
+                android:layout_marginTop="@dimen/h26"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/CommonText"
-                    android:text="@string/coachText"
+                    android:text="@string/rent_times"
                     android:textColor="@color/dark_black"
-                    android:textSize="@dimen/w17" />
+                    android:textSize="@dimen/w19" />
 
                 <TextView
                     android:id="@+id/coachText"
                     style="@style/CommonText"
                     android:textColor="@color/dark_black"
-                    android:textSize="@dimen/w17"
+                    android:textSize="@dimen/w19"
                     tools:text="塑形杠铃班" />
 
 
@@ -82,12 +75,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/w48"
                 android:layout_marginRight="@dimen/w48"
-                android:layout_marginTop="@dimen/h38"
+                android:layout_marginTop="@dimen/h24"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/CommonText"
-                    android:text="@string/palce_address"
+                    android:text="@string/rent_location"
                     android:textColor="@color/dark_black"
                     android:textSize="@dimen/w19" />
 
@@ -106,31 +99,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/w48"
                 android:layout_marginRight="@dimen/w48"
-                android:layout_marginTop="@dimen/h38"
+                android:layout_marginTop="@dimen/h24"
                 android:orientation="horizontal">
 
                 <TextView
                     style="@style/CommonText"
-                    android:layout_weight="1"
-                    android:text="@string/amount_text"
-                    android:textColor="@color/red"
-                    android:textSize="@dimen/w24"
-                    android:textStyle="bold" />
+                    android:text="@string/rent_address"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w19" />
 
                 <TextView
-                    android:id="@+id/amountText"
+                    android:id="@+id/rentAddress"
                     style="@style/CommonText"
-                    android:textColor="@color/red"
-                    android:textSize="@dimen/w24"
-                    android:textStyle="bold"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/w19"
                     tools:text="塑形杠铃班" />
-
-
             </LinearLayout>
-
         </LinearLayout>
-
-
     </android.support.v7.widget.CardView>
 
 
@@ -166,31 +151,30 @@
                 <TextView
                     style="@style/CommonText"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/w22"
+                    android:textSize="@dimen/w19"
                     tools:text="@string/pay_time_sheng" />
 
                 <cn.iwgang.countdownview.CountdownView
                     android:id="@+id/countDownView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/w37"
                     app:isHideTimeBackground="true"
                     app:isShowMinute="true"
                     app:isShowSecond="true"
                     app:isTimeTextBold="true"
-                    app:suffixGravity="bottom"
                     app:suffixMinute="@string/minute"
-                    android:layout_marginRight="@dimen/w37"
                     app:suffixSecond="@string/second"
                     app:suffixTextColor="@color/white"
-                    app:suffixTextSize="@dimen/w17"
+                    app:suffixTextSize="@dimen/w19"
                     app:timeTextColor="@color/white"
-                    app:timeTextSize="@dimen/w17" />
+                    app:timeTextSize="@dimen/w19" />
             </LinearLayout>
 
 
             <android.support.v7.widget.CardView
                 android:layout_width="@dimen/w300"
-                android:layout_height="@dimen/h98"
+                android:layout_height="@dimen/h97"
                 android:layout_marginLeft="@dimen/w36"
                 android:layout_marginTop="@dimen/h22">
 
@@ -220,7 +204,7 @@
 
                 <LinearLayout
                     android:layout_width="@dimen/w264"
-                    android:layout_height="@dimen/h78"
+                    android:layout_height="@dimen/h77"
                     android:layout_marginLeft="@dimen/w36"
                     android:layout_marginTop="@dimen/h22"
                     android:background="@drawable/pay_wechat"
@@ -243,9 +227,9 @@
 
                 <LinearLayout
                     android:layout_width="@dimen/w264"
-                    android:layout_height="@dimen/h78"
-                    android:layout_marginTop="@dimen/h22"
+                    android:layout_height="@dimen/h77"
                     android:layout_marginLeft="@dimen/w37"
+                    android:layout_marginTop="@dimen/h22"
                     android:background="@drawable/pay_zhifubao"
                     android:gravity="center"
                     android:orientation="vertical">

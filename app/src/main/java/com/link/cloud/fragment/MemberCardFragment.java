@@ -90,9 +90,9 @@ public class MemberCardFragment extends BaseFragment {
                 if (child == null) {
                     child = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
                 }
-
-                ((TextView) child.findViewById(R.id.pos)).setText("" + position);
-                child.findViewById(R.id.image).setBackgroundColor(colors[position]);
+//
+//                ((TextView) child.findViewById(R.id.pos)).setText("" + position);
+//                child.findViewById(R.id.image).setBackgroundColor(colors[position]);
                 return child;
             }
         });

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.SimpleStyleDialog;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions.RxPermissions;
+import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.ViewUtils;
 
 import butterknife.ButterKnife;
@@ -165,6 +167,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 
     private void showDeniedDialog(final String denyText, final String... permissions) {
         if (denyDialog == null) {
@@ -187,6 +199,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public Fragment showFragment(Class<? extends Fragment> fragmentClass) {
         return Utils.replace(getSupportFragmentManager(), R.id.content_frame, fragmentClass);
+    }
+
+    public Fragment showFragment(Class<? extends Fragment> fragmentClass,Bundle bundle) {
+        return Utils.replace(getSupportFragmentManager(),fragmentClass, R.id.content_frame, bundle);
     }
 
     public Context getContext() {

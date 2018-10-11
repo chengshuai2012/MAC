@@ -41,7 +41,7 @@
             android:paddingLeft="@dimen/w48"
             android:paddingRight="@dimen/w48"
             android:textSize="@dimen/w28"
-            tools:text="结束闪约，将立即退还XX元托管赏金。是否结束" />
+            tools:text="" />
 
         <CheckBox
             android:id="@+id/agree"

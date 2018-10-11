@@ -1,5 +1,7 @@
 package com.link.cloud.api.bean;
 
+import java.io.Serializable;
+
 /**
  * @author qianlu
  * @date 2018/9/26.
@@ -7,5 +9,5 @@ package com.link.cloud.api.bean;
  * email：zar.l@qq.com
  * description：
  */
-public class PrivateEduBean {
+public class PrivateEduBean  implements Serializable{
 }
