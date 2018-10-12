@@ -67,15 +67,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="@string/lesson"
-            android:textColor="@color/almost_white"
-            android:textSize="@dimen/text_size_34"
-            android:gravity="center"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
             android:text="@string/status"
             android:textColor="@color/almost_white"
             android:textSize="@dimen/text_size_34"

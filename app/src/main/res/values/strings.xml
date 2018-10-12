@@ -64,6 +64,7 @@
     <string name="back">返回</string>
     <string name="confirm">确定</string>
     <string name="confirm_consume_lesson">确认消课</string>
+    <string name="confirm_pre_lesson">确认预约</string>
     <string name="pay_count">支付金额：</string>
     <string name="work_step">操作步骤：</string>
     <string name="work_intro">打开支付宝，扫描下面二维码</string>

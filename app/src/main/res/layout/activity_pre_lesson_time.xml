@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pre_lesson_day_height"
+        android:id="@+id/lesson_pre_day"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_36"
+        android:textColor="@color/color_black_333333"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/margin_main_middle"
+        android:layout_marginBottom="@dimen/margin_main_middle"
+        android:id="@+id/day"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/lesson_pre_hour"
+        android:background="@color/almost_white"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/text_confirm"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+    <TextView
+        android:id="@+id/previous"
+        android:layout_width="@dimen/activity_top_view_height"
+        android:layout_height="@dimen/dialog_80_height"
+        android:background="@drawable/border_lesson"
+        android:gravity="center"
+        android:text="@string/pre"
+        android:textColor="@color/red"
+        android:layout_marginRight="@dimen/margin_main"
+        android:textSize="@dimen/text_size_42" />
+    <TextView
+        android:id="@+id/confirm_pre"
+        android:layout_width="@dimen/activity_top_view_height"
+        android:layout_height="@dimen/dialog_80_height"
+        android:background="@drawable/border_red_gradient"
+        android:gravity="center"
+        android:text="@string/confirm_pre_lesson"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_42" />
+
+
+</LinearLayout>
+</LinearLayout>

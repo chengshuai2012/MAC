@@ -64,9 +64,11 @@
     <dimen name="setting_text_view_width">377px</dimen>
     <dimen name="setting_text_view_height">69px</dimen>
     <dimen name="multi_card_width">750px</dimen>
-    <dimen name="multi_card_height">442px</dimen>
+    <dimen name="multi_card_height">422px</dimen>
     <dimen name="consume_lesson_height">230px</dimen>
     <dimen name="consume_lesson_width">500px</dimen>
+    <dimen name="pre_lesson_day_width">108px</dimen>
+    <dimen name="pre_lesson_day_height">220px</dimen>
 
 
 </resources>

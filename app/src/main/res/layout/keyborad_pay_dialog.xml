@@ -178,7 +178,7 @@
                 android:background="@drawable/button_bt_bg"
                 android:gravity="center"
                 android:text="@string/digitKeyppad_clear"
-                android:textColor="@color/red"
+                android:textColor="@color/colorbutton"
                 android:textSize="@dimen/text_size_36"></Button>
         </LinearLayout>
     </LinearLayout>

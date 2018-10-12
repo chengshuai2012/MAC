@@ -49,9 +49,9 @@ public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adap
         ViewPager viewPager =lesson_choose. findViewById(R.id.lesson_viewPager);
         Indicator indicator = (RecyclerIndicatorView) lesson_choose.findViewById(R.id.lesson_indicator);
         int selectColorId = getResources().getColor(R.color.almost_white);
-        int unSelectColorId =  getResources().getColor(R.color.red);
+        int unSelectColorId =  getResources().getColor(R.color.dark_black);
         indicator.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColorId, unSelectColorId));
-        indicator.setScrollBar(new SpringBar(getActivity(), Color.RED));
+        indicator.setScrollBar(new SpringBar(getActivity(),getResources().getColor(R.color.red)));
         viewPager.setOffscreenPageLimit(0);
         indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
         adapter = new LessonAdapter();
