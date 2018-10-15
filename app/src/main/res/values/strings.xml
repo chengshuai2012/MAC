@@ -148,6 +148,7 @@
     <string name="rent_address">租用地点：</string>
     <string name="rent_times">租用时间：</string>
     <string name="rent_location">租用位置：</string>
-
-
+    <string name="again_finger">请移开手指,再次放置...</string>
+    <string name="same_finger">验证错误，请放置同一根手指</string>
+    <string name="move_finger">请移开手指</string>
 </resources>
