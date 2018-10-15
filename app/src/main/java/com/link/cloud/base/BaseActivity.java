@@ -10,12 +10,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.link.cloud.Constants;
 import com.link.cloud.R;
+import com.link.cloud.listener.NettyListener;
+import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.SimpleStyleDialog;
 import com.orhanobut.logger.Logger;
@@ -27,14 +31,18 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.functions.Action1;
 
+import static com.link.cloud.Constants.TCP_PORT;
+import static com.link.cloud.Constants.TCP_URL;
+
 /**
  * Created by OFX002 on 2018/9/20.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, NettyListener {
 
     private Unbinder bind;
     private SimpleStyleDialog denyDialog;
+    public NettyClientBootstrap nettyClientBootstrap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected abstract int getLayoutId();
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        nettyClientBootstrap = new NettyClientBootstrap(this, this,TCP_PORT, TCP_URL);
+        nettyClientBootstrap.start();
+    }
+    protected void  SendMsgToTcp(String msg){
+        nettyClientBootstrap.startNetty("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblR5cGUiOjIsImp0aSI6IkhKS0YiLCJpcCI6IjE5Mi4xNjguMy4xMDIiLCJ1YSI6IjE2MzA3Iiwibm9uY2UiOiJwQWJvRkhubiIsImlhdCI6MTUzOTQyMTA3NCwiZXhwIjoxNTM5NDI0Njc0fQ.5PrRiJp8E7yFzHnYq28mBTRvL2zdwjmGiJhPCmMUZpqRZi08klCpmvqrS5CdJAWbk8amT_b2uCZlMLgrDZP0iQ\"}");
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -223,4 +240,23 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         win.setAttributes(winParams);
     }
 
+    @Override
+    public void onNettySuccess() {
+        Logger.e("Heart-Beat-Success");
+    }
+
+    @Override
+    public void onNettyFail(String msg) {
+        Logger.e(msg);
+    }
+
+    @Override
+    public void onNettyLoss(String msg) {
+        Logger.e(msg);
+    }
+
+    @Override
+    public void onMessageReceive(String msg) {
+        Logger.e(msg);
+    }
 }
