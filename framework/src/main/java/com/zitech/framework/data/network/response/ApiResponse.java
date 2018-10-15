@@ -5,7 +5,7 @@ package com.zitech.framework.data.network.response;
  * @author makk
  * @version V1.0
  * @Project: PersonalAccount
- * @Package com.zitech.personalaccount.data.network.response
+ * @Package
  * @Description: 响应基类
  * @date 2016/5/17 9:47
  */

@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.link.cloud.R;
+import com.link.cloud.User;
+import com.link.cloud.api.ApiFactory;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.widget.BottomBuyDialog;
 import com.link.cloud.widget.PublicTitleView;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ViewUtils;
 
 @SuppressLint("Registered")
@@ -27,7 +31,30 @@ public class DemoActivity extends AppBarActivity {
     @Override
     protected void initViews() {
 
+
+
+        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse response) {
+                User.get().setToken((String) response.getData());
+                getCode();
+            }
+        });
+
     }
+
+    private void getCode() {
+
+        ApiFactory.sendVCode("13631629110").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse response) {
+
+            }
+        });
+    }
+
+
+
 
     @Override
     protected int getLayoutId() {

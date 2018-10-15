@@ -7,13 +7,14 @@ package com.link.cloud.api;
  */
 public class ApiConstants {
     //API接口地址
-    public static final String DAILY_DAILY_URL = "http://47.75.97.26/";
-
-    //    public static final String DAILY_DAILY_URL = "https://bqadmin.btcbing.com/portal/";
-    //API接口地址
-    public static final String DAILY_URL_TWO = "https://tstbqadmin.btcbing.com/portal/";
+    public static final String DAILY_DAILY_URL = "http://alx.patpang.cn/";
 
 
-    public static final String TEAMLIST = "/team/list";
+    //获取验证码
+    public static final String SENDVCODE = "/{app}/{sendVCode}/{phone}";
+    //APP登录
+    public static final String APPLOGIN = "{pub}/{appLogin}/{deviceCode}/{password}";
+
+
 
 }

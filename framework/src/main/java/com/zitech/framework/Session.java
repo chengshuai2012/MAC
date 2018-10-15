@@ -146,15 +146,6 @@ public class Session extends Observable {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        ApplicationInfo appInfo = null;
-        try {
-            appInfo = context.getPackageManager()
-                    .getApplicationInfo(context.getPackageName(),
-                            PackageManager.GET_META_DATA);
-            channel = appInfo.metaData.getString("UMENG_CHANNEL");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         mContext = context;
     }
 

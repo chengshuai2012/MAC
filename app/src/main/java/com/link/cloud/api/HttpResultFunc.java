@@ -19,7 +19,7 @@ public class HttpResultFunc<T> implements Func1<ApiResponse<T>, ApiResponse<T>> 
         if (httpResult.getCode() == 1004) {
 
         }
-        if (httpResult.getCode() != 200) {
+        if (httpResult.getCode() != 200000) {
             throw new ApiException(httpResult.getCode(), httpResult.getMessage());
         }
         return httpResult;
