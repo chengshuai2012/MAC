@@ -26,6 +26,7 @@
         <activity android:name=".activity.PrivateEducationConsumActivity" />
         <activity android:name=".activity.PrePrivateLessonActivity" />
         <!--<activity android:name=".activity.SinglePurchaseActivity" />-->
+        <service android:name=".veune.MdUsbService"/>
     </application>
 
 </manifest>

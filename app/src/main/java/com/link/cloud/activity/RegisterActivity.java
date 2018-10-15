@@ -8,8 +8,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
+
+import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -101,20 +104,25 @@ public class RegisterActivity extends AppBarActivity {
 
     protected void initViews() {
         customProgress.setProgressFormatter(null);
-        customProgress.setMax(999);
+        customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
+
     }
 
     private void simulateProgress() {
-        ValueAnimator animator = ValueAnimator.ofInt(0, 1000);
+        ValueAnimator animator = ValueAnimator.ofInt(0, 100);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int progress = (int) animation.getAnimatedValue();
                 if(customProgress!=null){
                     customProgress.setProgress(progress);
-                    if(progress==999){
+                    int state = MacApplication.getVenueUtils().getState();
+                    if(state==3){
+                        MacApplication.getVenueUtils().workModel();
+                    }
+                    if(progress==99){
                         finish();
                     }
                 }
