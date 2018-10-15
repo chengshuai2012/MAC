@@ -269,8 +269,4 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         Logger.e(state+msg);
     }
 
-    @Override
-    public void identifyMsg(String msg, String uid) {
-
-    }
 }

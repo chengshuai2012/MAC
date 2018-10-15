@@ -11,12 +11,12 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
-
-import javax.crypto.Mac;
+import com.link.cloud.bean.People;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 
 /**
  * Created by OFX002 on 2018/9/21.
@@ -101,17 +101,19 @@ public class RegisterActivity extends AppBarActivity {
     TextView bindFinishInfo;
     @BindView(R.id.bind_middle_three)
     RelativeLayout bindMiddleThree;
+    Realm realm;
+    private ValueAnimator animator;
 
     protected void initViews() {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
-
+        realm=Realm.getDefaultInstance();
     }
 
     private void simulateProgress() {
-        ValueAnimator animator = ValueAnimator.ofInt(0, 100);
+        animator = ValueAnimator.ofInt(0, 100);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -121,6 +123,13 @@ public class RegisterActivity extends AppBarActivity {
                     int state = MacApplication.getVenueUtils().getState();
                     if(state==3){
                         MacApplication.getVenueUtils().workModel();
+                        animator.setCurrentPlayTime(0);
+                    }
+                    if(state==4){
+                        bindVenueIntro.setText(getResources().getString(R.string.move_finger));
+                    }
+                    if(state!=4&&state!=3){
+                        bindVenueIntro.setText(getResources().getString(R.string.right_finger));
                     }
                     if(progress==99){
                         finish();
@@ -188,4 +197,37 @@ public class RegisterActivity extends AppBarActivity {
 
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+    @Override
+    public void modelMsg(int state, String msg) {
+        if(state==3){
+            final People userBean = new People();
+            userBean.setUid(System.currentTimeMillis()+"");
+            userBean.setFeature(msg);
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.copyToRealm(userBean);
+                }
+            });
+            bindMiddleTwo.setVisibility(View.INVISIBLE);
+            bindMiddleThree.setVisibility(View.VISIBLE);
+            registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+            registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+            bindWay.setText(getResources().getString(R.string.bind_finish));
+            animator.cancel();
+        }
+        if(state==2){
+            bindVenueIntro.setText(getResources().getString(R.string.same_finger));
+        }
+        if(state==1){
+            bindVenueIntro.setText(getResources().getString(R.string.again_finger));
+        }
+    }
+
 }

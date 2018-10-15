@@ -19,7 +19,7 @@ public class MacApplication extends BaseApplication {
     public  static Venueutils getVenueUtils(){
         synchronized (Venueutils.class) {
             if (venueUtils==null){
-                return new Venueutils();
+                venueUtils = new Venueutils();
             }
             return venueUtils;
         }

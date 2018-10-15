@@ -1,5 +1,6 @@
 package com.link.cloud.activity;
 
+import android.animation.ValueAnimator;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -7,8 +8,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.bean.People;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
@@ -16,6 +19,7 @@ import com.link.cloud.utils.DialogUtils;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppBarActivity implements DialogCancelListener {
@@ -36,6 +40,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private Group_Lesson_Fragment group_lesson_fragment;
     private DialogUtils dialogUtils;
     Realm realm;
+    private RealmResults<People> userBeans;
+    private ValueAnimator animator;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -50,6 +57,20 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this,this);
         realm = Realm.getDefaultInstance();
+        userBeans = realm.where(People.class).findAll();
+        animator = ValueAnimator.ofInt(0, 100);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int progress = (int) animation.getAnimatedValue();
+                int state = MacApplication.getVenueUtils().getState();
+                if(state==3){
+                    MacApplication.getVenueUtils().identifyNewImg(userBeans);
+                }
+            }
+        });
+        animator.setDuration(40000);
+
     }
 
 
@@ -74,6 +95,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
+                animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.almost_white));
