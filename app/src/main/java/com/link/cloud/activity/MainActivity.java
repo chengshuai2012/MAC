@@ -110,6 +110,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         }
     }
 
+
     @Override
     public void dialogCancel() {
         member.setBackground(getResources().getDrawable(R.drawable.border_red));

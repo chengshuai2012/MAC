@@ -8,7 +8,8 @@ import java.util.Map;
  */
 public class Constants {
 
-
+    public static final String TCP_URL = "120.79.143.192";
+    public static final int TCP_PORT = 12125;
 
     public interface ActivityExtra {
 
