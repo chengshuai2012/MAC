@@ -1,6 +1,7 @@
 package com.link.cloud.api;
 
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
@@ -45,7 +46,90 @@ public interface ApiService {
      */
     @POST(ApiConstants.SENDVCODE)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> sendVCode(@Path("app") String app, @Path("sendVCode") String sendVCode, @Path("phone") String phone, @Header("access-token") String devid);
+    Observable<ApiResponse> sendVCode(@Path("app") String app, @Path("sendVCode") String sendVCode, @Path("phone") String phone, @Header("access-token") String token);
+
+
+    /**
+     * 团课入场
+     *
+     * @param
+     * @return
+     * @see {app}/{admissionCourse}/{uid}/{cid}
+     */
+    @POST(ApiConstants.ADMISSIONCOURSE)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("admissionCourse") String admissionCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
+
+
+    /**
+     * 课程列表
+     *
+     * @param
+     * @return
+     * @see {app}/{courseList}
+     */
+    @POST(ApiConstants.COURSELIST)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> courseList(@Path("app") String app, @Path("courseList") String courseList, @Header("access-token") String token);
+
+
+    /**
+     * 修改指纹
+     *
+     * @param
+     * @return
+     * @see {app}/{edituser}
+     */
+    @POST(ApiConstants.EDITUSER)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> edituser(@Path("app") String app, @Path("edituser") String edituser, @Header("access-token") String token, @Body EdituserRequest request);
+
+
+    /**
+     * 绑定用户
+     *
+     * @param
+     * @return
+     * @see "{app}/{bindUser}/{phone}/{vcode}";
+     */
+    @GET(ApiConstants.BINDUSER)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> binduser(@Path("app") String app, @Path("bindUser") String bindUser, @Path("phone") String phone, @Path("vcode") String vcode, @Header("access-token") String token);
+
+
+    /**
+     * 课程详情
+     *
+     * @param
+     * @return
+     * @see {app}/{courseDetail}/{id}
+     */
+    @GET(ApiConstants.COURSEDETAIL)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> coursedetail(@Path("app") String app, @Path("courseDetail") String courseDetail, @Path("id") String id, @Header("access-token") String token);
+
+
+    /**
+     * 查询顾客的私教信息
+     *
+     * @param
+     * @return
+     * @see {app}/{findCoach}/{uid}
+     */
+    @GET(ApiConstants.FINDCOACH)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> findcoach(@Path("app") String app, @Path("findCoach") String findCoach, @Path("uid") String uid, @Header("access-token") String token);
+
+    /**
+     * 查询顾客私教课程
+     *
+     * @param
+     * @return
+     * @see {app}/{findPersonalCourse}/{uid}/{cid}
+     */
+    @GET(ApiConstants.FINDPERSONALCOURSE)
+    @Headers("Content-Type:" + RetrofitClient.FORM)
+    Observable<ApiResponse> findpersonalcourse(@Path("app") String app, @Path("findPersonalCourse") String findPersonalCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
 
 
     /**
