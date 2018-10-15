@@ -1,9 +1,24 @@
 package com.link.cloud.utils;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
+
 import com.link.cloud.R;
+import com.link.cloud.veune.MdDevice;
 import com.link.cloud.veune.MdUsbService;
 import com.link.cloud.veune.ModelImgMng;
 import com.orhanobut.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import md.com.sdk.MicroFingerVein;
 
 /**
  * Created by 49488 on 2018/10/15.
@@ -31,16 +46,20 @@ public class Venueutils {
         void modelMsg(int state,String msg);
         void identifyMsg(String msg,String uid);
     };
-    public  void initVenue(MdUsbService.MyBinder mdDeviceBinder, Context context, VenueCallBack callBack,  Boolean bOpen){
+    public  void initVenue(Context context, VenueCallBack callBack,  Boolean bOpen){
         this.bOpen=bOpen;
         this.context=context;
-        this.mdDeviceBinder=mdDeviceBinder;
+        if(mdDeviceBinder==null){
+            Intent intent = new Intent(context, MdUsbService.class);
+            context.bindService(intent, mdSrvConn, Service.BIND_AUTO_CREATE);
+        }
         this.callBack=callBack;
     }
     public int getState() {
         if (!bOpen) {
             modOkProgress = 0;
             modelImgMng.reset();
+            Logger.e(mdDeviceBinder+"");
             bOpen = mdDeviceBinder.openDevice(0);//开启指定索引的设备
             if (bOpen) {
                 Logger.e( "open device success");
@@ -157,4 +176,81 @@ public class Venueutils {
         }
 
     }
+    private List<MdDevice> mdDevicesList = new ArrayList<MdDevice>();
+    public static MdDevice mdDevice;
+    private final int MSG_REFRESH_LIST = 0;
+    private Handler listManageH = new Handler(new Handler.Callback() {
+
+        @Override
+
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REFRESH_LIST: {
+                    mdDevicesList.clear();
+                    mdDevicesList = getDevList();
+                    if (mdDevicesList.size() > 0) {
+                        mdDevice = mdDevicesList.get(0);
+                    } else {
+                        listManageH.sendEmptyMessageDelayed(MSG_REFRESH_LIST, 1500L);
+
+                    }
+                    break;
+                }
+
+            }
+            return false;
+
+        }
+
+    });
+    private List<MdDevice> getDevList() {
+        List<MdDevice> mdDevList = new ArrayList<MdDevice>();
+        if (mdDeviceBinder != null) {
+            int deviceCount = MicroFingerVein.fvdev_get_count();
+            for (int i = 0; i < deviceCount; i++) {
+                MdDevice mdDevice = new MdDevice();
+                mdDevice.setNo(i);
+                mdDevice.setIndex(mdDeviceBinder.getDeviceNo(i));
+                mdDevList.add(mdDevice);
+            }
+        } else {
+            Logger.e( "microFingerVein not initialized by MdUsbService yet,wait a moment...");
+        }
+        return mdDevList;
+
+    }
+    private ServiceConnection mdSrvConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mdDeviceBinder = (MdUsbService.MyBinder) service;
+            if (mdDeviceBinder != null) {
+                mdDeviceBinder.setOnUsbMsgCallback(mdUsbMsgCallback);
+                listManageH.sendEmptyMessage(MSG_REFRESH_LIST);
+                Logger.e("bind MdUsbService success.");
+            } else {
+                Logger.e( "bind MdUsbService failed.");
+            }
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Logger.e("disconnect MdUsbService.");
+        }
+    };
+
+    private MdUsbService.UsbMsgCallback mdUsbMsgCallback = new MdUsbService.UsbMsgCallback() {
+        @Override
+        public void onUsbConnSuccess(String usbManufacturerName, String usbDeviceName) {
+            String newUsbInfo = "USB厂商：" + usbManufacturerName + "  \nUSB节点：" + usbDeviceName;
+            Logger.e(newUsbInfo);
+        }
+        @Override
+        public void onUsbDisconnect() {
+            Logger.e("USB连接已断开");
+        }
+
+    };
+    public void unBindService(){
+        context.unbindService(mdSrvConn);
+    }
+
 }

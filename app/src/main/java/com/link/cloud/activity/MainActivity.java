@@ -13,10 +13,10 @@ import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
-
-
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.realm.Realm;
+
 
 public class MainActivity extends AppBarActivity implements DialogCancelListener {
 
@@ -32,11 +32,10 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     LinearLayout chooseLessonContainer;
     @BindView(R.id.fg_container)
     FrameLayout fgContainer;
-
     private LessonChoose_Fragment lessonChoose_fragment;
     private Group_Lesson_Fragment group_lesson_fragment;
     private DialogUtils dialogUtils;
-
+    Realm realm;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -50,7 +49,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         fragmentTransaction.replace(R.id.fg_container, lessonChoose_fragment);
         fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this,this);
-
+        realm = Realm.getDefaultInstance();
     }
 
 
@@ -110,6 +109,11 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 
     @Override
     public void dialogCancel() {

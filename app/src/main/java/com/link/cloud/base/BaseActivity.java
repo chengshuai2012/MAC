@@ -17,10 +17,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.link.cloud.Constants;
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.listener.NettyListener;
 import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Utils;
+import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.SimpleStyleDialog;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -38,7 +40,7 @@ import static com.link.cloud.Constants.TCP_URL;
  * Created by OFX002 on 2018/9/20.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, NettyListener {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, NettyListener, Venueutils.VenueCallBack {
 
     private Unbinder bind;
     private SimpleStyleDialog denyDialog;
@@ -50,7 +52,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         this.setContentView(this.getLayoutId());
         bind = ButterKnife.bind(this);
+        MacApplication.getVenueUtils().initVenue(this,this,false);
         initViews();
+
     }
 
     protected abstract void initViews();
@@ -258,5 +262,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onMessageReceive(String msg) {
         Logger.e(msg);
+    }
+
+    @Override
+    public void modelMsg(int state, String msg) {
+        Logger.e(state+msg);
+    }
+
+    @Override
+    public void identifyMsg(String msg, String uid) {
+
     }
 }
