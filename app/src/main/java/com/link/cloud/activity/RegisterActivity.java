@@ -1,15 +1,8 @@
 package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.style.AbsoluteSizeSpan;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,12 +10,8 @@ import android.widget.TextView;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
-import com.link.cloud.api.ApiFactory;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
-import com.link.cloud.utils.Utils;
-import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,9 +36,9 @@ public class RegisterActivity extends AppBarActivity {
     @BindView(R.id.bind_way)
     TextView bindWay;
     @BindView(R.id.input_tel)
-    EditText inputTel;
+    TextView inputTel;
     @BindView(R.id.verify_code)
-    EditText verifyCode;
+    TextView verifyCode;
     @BindView(R.id.send)
     TextView send;
     @BindView(R.id.bind_keypad_1)
@@ -114,27 +103,13 @@ public class RegisterActivity extends AppBarActivity {
     RelativeLayout bindMiddleThree;
     Realm realm;
     private ValueAnimator animator;
-    boolean tel_input =true;
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     protected void initViews() {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
         realm=Realm.getDefaultInstance();
-        setHintSize(inputTel,36,getResources().getString(R.string.please_input_tel));
-        setHintSize(verifyCode,30,getResources().getString(R.string.please_input_verify));
-        verifyCode.setShowSoftInputOnFocus(false);
-        inputTel.setShowSoftInputOnFocus(false);
-    }
-    public void setHintSize(EditText editText,int size,String hint){
-        String hintStr = hint;
-        SpannableString ss =  new SpannableString(hintStr);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
-        editText.setHintTextColor(getResources().getColor(R.color.dark_black));
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        editText.setHint(new SpannedString(ss));
-
     }
 
     private void simulateProgress() {
@@ -166,16 +141,13 @@ public class RegisterActivity extends AppBarActivity {
         animator.start();
     }
     StringBuilder builder = new StringBuilder();
-    StringBuilder verify = new StringBuilder();
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_register;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick({R.id.bind_keypad_0,R.id.bind_keypad_1,R.id.bind_keypad_2,R.id.bind_keypad_3,R.id.bind_keypad_4,R.id.bind_keypad_5,R.id.bind_keypad_6,R.id.bind_keypad_7,R.id.bind_keypad_8,
-            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.bind_venue_intro,R.id.back,R.id.input_tel,R.id.verify_code,R.id.send})
+            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.bind_venue_intro,R.id.back})
     public void OnClick(View v){
         switch (v.getId()){
             case R.id.back:
@@ -191,42 +163,18 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_7:
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
-                if(inputTel.isFocused()){
-                    builder.append(((TextView)v).getText());
-                    inputTel.setText(builder.toString());
-                    inputTel.setSelection(builder.length());
-                }else {
-                    verify.append(((TextView)v).getText());
-                    verifyCode.setText(verify.toString());
-                    verifyCode.setSelection(verify.length());
-                }
+                builder.append(((TextView)v).getText());
+                inputTel.setText(builder.toString());
             break;
             case R.id.bind_keypad_ok:
-                if(inputTel.isFocused()){
-                    builder.delete(0,builder.length());
-                    inputTel.setText(builder.toString());
-                    inputTel.setSelection(builder.length());
-                    setHintSize(inputTel,36,getResources().getString(R.string.please_input_tel));
-                }else {
-                    verify.delete(0,verify.length());
-                    verifyCode.setText(verify.toString());
-                    verifyCode.setSelection(verify.length());
-                    setHintSize(verifyCode,30,getResources().getString(R.string.please_input_verify));
-                }
+                builder.delete(0,builder.length());
+                inputTel.setText(builder.toString());
+
                 break;
             case R.id.bind_keypad_delect:
-                    if(inputTel.isFocused()){
-                        if(builder.length()>=1){
-                            builder.deleteCharAt(builder.length() - 1);
-                            inputTel.setText(builder.toString());
-                            inputTel.setSelection(builder.length());
-                        }
-                    }else {
-                        if(verify.length()>=1){
-                            verify.deleteCharAt(verify.length() - 1);
-                            verifyCode.setText(verify.toString());
-                            verifyCode.setSelection(verify.length());
-                    }
+                if(builder.length()>=1){
+                    builder.deleteCharAt(builder.length() - 1);
+                    inputTel.setText(builder.toString());
                 }
                     break;
             case R.id.confirm_bind:
@@ -245,17 +193,8 @@ public class RegisterActivity extends AppBarActivity {
                 registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
                 bindWay.setText(getResources().getString(R.string.bind_finish));
                 break;
-            case R.id.send:
-                String tel_num = inputTel.getText().toString();
-                Utils.isPhoneNum(tel_num);
-                ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
-                    @Override
-                    public void onNext(ApiResponse apiResponse) {
 
-                    }
-                });
 
-                break;
         }
     }
 

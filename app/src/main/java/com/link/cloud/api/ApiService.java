@@ -1,5 +1,6 @@
 package com.link.cloud.api;
 
+import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.PageRequest;
@@ -7,6 +8,7 @@ import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.http.Body;
@@ -70,7 +72,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.COURSELIST)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> courseList(@Path("app") String app, @Path("courseList") String courseList, @Path("begDate") String begDate,@Header("access-token") String token);
+    Observable<ApiResponse<List<LessonBean>>> courseList(@Path("app") String app, @Path("courseList") String courseList, @Path("begDate") String begDate, @Header("access-token") String token);
 
 
     /**
@@ -102,11 +104,11 @@ public interface ApiService {
      *
      * @param
      * @return
-     * @see {app}/{courseDetail}/{id}
+     * @see {app}/{courseDetail}/{courseReleasePkcode}
      */
     @GET(ApiConstants.COURSEDETAIL)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> coursedetail(@Path("app") String app, @Path("courseDetail") String courseDetail, @Path("id") String id, @Header("access-token") String token);
+    Observable<ApiResponse> coursedetail(@Path("app") String app, @Path("courseDetail") String courseDetail, @Path("courseReleasePkcode") String courseReleasePkcode, @Header("access-token") String token);
 
 
     /**
