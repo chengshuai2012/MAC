@@ -44,7 +44,7 @@ public interface ApiService {
      * @return
      * @see /{app}/{sendVCode}/{phone}
      */
-    @POST(ApiConstants.SENDVCODE)
+    @GET(ApiConstants.SENDVCODE)
     @Headers("Content-Type:" + RetrofitClient.FORM)
     Observable<ApiResponse> sendVCode(@Path("app") String app, @Path("sendVCode") String sendVCode, @Path("phone") String phone, @Header("access-token") String token);
 

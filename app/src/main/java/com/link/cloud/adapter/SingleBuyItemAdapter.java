@@ -73,19 +73,9 @@ public class SingleBuyItemAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 2;
     }
 
 
-
-    public static class ContentViewHolder extends RecyclerView.ViewHolder {
-        private TextView contentText;
-
-
-        public ContentViewHolder(View itemView) {
-            super(itemView);
-            contentText = itemView.findViewById(R.id.contentText);
-        }
-    }
 }
 

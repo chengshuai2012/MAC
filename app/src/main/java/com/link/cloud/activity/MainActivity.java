@@ -50,6 +50,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this,this);
         realm = Realm.getDefaultInstance();
+        showActivity(DemoActivity.class);
     }
 
 

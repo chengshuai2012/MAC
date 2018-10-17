@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/h107"
+    android:layout_marginTop="@dimen/h21"
+    android:background="@drawable/single_buy_icon"
+    android:orientation="vertical">
+
+    <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:src="@drawable/single_buy_icon" />-->
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/h107"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginLeft="@dimen/w12"
         android:layout_marginRight="@dimen/w12"
-        android:layout_marginTop="@dimen/h21"
-        android:background="@drawable/single_buy_icon"
-        android:gravity="center_vertical"
         android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/w37"
             android:orientation="horizontal">
 
@@ -25,7 +32,7 @@
                 android:id="@+id/cardName"
                 style="@style/CommonText"
                 android:layout_weight="1"
-                tools:text="单次入场券"
+                android:text="单次入场券"
                 android:textColor="@color/red"
                 android:textSize="@dimen/w18" />
 
@@ -35,8 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/w56"
-                android:textSize="@dimen/w14"
-                tools:text="20.00" />
+                android:text="20.00"
+                android:textSize="@dimen/w14" />
 
         </LinearLayout>
 
@@ -44,15 +51,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/w37"
-            android:gravity="center"
             android:layout_marginTop="@dimen/h10"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/validityPeriod"
                 style="@style/CommonText"
                 android:layout_weight="1"
-                tools:text="有效期1年"
+                android:text="有效期1年"
                 android:textColor="@color/color_gray_999999"
                 android:textSize="@dimen/w14" />
 
@@ -71,4 +78,4 @@
     </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="@dimen/w190"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="-15dp"
-        android:layout_marginTop="@dimen/h150"
-        android:orientation="vertical">
-
-
-        <RadioButton
-            android:id="@+id/singBuy"
-            style="@style/RadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/h50"
-            android:background="@drawable/singlepurchase_selector"
-            android:checked="true"
-            android:gravity="center"
-            android:text="@string/buy_sing_come"
-            android:textSize="@dimen/w20" />
-
-
-        <RadioButton
-            android:id="@+id/activiteCard"
-            style="@style/RadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/h50"
-            android:layout_marginTop="@dimen/h26"
-            android:background="@drawable/singlepurchase_selector"
-            android:gravity="center"
-            android:text="@string/activate_card"
-            android:textSize="@dimen/w20" />
-
-
-        <RadioButton
-            android:id="@+id/rechargeCard"
-            style="@style/RadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/h50"
-            android:layout_marginTop="@dimen/h26"
-            android:background="@drawable/singlepurchase_selector"
-            android:gravity="center"
-            android:text="@string/card_recharge"
-            android:textSize="@dimen/w20" />
-
-
-    </RadioGroup>
-
-
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <com.link.cloud.widget.PublicTitleView
+        android:id="@+id/publicTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="wrap_content"
+        app:finish_text="@string/back_home" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/h25"
+        android:orientation="horizontal">
+
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="@dimen/w190"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-20dp"
+            android:orientation="vertical">
+
+
+            <RadioButton
+                android:id="@+id/singBuy"
+                style="@style/RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h50"
+                android:background="@drawable/singlepurchase_selector"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/buy_sing_come"
+                android:textSize="@dimen/w20" />
+
+
+            <RadioButton
+                android:id="@+id/activiteCard"
+                style="@style/RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h50"
+                android:layout_marginTop="@dimen/h26"
+                android:background="@drawable/singlepurchase_selector"
+                android:gravity="center"
+                android:text="@string/activate_card"
+                android:textSize="@dimen/w20" />
+
+
+            <RadioButton
+                android:id="@+id/rechargeCard"
+                style="@style/RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h50"
+                android:layout_marginTop="@dimen/h26"
+                android:background="@drawable/singlepurchase_selector"
+                android:gravity="center"
+                android:text="@string/card_recharge"
+                android:textSize="@dimen/w20" />
+
+
+        </RadioGroup>
+
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
+
+
+    </LinearLayout>
+
 </LinearLayout>

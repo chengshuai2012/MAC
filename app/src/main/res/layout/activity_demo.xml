@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -15,9 +14,25 @@
         app:finish_text_size="@dimen/w20"
         app:title_text="@string/warning_sdcard_unmounted"
         app:title_text_color="@color/red"
-        app:title_text_size="@dimen/w20"/>
+        app:title_text_size="@dimen/w20" />
 
-    <include layout="@layout/private_edu_item_layout"></include>
+    <LinearLayout
+        android:background="@color/red"
+        android:layout_width="@dimen/h800"
+        android:layout_height="@dimen/h800"
+        android:gravity="center"
+  >
 
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/fingerImage"
+            android:layout_width="@dimen/w400"
+            android:layout_height="@dimen/w400"
+            android:src="@drawable/finger"
+            android:background="@drawable/finger"
+            />
+
+
+
+    </LinearLayout>
 
 </LinearLayout>

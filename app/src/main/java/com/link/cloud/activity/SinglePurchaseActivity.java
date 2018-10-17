@@ -11,6 +11,7 @@ import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.fragment.OpenMembershipFragment;
 import com.link.cloud.fragment.RechargeFragment;
 import com.link.cloud.fragment.SingleBuyFragment;
+import com.link.cloud.widget.PublicTitleView;
 
 /**
  * @author qianlu
@@ -27,6 +28,7 @@ public class SinglePurchaseActivity extends AppBarActivity {
     private RadioButton rechargeCard;
     private RadioGroup radioGroup;
     private FrameLayout contentframe;
+    private PublicTitleView publicTitleView;
 
     @Override
     protected void initViews() {
@@ -46,7 +48,7 @@ public class SinglePurchaseActivity extends AppBarActivity {
     }
 
     private void initialize() {
-
+        publicTitleView = (PublicTitleView) findViewById(R.id.publicTitle);
         singBuy = (RadioButton) findViewById(R.id.singBuy);
         activiteCard = (RadioButton) findViewById(R.id.activiteCard);
         rechargeCard = (RadioButton) findViewById(R.id.rechargeCard);
@@ -59,7 +61,12 @@ public class SinglePurchaseActivity extends AppBarActivity {
                 intFragment(checkedId);
             }
         });
-
+        publicTitleView.setItemClickListener(new PublicTitleView.onItemClickListener() {
+            @Override
+            public void itemClickListener() {
+                finish();
+            }
+        });
 
 
     }

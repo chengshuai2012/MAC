@@ -8,24 +8,29 @@ import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.widget.BottomBuyDialog;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ViewUtils;
 
+import pl.droidsonroids.gif.GifImageButton;
+import pl.droidsonroids.gif.GifImageView;
+
 @SuppressLint("Registered")
 public class DemoActivity extends AppBarActivity {
     private LinearLayout rootView;
     private PublicTitleView publicTitle;
+    private GifImageView fingerImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GifImageButton gib = new GifImageButton(this);
+
         super.onCreate(savedInstanceState);
         initialize();
         setToolBarHelperHeight(ViewUtils.getDimenPx(R.dimen.h300));
-        setTitle(R.mipmap.ic_no_data);
-        showActivity(SinglePurchaseActivity.class);
+        setTitle(R.drawable.handy_logo);
     }
 
     @Override
@@ -62,17 +67,19 @@ public class DemoActivity extends AppBarActivity {
     }
 
     private void initialize() {
-        rootView = (LinearLayout) findViewById(R.id.rootView);
+//        rootView = (LinearLayout) findViewById(R.id.rootView);
         publicTitle= (PublicTitleView) findViewById(R.id.publicTitle);
+        fingerImage= (GifImageView) findViewById(R.id.fingerImage);
+        fingerImage.setImageResource(R.drawable.finger);
+//        Glide.w ith(this).load(R.drawable.finger).asGif().into(fingerImage);
         publicTitle.setTags("haha","asdjfhasd","asdfads");
-        publicTitle.nextPosition();
+
         publicTitle.setItemClickListener(new PublicTitleView.onItemClickListener() {
             @Override
             public void itemClickListener() {
-                setToolBarHelperHeight(ViewUtils.getDimenPx(R.dimen.h120));
+                finish();
             }
         });
-        BottomBuyDialog dialog=new BottomBuyDialog(this);
-        dialog.show();
+
     }
 }

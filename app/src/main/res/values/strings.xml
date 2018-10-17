@@ -151,4 +151,5 @@
     <string name="again_finger">请移开手指,再次放置...</string>
     <string name="same_finger">验证错误，请放置同一根手指</string>
     <string name="move_finger">请移开手指</string>
+    <string name="handy_member">汗的会员卡</string>
 </resources>
