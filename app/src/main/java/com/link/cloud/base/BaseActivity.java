@@ -29,6 +29,8 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.ViewUtils;
 
+import javax.crypto.Mac;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.functions.Action1;
@@ -74,6 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy() {
         super.onDestroy();
         bind.unbind();
+        MacApplication.getVenueUtils().unBindService();
     }
     @Override
     protected void onStop() {

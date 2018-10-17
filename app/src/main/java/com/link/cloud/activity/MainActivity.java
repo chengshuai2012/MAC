@@ -62,10 +62,10 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int progress = (int) animation.getAnimatedValue();
                 int state = MacApplication.getVenueUtils().getState();
                 if(state==3){
-                    MacApplication.getVenueUtils().identifyNewImg(userBeans);
+                    String uid = MacApplication.getVenueUtils().identifyNewImg(userBeans);
+                    group_lesson_fragment.onVeuenMsg(uid);
                 }
             }
         });
@@ -87,7 +87,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.manager:
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
-
                 dialogUtils.showManagerDialog(view);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
                 member.setBackground(null);
@@ -109,6 +108,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 fragmentTransaction.commit();
                 break;
             case R.id.choose_lesson:
+                animator.cancel();
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));

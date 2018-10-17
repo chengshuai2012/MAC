@@ -17,7 +17,7 @@ import com.link.cloud.utils.DialogUtils;
 import java.util.List;
 
 
-public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DialogCancelListener{
+public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<String> dataList;
 
@@ -67,19 +67,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-            recyclerViewHolder.lesson_in.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    View view =View.inflate(activity,R.layout.verify_success,null);
-                    DialogUtils.getDialogUtils(activity,GroupLesson_Adapter.this).showVeuneOkDialog(view);
-                }
-            });recyclerViewHolder.memeber_name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    View view =View.inflate(activity,R.layout.verify_fail,null);
-                    DialogUtils.getDialogUtils(activity,GroupLesson_Adapter.this).showVeuneFailDialog(view);
-                }
-            });
+
 
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
@@ -128,10 +116,6 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    @Override
-    public void dialogCancel() {
-
-    }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
