@@ -76,7 +76,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy() {
         super.onDestroy();
         bind.unbind();
-        MacApplication.getVenueUtils().unBindService();
+        try {
+            MacApplication.getVenueUtils().unBindService();
+        }catch (Exception e){
+
+        }
+
     }
     @Override
     protected void onStop() {
