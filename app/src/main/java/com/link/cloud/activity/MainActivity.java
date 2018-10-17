@@ -45,6 +45,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private Group_Lesson_Fragment group_lesson_fragment;
     private DialogUtils dialogUtils;
     Realm realm;
+    ValueAnimator animator;
+    RealmResults<People> userBeans;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
