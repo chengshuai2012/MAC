@@ -1,5 +1,6 @@
 package com.link.cloud.activity;
 
+import android.animation.ValueAnimator;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -7,10 +8,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.bean.People;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
@@ -21,6 +24,7 @@ import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppBarActivity implements DialogCancelListener {
@@ -41,13 +45,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private Group_Lesson_Fragment group_lesson_fragment;
     private DialogUtils dialogUtils;
     Realm realm;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
-    protected void initViews() {
+    protected   void initViews() {
         hideToolbar();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
@@ -56,6 +59,20 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         realm = Realm.getDefaultInstance();
+        userBeans = realm.where(People.class).findAll();
+        animator = ValueAnimator.ofInt(0, 100);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int state = MacApplication.getVenueUtils().getState();
+                if(state==3){
+                    String uid = MacApplication.getVenueUtils().identifyNewImg(userBeans);
+                    group_lesson_fragment.onVeuenMsg(uid);
+                }
+            }
+        });
+        animator.setDuration(40000);
+
 
 
 
@@ -98,7 +115,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.manager:
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
-
                 dialogUtils.showManagerDialog(view);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
                 member.setBackground(null);
@@ -106,6 +122,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
+                animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.almost_white));
@@ -119,6 +136,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 fragmentTransaction.commit();
                 break;
             case R.id.choose_lesson:
+                animator.cancel();
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));
@@ -154,5 +172,4 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
     }
-
 }

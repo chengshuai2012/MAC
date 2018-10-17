@@ -132,32 +132,32 @@ public class LessonChoose_Fragment extends Fragment implements ChooseLesson_Adap
                     }, 1000);
                 }
             });
-            // 设置加载更多监听
-            recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
-                @Override
-                public void onLoadMore() {
-                    loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING);
-
-                    if (dataList.size() < 52) {
-                        // 模拟获取网络数据，延时1s
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getData();
-                                        loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_COMPLETE);
-                                    }
-                                });
-                            }
-                        }, 1000);
-                    } else {
-                        // 显示加载到底的提示
-                        loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_END);
-                    }
-                }
-            });
+//            // 设置加载更多监听
+//            recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+//                @Override
+//                public void onLoadMore() {
+//                    loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING);
+//
+//                    if (dataList.size() < 52) {
+//                        // 模拟获取网络数据，延时1s
+//                        new Timer().schedule(new TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                getActivity().runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        getData();
+//                                        loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_COMPLETE);
+//                                    }
+//                                });
+//                            }
+//                        }, 1000);
+//                    } else {
+//                        // 显示加载到底的提示
+//                        loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_END);
+//                    }
+//                }
+//            });
             return Group_Lesson_Fragment;
         }
 

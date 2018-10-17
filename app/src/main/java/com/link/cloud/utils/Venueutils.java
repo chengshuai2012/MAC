@@ -7,9 +7,10 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.link.cloud.R;
+import com.link.cloud.bean.People;
 import com.link.cloud.veune.MdDevice;
 import com.link.cloud.veune.MdUsbService;
 import com.link.cloud.veune.ModelImgMng;
@@ -17,7 +18,13 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import io.realm.RealmResults;
 import md.com.sdk.MicroFingerVein;
 
 /**
@@ -33,19 +40,15 @@ public class Venueutils {
     private int[] pos = new int[1];
     private float[] score = new float[1];
     private boolean ret;
-    private ModelImgMng modelImgMng = new ModelImgMng();
+    public ModelImgMng modelImgMng = new ModelImgMng();
     private int[] tipTimes = {0, 0};//后两次次建模时用了不同手指或提取特征识别时，最多重复提醒限制3次
     private int lastTouchState = 0;//记录上一次的触摸状态
     private int modOkProgress = 0;
-    boolean isWorkFinsh = false;
-    boolean isIdentyFinsh = false;
-    int time = 0;
     private final static float IDENTIFY_SCORE_THRESHOLD = 0.63f;
     private final static float MODEL_SCORE_THRESHOLD = 0.4f;
     public interface VenueCallBack{
         void modelMsg(int state,String msg);
-        void identifyMsg(String msg,String uid);
-    };
+    }
     public  void initVenue(Context context, VenueCallBack callBack,  Boolean bOpen){
         this.bOpen=bOpen;
         this.context=context;
@@ -148,10 +151,10 @@ public class Venueutils {
                         tipTimes[0] = 0;
                         tipTimes[1] = 0;
                         modelImgMng.setImg3(img);
+                        callBack.modelMsg(3,HexUtil.bytesToHexString(feature));
                         modelImgMng.setFeature3(feature);
                         modelImgMng.reset();
                         mdDeviceBinder.closeDevice(0);
-                        callBack.modelMsg(3,context.getString(R.string.same_finger));
                         bOpen = false;
                     } else {//第三次建模从图片中取特征值无效
                         modOkProgress = 2;
@@ -175,6 +178,54 @@ public class Venueutils {
             }
         }
 
+    }
+    public String identifyNewImg(final RealmResults<People> peoples) {
+        final int nThreads=peoples.size()/1000+1;
+        ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
+        List<Future<String>> futures = new ArrayList();
+        for (int i = 0; i < nThreads; i++) {
+            final List<People> subList = peoples.subList(1000* nThreads * i, 1000*nThreads * (i + 1));
+            Callable<String> task = new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    StringBuffer sb = new StringBuffer();
+                    String[] uids = new String[1000];
+                    int position =0;
+                    for (People userBean : subList) {
+                        sb.append(userBean.getFeature());
+                        uids[position] = userBean.getUid();
+                        position++;
+
+                    }
+                    byte[] allFeaturesBytes = HexUtil.hexStringToByte(sb.toString());
+                    boolean identifyResult = MicroFingerVein.fv_index(allFeaturesBytes, allFeaturesBytes.length / 3352, img, pos, score);
+                    identifyResult = identifyResult && score[0] > IDENTIFY_SCORE_THRESHOLD;//得分是否达标
+                    if (identifyResult) {//比对通过且得分达标时打印此手指绑定的用户名
+                        String uid = uids[pos[0]];
+                        return uid;
+                    } else {
+                        return null;
+
+                    }
+                }
+            };
+
+            futures.add(executorService.submit(task));
+
+        }
+        for (Future<String> future : futures) {
+            try {
+                if(!TextUtils.isEmpty(future.get())){
+                    return future.get();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executorService.shutdown();
+        return null;
     }
     private List<MdDevice> mdDevicesList = new ArrayList<MdDevice>();
     public static MdDevice mdDevice;
