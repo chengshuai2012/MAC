@@ -42,7 +42,6 @@ public class Group_Lesson_Fragment extends Fragment implements DialogCancelListe
         return Group_Lesson_Fragment;
     }
     private void init() {
-
         // 设置刷新控件颜色
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.red));
 

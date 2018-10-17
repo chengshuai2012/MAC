@@ -29,7 +29,7 @@ public class ApiConstants {
     public static final String BINDUSER = "{app}/{bindUser}/{phone}/{vcode}";
 
     //课程详情
-    public static final String COURSEDETAIL = "{app}/{courseDetail}/{courseReleasePkcode}";
+    public static final String COURSEDETAIL = "{app}/{courseDetail}/{id}";
 
     //查询顾客的私教信息
     public static final String FINDCOACH = "{app}/{findCoach}/{uid}";

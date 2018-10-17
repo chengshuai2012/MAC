@@ -1,7 +1,6 @@
 package com.link.cloud.api;
 
 import com.link.cloud.User;
-import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.PageRequest;
@@ -11,7 +10,6 @@ import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.SchedulersCompat;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -79,7 +77,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse<List<LessonBean>>>  courseList(String begDate) {
+    public static Observable<ApiResponse> courseList(String begDate) {
         return getApiService().courseList("app", "courseList", begDate, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
@@ -108,8 +106,8 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> coursedetail(String courseReleasePkcode) {
-        return getApiService().coursedetail("app", "courseDetail", courseReleasePkcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> coursedetail(String id) {
+        return getApiService().coursedetail("app", "courseDetail", id, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 
