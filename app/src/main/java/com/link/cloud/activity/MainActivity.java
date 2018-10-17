@@ -85,6 +85,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 User.get().setToken((String) response.getData());
             }
         });
+
     }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
