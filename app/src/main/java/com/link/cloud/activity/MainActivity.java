@@ -8,11 +8,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.link.cloud.R;
+import com.link.cloud.User;
+import com.link.cloud.api.ApiFactory;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
@@ -36,21 +41,47 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private Group_Lesson_Fragment group_lesson_fragment;
     private DialogUtils dialogUtils;
     Realm realm;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
-    protected   void initViews() {
+    protected void initViews() {
         hideToolbar();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         lessonChoose_fragment = new LessonChoose_Fragment();
         fragmentTransaction.replace(R.id.fg_container, lessonChoose_fragment);
         fragmentTransaction.commit();
-        dialogUtils = DialogUtils.getDialogUtils(this,this);
+        dialogUtils = DialogUtils.getDialogUtils(this, this);
         realm = Realm.getDefaultInstance();
-        showActivity(DemoActivity.class);
+
+
+
+
+        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse response) {
+                User.get().setToken((String) response.getData());
+                getListDate();
+            }
+        });
+
+
+    }
+
+
+    public void getListDate() {
+
+        ApiFactory.courseList("2018-10-17").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+
+            @Override
+            public void onNext(ApiResponse response) {
+
+            }
+        });
+
     }
 
 
@@ -123,4 +154,5 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
     }
+
 }

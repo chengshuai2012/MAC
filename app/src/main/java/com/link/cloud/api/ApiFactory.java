@@ -77,8 +77,8 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> courseList() {
-        return getApiService().courseList("app", "courseList", User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> courseList(String begDate) {
+        return getApiService().courseList("app", "courseList", begDate, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

@@ -7,7 +7,6 @@ import com.link.cloud.Constants;
 import com.link.cloud.R;
 import com.link.cloud.api.bean.RentTimeBean;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.fragment.BuyPrivateEduFragment;
 import com.link.cloud.fragment.RentBuyFragment;
 import com.link.cloud.fragment.RentCabinetFragment;
 import com.link.cloud.fragment.RentInfoFragment;

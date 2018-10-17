@@ -38,7 +38,7 @@
             style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:layout_width="@dimen/main_image_width"
             android:layout_height="@dimen/main_image_height"
-            android:src="@mipmap/ic_action_more"
+            android:src="@drawable/handy_logo"
             android:layout_gravity="center"
             android:textColor="@color/textColorPrimaryDark"
             android:textSize="17sp" />

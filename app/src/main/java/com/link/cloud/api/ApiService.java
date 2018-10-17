@@ -66,11 +66,11 @@ public interface ApiService {
      *
      * @param
      * @return
-     * @see {app}/{courseList}
+     * @see {app}/{courseList}/{begDate}
      */
     @POST(ApiConstants.COURSELIST)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> courseList(@Path("app") String app, @Path("courseList") String courseList, @Header("access-token") String token);
+    Observable<ApiResponse> courseList(@Path("app") String app, @Path("courseList") String courseList, @Path("begDate") String begDate,@Header("access-token") String token);
 
 
     /**

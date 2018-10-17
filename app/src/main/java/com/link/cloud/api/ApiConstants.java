@@ -20,7 +20,7 @@ public class ApiConstants {
     public static final String ADMISSIONCOURSE = "{app}/{admissionCourse}/{uid}/{cid}";
 
     //课程列表
-    public static final String COURSELIST = "{app}/{courseList}";
+    public static final String COURSELIST = "{app}/{courseList}/{begDate}";
 
     //修改指纹
     public static final String EDITUSER = "{app}/{editUser}";

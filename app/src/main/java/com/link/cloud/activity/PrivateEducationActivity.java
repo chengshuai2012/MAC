@@ -30,6 +30,8 @@ public class PrivateEducationActivity extends AppBarActivity {
 
     @Override
     protected void initViews() {
+
+        setTitle(R.drawable.handy_logo);
         showFragment(PrivateEduListFragment.class);
         publicTitle = (PublicTitleView) findViewById(R.id.publicTitle);
         publicTitle.setItemClickListener(new PublicTitleView.onItemClickListener() {
