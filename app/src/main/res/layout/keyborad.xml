@@ -4,12 +4,11 @@
     android:layout_height="@dimen/keyboard_height"
     android:orientation="vertical">
 
-<TextView
+<EditText
     android:layout_width="match_parent"
     android:layout_height="@dimen/keyboard_edit_height"
     android:background="@drawable/border_lesson"
     android:layout_marginBottom="@dimen/keyboard_margin"
-    android:textColorHint="@color/red"
     android:id="@+id/input_tel"
     android:gravity="center"
     android:text="@string/please_input_tel"
@@ -22,12 +21,11 @@
         android:layout_marginBottom="@dimen/keyboard_margin"
         android:gravity="center"
         >
-        <TextView
+        <EditText
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="@dimen/keyboard_edit_height"
             android:background="@drawable/border_lesson"
-            android:textColorHint="@color/red"
             android:gravity="center"
             android:layout_marginRight="@dimen/keyboard_margin"
             android:id="@+id/verify_code"
