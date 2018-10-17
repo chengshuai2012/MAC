@@ -66,8 +66,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onStart() {
         super.onStart();
-//        nettyClientBootstrap = new NettyClientBootstrap(this, this,TCP_PORT, TCP_URL);
-//        nettyClientBootstrap.start();
+        nettyClientBootstrap = new NettyClientBootstrap(this, this,TCP_PORT, TCP_URL);
+        nettyClientBootstrap.start();
     }
     protected void  SendMsgToTcp(String msg){
         nettyClientBootstrap.startNetty("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblR5cGUiOjIsImp0aSI6IkhKS0YiLCJpcCI6IjE5Mi4xNjguMy4xMDIiLCJ1YSI6IjE2MzA3Iiwibm9uY2UiOiJwQWJvRkhubiIsImlhdCI6MTUzOTQyMTA3NCwiZXhwIjoxNTM5NDI0Njc0fQ.5PrRiJp8E7yFzHnYq28mBTRvL2zdwjmGiJhPCmMUZpqRZi08klCpmvqrS5CdJAWbk8amT_b2uCZlMLgrDZP0iQ\"}");

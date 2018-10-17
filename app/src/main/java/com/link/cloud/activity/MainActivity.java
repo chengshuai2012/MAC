@@ -12,7 +12,6 @@ import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
-import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
@@ -21,8 +20,6 @@ import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,13 +47,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     Realm realm;
     ValueAnimator animator;
     RealmResults<People> userBeans;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
-    protected void initViews() {
+    protected   void initViews() {
         hideToolbar();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
@@ -71,7 +67,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int state = MacApplication.getVenueUtils().getState();
-                if (state == 3) {
+                if(state==3){
                     String uid = MacApplication.getVenueUtils().identifyNewImg(userBeans);
                     group_lesson_fragment.onVeuenMsg(uid);
                 }
@@ -79,13 +75,34 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         });
         animator.setDuration(40000);
 
+
+
+
+
         ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onNext(ApiResponse response) {
                 User.get().setToken((String) response.getData());
+                getListDate();
             }
         });
+
+
     }
+
+
+    public void getListDate() {
+
+        ApiFactory.courseList("2018-10-17").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+
+            @Override
+            public void onNext(ApiResponse response) {
+
+            }
+        });
+
+    }
+
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
     public void onClick(View v) {
