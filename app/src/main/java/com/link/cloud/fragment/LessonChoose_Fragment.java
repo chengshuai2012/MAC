@@ -11,6 +11,8 @@ import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.base.BaseFragment;
+import com.link.cloud.listener.FragmentListener;
+import com.link.cloud.utils.Utils;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
@@ -18,7 +20,9 @@ import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,10 +51,10 @@ public class LessonChoose_Fragment extends BaseFragment {
         scrollIndicatorView = contentView.findViewById(R.id.titleIndicator);
 
         int selectColorId = getResources().getColor(R.color.almost_white);
-        int unSelectColorId =  getResources().getColor(R.color.dark_black);
+        int unSelectColorId = getResources().getColor(R.color.dark_black);
 
         scrollIndicatorView.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColorId, unSelectColorId));
-        scrollIndicatorView.setScrollBar(new SpringBar(getActivity(),getResources().getColor(R.color.red)));
+        scrollIndicatorView.setScrollBar(new SpringBar(getActivity(), getResources().getColor(R.color.red)));
 
 
         indicatorViewPager = new IndicatorViewPager(scrollIndicatorView, viewPager);
@@ -65,9 +69,10 @@ public class LessonChoose_Fragment extends BaseFragment {
         return R.layout.choose_lesson_fragment;
     }
 
-    public void getListDate() {
+    private void getListDate() {
 
-        ApiFactory.courseList("2018-10-17").subscribe(new ProgressSubscriber<ApiResponse<List<LessonBean>>>(getActivity()) {
+
+        ApiFactory.courseList(Utils.getDate()).subscribe(new ProgressSubscriber<ApiResponse<List<LessonBean>>>(getActivity()) {
 
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
@@ -79,7 +84,14 @@ public class LessonChoose_Fragment extends BaseFragment {
                     date.add(lessonBean.getDate());
                     LessonListFragment lessonListFragment = new LessonListFragment();
                     lessonListFragment.setCourses(lessonBean.getCourses());
+                    lessonListFragment.setFragmentListener(new FragmentListener() {
+                        @Override
+                        public void OnRefreshListener() {
+                            getListDate();
+                        }
+                    });
                     fragmentList.add(lessonListFragment);
+
                 }
                 IndicatorViewAdapter indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, getActivity());
                 indicatorViewPager.setAdapter(indicatorViewAdapter);

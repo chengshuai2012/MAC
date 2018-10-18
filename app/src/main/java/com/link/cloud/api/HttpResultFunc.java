@@ -16,12 +16,10 @@ public class HttpResultFunc<T> implements Func1<ApiResponse<T>, ApiResponse<T>> 
     @Override
     public ApiResponse<T> call(ApiResponse<T> httpResult) {
 
-        if (httpResult.getCode() == 1004) {
-
-        }
-        if (httpResult.getCode() != 200000) {
+        if (!httpResult.getCode().equals("200000")) {
             throw new ApiException(httpResult.getCode(), httpResult.getMessage());
         }
+
         return httpResult;
     }
 

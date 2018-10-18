@@ -48,8 +48,10 @@ import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -64,14 +66,17 @@ import rx.functions.Action1;
  * Created by ludaiqian on 16/7/7.
  */
 public class Utils extends com.zitech.framework.utils.Utils {
+
+
     private static final int DEFAULT_AVATAR_NOTIFICATION_ICON_SIZE = ViewUtils.dip2px(48);
+
     public static void AddFinishButton(final Activity activity, LinearLayout view, String content) {
         Button button = new Button(activity);
         LinearLayout.LayoutParams layoutParams
                 = new LinearLayout.LayoutParams(ViewUtils.getDimenPx(R.dimen.w84), ViewUtils.getDimenPx(R.dimen.w84));
         button.setText(content);
         button.setTextColor(activity.getResources().getColor(R.color.white));
-        button.setTextSize( ViewUtils.getDimenPx(R.dimen.w15));
+        button.setTextSize(ViewUtils.getDimenPx(R.dimen.w15));
         button.setBackground(activity.getResources().getDrawable(R.drawable.border_red_gradient_round));
         layoutParams.leftMargin = ViewUtils.getDimenPx(R.dimen.w600);
         layoutParams.topMargin = ViewUtils.getDimen(R.dimen.h22);
@@ -120,6 +125,14 @@ public class Utils extends com.zitech.framework.utils.Utils {
 
                     }
                 });
+    }
+
+
+    public static String getDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss
+        Date begDate = new Date(System.currentTimeMillis());
+        String date = simpleDateFormat.format(begDate);
+        return date;
     }
 
     /**
@@ -215,6 +228,7 @@ public class Utils extends com.zitech.framework.utils.Utils {
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir)));
     }
+
     /**
      * dp转px
      *
@@ -812,7 +826,7 @@ public class Utils extends com.zitech.framework.utils.Utils {
      * @param args
      */
     public static Fragment replace(FragmentManager fm, Class<? extends Fragment> fragmentClass, int replaceLayoutId, Bundle args) {
-       return replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
+        return replace(fm, fragmentClass, replaceLayoutId, fragmentClass.getSimpleName(), args);
     }
 
     /**

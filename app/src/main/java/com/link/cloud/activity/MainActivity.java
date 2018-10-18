@@ -79,12 +79,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         });
         animator.setDuration(40000);
 
-        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse response) {
-                User.get().setToken((String) response.getData());
-            }
-        });
+
     }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})

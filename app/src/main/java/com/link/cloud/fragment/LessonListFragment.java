@@ -10,6 +10,7 @@ import com.link.cloud.adapter.ChooseLesson_Adapter;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.base.BaseFragment;
 import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.listener.FragmentListener;
 
 import java.util.List;
 
@@ -22,7 +23,12 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
     private List<LessonItemBean> courses;
     private android.support.v4.widget.SwipeRefreshLayout swipe;
     private android.support.v7.widget.RecyclerView recycle;
+    private FragmentListener fragmentListener;
 
+
+    public void setFragmentListener(FragmentListener fragmentListener) {
+        this.fragmentListener = fragmentListener;
+    }
 
     public void setCourses(List<LessonItemBean> courses) {
         this.courses = courses;
@@ -44,7 +50,7 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
         swipe = (SwipeRefreshLayout) contentView.findViewById(R.id.swipe);
         recycle = (RecyclerView) contentView.findViewById(R.id.recycle);
         recycle.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ChooseLesson_Adapter loadMoreAdapter=  new ChooseLesson_Adapter(courses,getActivity());
+        ChooseLesson_Adapter loadMoreAdapter = new ChooseLesson_Adapter(courses, getActivity());
         recycle.setAdapter(loadMoreAdapter);
         loadMoreAdapter.setOnItemClickListner(new ChooseLesson_Adapter.onItemClickLister() {
             @Override
@@ -62,9 +68,16 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
 
             }
         });
+        swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (null != fragmentListener) {
+                    fragmentListener.OnRefreshListener();
+                }
+            }
+        });
 
     }
-
 
 
     @Override
