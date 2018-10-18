@@ -5,6 +5,7 @@ import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.request.EdituserRequest;
+import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
@@ -147,6 +148,14 @@ public class ApiFactory {
      */
     public static Observable<ApiResponse<PageResponse<PrivateEduBean>>> privateEduList(PageRequest request) {
         return getApiService().privateEduList(request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * 我的团队
+     *
+     * @return
+     */
+    public static Observable<ApiResponse> getUsers(GetUserPages request) {
+        return getApiService().getUsers(User.get().getToken(),request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

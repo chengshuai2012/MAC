@@ -4,6 +4,7 @@ import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.request.EdituserRequest;
+import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
@@ -75,6 +76,17 @@ public interface ApiService {
 
 
     /**
+     * 分页获取指静脉
+     *
+     * @param
+     * @return
+     *
+     */
+    @POST(ApiConstants.GETUSERS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> getUsers(@Header("access-token") String token, @Body GetUserPages request);
+
+ /**
      * 修改指纹
      *
      * @param

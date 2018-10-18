@@ -13,6 +13,9 @@ import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.LessonBean;
+import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.request.GetUserPages;
+import com.link.cloud.api.response.PageResponse;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
 import com.link.cloud.fragment.Group_Lesson_Fragment;
@@ -78,7 +81,15 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
         animator.setDuration(40000);
+        GetUserPages getUserPages = new GetUserPages();
+        getUserPages.setContent("HJKF");
+        getUserPages.setPageNo(1);
+        ApiFactory.getUsers(getUserPages).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
 
+            }
+        });
 
     }
 

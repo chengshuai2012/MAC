@@ -25,6 +25,9 @@ public class ApiConstants {
     //修改指纹
     public static final String EDITUSER = "app/editUser";
 
+    //分页获取指静脉
+    public static final String GETUSERS = "app/users";
+
     //绑定用户
     public static final String BINDUSER = "{app}/{bindUser}/{phone}/{vcode}";
 
