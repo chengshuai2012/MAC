@@ -10,14 +10,18 @@ package com.zitech.framework.data.network.response;
  * @date 2016/5/17 9:47
  */
 public class ApiResponse<T> {
-    T data;
+
+
+
 
     /**
      * code : 0
      * msg : ok
      */
+    T data;
     private String code;
     private String message;
+    private String secondMessage;
 
     public String getCode() {
         return code;
@@ -43,5 +47,11 @@ public class ApiResponse<T> {
     public void setData(T data) {
         this.data = data;
     }
+    public String getSecondMessage() {
+        return secondMessage;
+    }
 
+    public void setSecondMessage(String secondMessage) {
+        this.secondMessage = secondMessage;
+    }
 }

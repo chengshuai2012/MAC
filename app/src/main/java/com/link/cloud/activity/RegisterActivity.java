@@ -120,6 +120,7 @@ public class RegisterActivity extends AppBarActivity {
     Realm realm;
     private ValueAnimator animator;
     boolean isSendVerify = false;
+    private String tel_num;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
@@ -244,12 +245,19 @@ public class RegisterActivity extends AppBarActivity {
                 break;
             case R.id.confirm_bind:
                 if(isSendVerify){
-                    bindMiddleOne.setVisibility(View.INVISIBLE);
-                    bindMiddleTwo.setVisibility(View.VISIBLE);
-                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
-                    registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
-                    bindWay.setText(getResources().getString(R.string.bind_veune));
-                    simulateProgress();
+                    String code = verifyCode.getText().toString();
+                    ApiFactory.binduser(tel_num,code).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                        @Override
+                        public void onNext(ApiResponse apiResponse) {
+                            bindMiddleOne.setVisibility(View.INVISIBLE);
+                            bindMiddleTwo.setVisibility(View.VISIBLE);
+                            registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
+                            registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+                            bindWay.setText(getResources().getString(R.string.bind_veune));
+                            simulateProgress();
+                        }
+                    });
+
                 }else {
                     ToastMaster.shortToast(getResources().getString(R.string.verify_first));
                 }
@@ -263,11 +271,12 @@ public class RegisterActivity extends AppBarActivity {
                 bindWay.setText(getResources().getString(R.string.bind_finish));
                 break;
             case R.id.send:
-                String tel_num = inputTel.getText().toString();
+                tel_num = inputTel.getText().toString();
                 if (Utils.isPhoneNum(tel_num)) {
                     ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
+                            isSendVerify=true;
                             ToastMaster.shortToast(getResources().getString(R.string.verify_has_send));
                         }
                     });
@@ -283,6 +292,12 @@ public class RegisterActivity extends AppBarActivity {
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isSendVerify=false;
     }
 
     @Override
