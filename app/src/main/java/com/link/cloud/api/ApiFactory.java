@@ -3,6 +3,7 @@ package com.link.cloud.api;
 import com.link.cloud.User;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
@@ -90,7 +91,7 @@ public class ApiFactory {
      * @return
      */
     public static Observable<ApiResponse> edituser(EdituserRequest request) {
-        return getApiService().edituser("app", "edituser", User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+        return getApiService().edituser(User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 
@@ -99,7 +100,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> binduser(String phone, String vCode) {
+    public static Observable<ApiResponse<EdituserRequest>> binduser(String phone, String vCode) {
         return getApiService().binduser("app", "bindUser", phone, vCode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 

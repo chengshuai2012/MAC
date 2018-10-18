@@ -2,6 +2,7 @@ package com.link.cloud.api;
 
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
@@ -81,9 +82,8 @@ public interface ApiService {
      * @see {app}/{edituser}
      */
     @POST(ApiConstants.EDITUSER)
-    @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> edituser(@Path("app") String app, @Path("edituser") String edituser, @Header("access-token") String token, @Body EdituserRequest request);
-
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> edituser(@Header("access-token") String token, @Body EdituserRequest request);
 
     /**
      * 绑定用户
@@ -94,7 +94,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.BINDUSER)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> binduser(@Path("app") String app, @Path("bindUser") String bindUser, @Path("phone") String phone, @Path("vcode") String vcode, @Header("access-token") String token);
+    Observable<ApiResponse<EdituserRequest>> binduser(@Path("app") String app, @Path("bindUser") String bindUser, @Path("phone") String phone, @Path("vcode") String vcode, @Header("access-token") String token);
 
 
     /**

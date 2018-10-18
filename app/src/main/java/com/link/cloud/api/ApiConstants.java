@@ -23,7 +23,7 @@ public class ApiConstants {
     public static final String COURSELIST = "{app}/{courseList}/{begDate}";
 
     //修改指纹
-    public static final String EDITUSER = "{app}/{editUser}";
+    public static final String EDITUSER = "app/editUser";
 
     //绑定用户
     public static final String BINDUSER = "{app}/{bindUser}/{phone}/{vcode}";

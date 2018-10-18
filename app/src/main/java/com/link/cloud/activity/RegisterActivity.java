@@ -21,6 +21,8 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
 import com.link.cloud.utils.Utils;
@@ -121,6 +123,7 @@ public class RegisterActivity extends AppBarActivity {
     private ValueAnimator animator;
     boolean isSendVerify = false;
     private String tel_num;
+    private EdituserRequest edituserRequest;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
@@ -246,15 +249,16 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.confirm_bind:
                 if(isSendVerify){
                     String code = verifyCode.getText().toString();
-                    ApiFactory.binduser(tel_num,code).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                    ApiFactory.binduser(tel_num,code).subscribe(new ProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
-                        public void onNext(ApiResponse apiResponse) {
+                        public void onNext(ApiResponse<EdituserRequest> apiResponse) {
                             bindMiddleOne.setVisibility(View.INVISIBLE);
                             bindMiddleTwo.setVisibility(View.VISIBLE);
                             registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
                             registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
                             bindWay.setText(getResources().getString(R.string.bind_veune));
                             simulateProgress();
+                            edituserRequest = apiResponse.getData();
                         }
                     });
 
@@ -303,21 +307,19 @@ public class RegisterActivity extends AppBarActivity {
     @Override
     public void modelMsg(int state, String msg) {
         if (state == 3) {
-            final People userBean = new People();
-            userBean.setUid(System.currentTimeMillis() + "");
-            userBean.setFeature(msg);
-            realm.executeTransaction(new Realm.Transaction() {
+            edituserRequest.setFingerprint(msg);
+            ApiFactory.edituser(edituserRequest).subscribe(new ProgressSubscriber<ApiResponse>(this) {
                 @Override
-                public void execute(Realm realm) {
-                    realm.copyToRealm(userBean);
+                public void onNext(ApiResponse apiResponse) {
+                    bindMiddleTwo.setVisibility(View.INVISIBLE);
+                    bindMiddleThree.setVisibility(View.VISIBLE);
+                    registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+                    bindWay.setText(getResources().getString(R.string.bind_finish));
+                    animator.cancel();
                 }
             });
-            bindMiddleTwo.setVisibility(View.INVISIBLE);
-            bindMiddleThree.setVisibility(View.VISIBLE);
-            registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
-            registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-            bindWay.setText(getResources().getString(R.string.bind_finish));
-            animator.cancel();
+
         }
         if (state == 2) {
             bindVenueIntro.setText(getResources().getString(R.string.same_finger));
