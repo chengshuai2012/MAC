@@ -156,4 +156,5 @@
     <string name="handy_member">汗的会员卡</string>
     <string name="error_tel">请输入正确的手机号</string>
     <string name="verify_has_send">验证码已发送</string>
+    <string name="verify_first">请先获取验证码</string>
 </resources>

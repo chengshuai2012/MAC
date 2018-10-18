@@ -119,7 +119,7 @@ public class RegisterActivity extends AppBarActivity {
     RelativeLayout bindMiddleThree;
     Realm realm;
     private ValueAnimator animator;
-    boolean tel_input = true;
+    boolean isSendVerify = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
@@ -243,13 +243,17 @@ public class RegisterActivity extends AppBarActivity {
                 }
                 break;
             case R.id.confirm_bind:
-                bindMiddleOne.setVisibility(View.INVISIBLE);
-                bindMiddleTwo.setVisibility(View.VISIBLE);
-                String tel = inputTel.getText().toString();
-                registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
-                registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
-                bindWay.setText(getResources().getString(R.string.bind_veune));
-                simulateProgress();
+                if(isSendVerify){
+                    bindMiddleOne.setVisibility(View.INVISIBLE);
+                    bindMiddleTwo.setVisibility(View.VISIBLE);
+                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
+                    registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+                    bindWay.setText(getResources().getString(R.string.bind_veune));
+                    simulateProgress();
+                }else {
+                    ToastMaster.shortToast(getResources().getString(R.string.verify_first));
+                }
+
                 break;
             case R.id.bind_venue_intro:
                 bindMiddleTwo.setVisibility(View.INVISIBLE);
