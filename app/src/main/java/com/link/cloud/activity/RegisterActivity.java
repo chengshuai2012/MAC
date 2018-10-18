@@ -315,7 +315,7 @@ public class RegisterActivity extends AppBarActivity {
                     bindMiddleThree.setVisibility(View.VISIBLE);
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-                    bindWay.setText(getResources().getString(R.string.bind_finish));
+                    bindWay.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
                     animator.cancel();
                 }
             });
