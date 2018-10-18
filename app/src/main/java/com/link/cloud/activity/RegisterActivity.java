@@ -27,6 +27,7 @@ import com.link.cloud.utils.Utils;
 import com.orhanobut.logger.Logger;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
+import com.zitech.framework.utils.ToastMaster;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -118,22 +119,24 @@ public class RegisterActivity extends AppBarActivity {
     RelativeLayout bindMiddleThree;
     Realm realm;
     private ValueAnimator animator;
-    boolean tel_input =true;
+    boolean tel_input = true;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
-        realm=Realm.getDefaultInstance();
-        setHintSize(inputTel,36,getResources().getString(R.string.please_input_tel));
-        setHintSize(verifyCode,30,getResources().getString(R.string.please_input_verify));
+        realm = Realm.getDefaultInstance();
+        setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+        setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
         verifyCode.setShowSoftInputOnFocus(false);
         inputTel.setShowSoftInputOnFocus(false);
     }
-    public void setHintSize(EditText editText,int size,String hint){
+
+    public void setHintSize(EditText editText, int size, String hint) {
         String hintStr = hint;
-        SpannableString ss =  new SpannableString(hintStr);
+        SpannableString ss = new SpannableString(hintStr);
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
         editText.setHintTextColor(getResources().getColor(R.color.dark_black));
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -147,20 +150,20 @@ public class RegisterActivity extends AppBarActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int progress = (int) animation.getAnimatedValue();
-                if(customProgress!=null){
+                if (customProgress != null) {
                     customProgress.setProgress(progress);
                     int state = MacApplication.getVenueUtils().getState();
-                    if(state==3){
+                    if (state == 3) {
                         MacApplication.getVenueUtils().workModel();
                         animator.setCurrentPlayTime(0);
                     }
-                    if(state==4){
+                    if (state == 4) {
                         bindVenueIntro.setText(getResources().getString(R.string.move_finger));
                     }
-                    if(state!=4&&state!=3){
+                    if (state != 4 && state != 3) {
                         bindVenueIntro.setText(getResources().getString(R.string.right_finger));
                     }
-                    if(progress==99){
+                    if (progress == 99) {
                         finish();
                     }
                 }
@@ -169,6 +172,7 @@ public class RegisterActivity extends AppBarActivity {
         animator.setDuration(40000);
         animator.start();
     }
+
     StringBuilder builder = new StringBuilder();
     StringBuilder verify = new StringBuilder();
 
@@ -178,10 +182,10 @@ public class RegisterActivity extends AppBarActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @OnClick({R.id.bind_keypad_0,R.id.bind_keypad_1,R.id.bind_keypad_2,R.id.bind_keypad_3,R.id.bind_keypad_4,R.id.bind_keypad_5,R.id.bind_keypad_6,R.id.bind_keypad_7,R.id.bind_keypad_8,
-            R.id.bind_keypad_9,R.id.bind_keypad_ok,R.id.bind_keypad_delect,R.id.confirm_bind,R.id.bind_venue_intro,R.id.back,R.id.input_tel,R.id.verify_code,R.id.send})
-    public void OnClick(View v){
-        switch (v.getId()){
+    @OnClick({R.id.bind_keypad_0, R.id.bind_keypad_1, R.id.bind_keypad_2, R.id.bind_keypad_3, R.id.bind_keypad_4, R.id.bind_keypad_5, R.id.bind_keypad_6, R.id.bind_keypad_7, R.id.bind_keypad_8,
+            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send})
+    public void OnClick(View v) {
+        switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
@@ -195,44 +199,49 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_7:
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
-                if(inputTel.isFocused()){
-                    builder.append(((TextView)v).getText());
-                    inputTel.setText(builder.toString());
-                    inputTel.setSelection(builder.length());
-                }else {
-                    verify.append(((TextView)v).getText());
-                    verifyCode.setText(verify.toString());
-                    verifyCode.setSelection(verify.length());
+                if (inputTel.isFocused()) {
+                    if (builder.length() <= 11) {
+                        builder.append(((TextView) v).getText());
+                        inputTel.setText(builder.toString());
+                        inputTel.setSelection(builder.length());
+                    }
+
+                } else {
+                    if (verify.length() <= 11) {
+                        verify.append(((TextView) v).getText());
+                        verifyCode.setText(verify.toString());
+                        verifyCode.setSelection(verify.length());
+                    }
                 }
-            break;
+                break;
             case R.id.bind_keypad_ok:
-                if(inputTel.isFocused()){
-                    builder.delete(0,builder.length());
+                if (inputTel.isFocused()) {
+                    builder.delete(0, builder.length());
                     inputTel.setText(builder.toString());
                     inputTel.setSelection(builder.length());
-                    setHintSize(inputTel,36,getResources().getString(R.string.please_input_tel));
-                }else {
-                    verify.delete(0,verify.length());
+                    setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+                } else {
+                    verify.delete(0, verify.length());
                     verifyCode.setText(verify.toString());
                     verifyCode.setSelection(verify.length());
-                    setHintSize(verifyCode,30,getResources().getString(R.string.please_input_verify));
+                    setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
                 }
                 break;
             case R.id.bind_keypad_delect:
-                    if(inputTel.isFocused()){
-                        if(builder.length()>=1){
-                            builder.deleteCharAt(builder.length() - 1);
-                            inputTel.setText(builder.toString());
-                            inputTel.setSelection(builder.length());
-                        }
-                    }else {
-                        if(verify.length()>=1){
-                            verify.deleteCharAt(verify.length() - 1);
-                            verifyCode.setText(verify.toString());
-                            verifyCode.setSelection(verify.length());
+                if (inputTel.isFocused()) {
+                    if (builder.length() >= 1) {
+                        builder.deleteCharAt(builder.length() - 1);
+                        inputTel.setText(builder.toString());
+                        inputTel.setSelection(builder.length());
+                    }
+                } else {
+                    if (verify.length() >= 1) {
+                        verify.deleteCharAt(verify.length() - 1);
+                        verifyCode.setText(verify.toString());
+                        verifyCode.setSelection(verify.length());
                     }
                 }
-                    break;
+                break;
             case R.id.confirm_bind:
                 bindMiddleOne.setVisibility(View.INVISIBLE);
                 bindMiddleTwo.setVisibility(View.VISIBLE);
@@ -251,13 +260,16 @@ public class RegisterActivity extends AppBarActivity {
                 break;
             case R.id.send:
                 String tel_num = inputTel.getText().toString();
-                Utils.isPhoneNum(tel_num);
-                ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
-                    @Override
-                    public void onNext(ApiResponse apiResponse) {
-
-                    }
-                });
+                if (Utils.isPhoneNum(tel_num)) {
+                    ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                        @Override
+                        public void onNext(ApiResponse apiResponse) {
+                            ToastMaster.shortToast(getResources().getString(R.string.verify_has_send));
+                        }
+                    });
+                } else {
+                    ToastMaster.shortToast(getResources().getString(R.string.error_tel));
+                }
 
                 break;
         }
@@ -268,11 +280,12 @@ public class RegisterActivity extends AppBarActivity {
         super.onDestroy();
         realm.close();
     }
+
     @Override
     public void modelMsg(int state, String msg) {
-        if(state==3){
+        if (state == 3) {
             final People userBean = new People();
-            userBean.setUid(System.currentTimeMillis()+"");
+            userBean.setUid(System.currentTimeMillis() + "");
             userBean.setFeature(msg);
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -287,10 +300,10 @@ public class RegisterActivity extends AppBarActivity {
             bindWay.setText(getResources().getString(R.string.bind_finish));
             animator.cancel();
         }
-        if(state==2){
+        if (state == 2) {
             bindVenueIntro.setText(getResources().getString(R.string.same_finger));
         }
-        if(state==1){
+        if (state == 1) {
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
         }
     }
