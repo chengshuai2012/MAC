@@ -22,15 +22,21 @@ import com.link.cloud.fragment.Group_Lesson_Fragment;
 import com.link.cloud.fragment.LessonChoose_Fragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
+import com.link.cloud.utils.NettyClientBootstrap;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import static com.link.cloud.Constants.TCP_PORT;
+import static com.link.cloud.Constants.TCP_URL;
 
 
 public class MainActivity extends AppBarActivity implements DialogCancelListener {
@@ -81,18 +87,22 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
         animator.setDuration(40000);
-        GetUserPages getUserPages = new GetUserPages();
-        getUserPages.setContent("HJKF");
-        getUserPages.setPageNo(1);
-        ApiFactory.getUsers(getUserPages).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Runnable runnable = new Runnable() {
             @Override
-            public void onNext(ApiResponse apiResponse) {
-
+            public void run() {
+                nettyClientBootstrap = new NettyClientBootstrap(MainActivity.this,MainActivity. this,TCP_PORT, TCP_URL,"{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\""+User.get().getToken()+"\"}");
+                nettyClientBootstrap.start();
+                SendMsgToTcp("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\""+User.get().getToken()+"\"}");
             }
-        });
+        };
+        service.execute(runnable);
+
 
     }
-
+    protected void  SendMsgToTcp(String msg){
+        nettyClientBootstrap.startNetty(msg);
+    }
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
     public void onClick(View v) {
 

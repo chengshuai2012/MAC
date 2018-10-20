@@ -38,9 +38,11 @@ public class NettyClientBootstrap {
     public boolean isRepeate = false;
     public Context context;
     NettyListener listener;
-    public NettyClientBootstrap(Context context,  NettyListener listener,int port, String host) {
+    String msg;
+    public NettyClientBootstrap(Context context,  NettyListener listener,int port, String host,String msg) {
         this.context = context;
         this.port = port;
+        this.msg =msg;
         this.host = host;
         this.listener=listener;
         //初始化连接
@@ -135,7 +137,7 @@ public class NettyClientBootstrap {
                 IdleStateEvent e = (IdleStateEvent) evt;
                 switch (e.state()) {
                     case WRITER_IDLE:
-                        startNetty("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblR5cGUiOjIsImp0aSI6IkhKS0YiLCJpcCI6IjE5Mi4xNjguMy4xMDIiLCJ1YSI6IjE2MzA3Iiwibm9uY2UiOiJwQWJvRkhubiIsImlhdCI6MTUzOTQyMTA3NCwiZXhwIjoxNTM5NDI0Njc0fQ.5PrRiJp8E7yFzHnYq28mBTRvL2zdwjmGiJhPCmMUZpqRZi08klCpmvqrS5CdJAWbk8amT_b2uCZlMLgrDZP0iQ\"}");
+                        startNetty(msg);
                         break;
                 }
             }

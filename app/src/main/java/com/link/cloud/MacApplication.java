@@ -33,7 +33,6 @@ public class MacApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
         user = new User();
-        getToken();
         mainThreadHandler = new Handler(Looper.getMainLooper());
         MVCHelper.setLoadViewFactory(new MyLoadViewFactory());
         Realm.init(this);
@@ -59,13 +58,6 @@ public class MacApplication extends BaseApplication {
     }
 
 
-    private void getToken() {
-        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse response) {
-                User.get().setToken((String) response.getData());
-            }
-        });
-    }
+
 
 }

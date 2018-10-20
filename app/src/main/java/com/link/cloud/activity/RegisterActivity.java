@@ -190,9 +190,9 @@ public class RegisterActivity extends AppBarActivity {
             R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send})
     public void OnClick(View v) {
         switch (v.getId()) {
-            case R.id.back:
-                finish();
-                break;
+//            case R.id.back:
+//                finish();
+//                break;
             case R.id.bind_keypad_0:
             case R.id.bind_keypad_1:
             case R.id.bind_keypad_2:
@@ -246,6 +246,7 @@ public class RegisterActivity extends AppBarActivity {
                     }
                 }
                 break;
+            case R.id.back:
             case R.id.confirm_bind:
                 if(isSendVerify){
                     String code = verifyCode.getText().toString();
@@ -315,7 +316,7 @@ public class RegisterActivity extends AppBarActivity {
                     bindMiddleThree.setVisibility(View.VISIBLE);
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-                    bindWay.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
+                    cardNum.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
                     animator.cancel();
                 }
             });

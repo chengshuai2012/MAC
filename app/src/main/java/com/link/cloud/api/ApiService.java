@@ -3,6 +3,7 @@ package com.link.cloud.api;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.api.request.PageRequest;
@@ -60,7 +61,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.ADMISSIONCOURSE)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("admissionCourse") String admissionCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
+    Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("courseAdmission") String admissionCourse, @Path("uuid") String uid, @Path("courseReleasePkcode") String cid, @Header("access-token") String token);
 
 
     /**
@@ -84,7 +85,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.GETUSERS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse> getUsers(@Header("access-token") String token, @Body GetUserPages request);
+    Observable<ApiResponse<UserList>> getUsers(@Header("access-token") String token, @Body GetUserPages request);
 
  /**
      * 修改指纹
@@ -155,5 +156,25 @@ public interface ApiService {
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<PageResponse<PrivateEduBean>>> privateEduList(@Body PageRequest request);
 
+    /**
+     * 获取准备开课课程详情(开课前30分可获取)
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.GETRECENTCLASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse> getRecentClass(@Header("access-token")String token);
 
+    /**
+     * 获取团课学员
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.GETGROUPLESSONMEMBER)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable getGroupUsers(@Path("app")String app, @Path("courseUsers")String courseUsers, @Header("access-token")String token, @Path("courseUsers")String courseReleasePkcode);
 }

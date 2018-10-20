@@ -192,7 +192,7 @@ public class Venueutils {
                     String[] uids = new String[1000];
                     int position =0;
                     for (People userBean : subList) {
-                        sb.append(userBean.getFeature());
+                        sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUid();
                         position++;
 

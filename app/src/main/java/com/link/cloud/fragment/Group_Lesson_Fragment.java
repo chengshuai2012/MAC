@@ -14,9 +14,12 @@ import android.view.ViewGroup;
 
 import com.link.cloud.R;
 import com.link.cloud.adapter.GroupLesson_Adapter;
+import com.link.cloud.api.ApiFactory;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.EndlessRecyclerOnScrollListener;
 import com.link.cloud.utils.DialogUtils;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +42,19 @@ public class Group_Lesson_Fragment extends Fragment implements DialogCancelListe
         swipeRefreshLayout = (SwipeRefreshLayout)Group_Lesson_Fragment.findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) Group_Lesson_Fragment.findViewById(R.id.recycler_view);
         init();
+        initData();
         return Group_Lesson_Fragment;
     }
+
+    private void initData() {
+        ApiFactory.getRecentLesson().subscribe(new ProgressSubscriber<ApiResponse>(getActivity()) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+
+            }
+        });
+    }
+
     private void init() {
 
         // 设置刷新控件颜色
@@ -72,33 +86,7 @@ public class Group_Lesson_Fragment extends Fragment implements DialogCancelListe
                 }, 1000);
             }
         });
-//
-//        // 设置加载更多监听
-//        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
-//            @Override
-//            public void onLoadMore() {
-//                loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING);
-//
-//                if (dataList.size() < 52) {
-//                    // 模拟获取网络数据，延时1s
-//                    new Timer().schedule(new TimerTask() {
-//                        @Override
-//                        public void run() {
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    getData();
-//                                    loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_COMPLETE);
-//                                }
-//                            });
-//                        }
-//                    }, 1000);
-//                } else {
-//                    // 显示加载到底的提示
-//                    loadMoreAdapter.setLoadState(loadMoreAdapter.LOADING_END);
-//                }
-//            }
-//        });
+
     }
 
     private void getData() {

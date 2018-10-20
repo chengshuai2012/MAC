@@ -17,7 +17,7 @@ public class ApiConstants {
     public static final String APPLOGIN = "{pub}/{appLogin}/{deviceCode}/{password}";
 
     //团课入场
-    public static final String ADMISSIONCOURSE = "{app}/{admissionCourse}/{uid}/{cid}";
+    public static final String ADMISSIONCOURSE = "{app}/{courseAdmission}/{uuid}/{courseReleasePkcode}";
 
     //课程列表
     public static final String COURSELIST = "{app}/{courseList}/{begDate}";
@@ -27,6 +27,9 @@ public class ApiConstants {
 
     //分页获取指静脉
     public static final String GETUSERS = "app/users";
+
+    //获取准备开课课程详情(开课前30分可获取)
+    public static final String GETRECENTCLASS = "app/findStartCourse";
 
     //绑定用户
     public static final String BINDUSER = "{app}/{bindUser}/{phone}/{vcode}";
@@ -42,6 +45,9 @@ public class ApiConstants {
 
     //查询顾客私教课程
     public static final String FINISHCOURSE = "{app}/{finishCourse}/{uid}/{cid}/{kid}";
+
+    //获取团课学员
+    public static final String GETGROUPLESSONMEMBER = "{app}/{courseUsers}/{courseReleasePkcode}";
 
 
 }
