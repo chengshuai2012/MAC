@@ -1,31 +1,47 @@
 package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
+import com.link.cloud.adapter.GroupLesson_Adapter;
+import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.LessonBean;
-import com.link.cloud.api.bean.PrivateEduBean;
-import com.link.cloud.api.request.GetUserPages;
-import com.link.cloud.api.response.PageResponse;
+import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
-import com.link.cloud.fragment.Group_Lesson_Fragment;
-import com.link.cloud.fragment.LessonChoose_Fragment;
+import com.link.cloud.bean.FingerprintsBean;
+import com.link.cloud.fragment.LessonListFragment;
 import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.NettyClientBootstrap;
+import com.link.cloud.utils.Utils;
+import com.orhanobut.logger.Logger;
+import com.shizhefei.view.indicator.IndicatorViewPager;
+import com.shizhefei.view.indicator.RecyclerIndicatorView;
+import com.shizhefei.view.indicator.slidebar.SpringBar;
+import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,6 +49,7 @@ import java.util.concurrent.Executors;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 import static com.link.cloud.Constants.TCP_PORT;
@@ -51,14 +68,59 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     TextView lessonIn;
     @BindView(R.id.choose_lesson_container)
     LinearLayout chooseLessonContainer;
-    @BindView(R.id.fg_container)
-    FrameLayout fgContainer;
-    private LessonChoose_Fragment lessonChoose_fragment;
-    private Group_Lesson_Fragment group_lesson_fragment;
+    @BindView(R.id.group_lesson_fragment)
+    RelativeLayout group_lesson_fragment;
+    @BindView(R.id.choose_lesson_fragment)
+    RelativeLayout choose_lesson_fragment;
+    @BindView(R.id.lesson_name)
+    TextView lessonName;
+    @BindView(R.id.coach_name)
+    TextView coachName;
     private DialogUtils dialogUtils;
     Realm realm;
     ValueAnimator animator;
-    RealmResults<People> userBeans;
+    private List<String> date = new ArrayList<>();
+    private ViewPager viewPager;
+    private RecyclerIndicatorView scrollIndicatorView;
+    private IndicatorViewPager indicatorViewPager;
+    private List<Fragment> fragmentList = new ArrayList<>();
+    private FragmentManager fragmentManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private GroupLesson_Adapter loadMoreAdapter;
+    private ArrayList<GroupLessonInResource> groupInList = new ArrayList<>();
+    private ArrayList<FingerprintsBean> groupUsers = new ArrayList<>();
+    private ArrayList<GroupLessonUser.UserInfosBean> groupInUserList = new ArrayList<>();
+    RealmResults<FingerprintsBean> userBeans;
+    private String courseReleasePkcode;
+
+    private void getListDate() {
+        ApiFactory.courseList(Utils.getDate()).subscribe(new ProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
+            @Override
+            public void onNext(ApiResponse<List<LessonBean>> response) {
+                if (!date.isEmpty()) {
+                    date.clear();
+                    fragmentList.clear();
+                }
+                for (LessonBean lessonBean : response.getData()) {
+                    date.add("    "+lessonBean.getDate().substring(5)+"    ");
+                    LessonListFragment lessonListFragment = new LessonListFragment();
+                    lessonListFragment.setCourses(lessonBean.getCourses());
+                    lessonListFragment.setFragmentListener(new FragmentListener() {
+                        @Override
+                        public void OnRefreshListener() {
+                            getListDate();
+                        }
+                    });
+                    fragmentList.add(lessonListFragment);
+
+                }
+                IndicatorViewAdapter indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
+                indicatorViewPager.setAdapter(indicatorViewAdapter);
+            }
+        });
+
+    }
 
     @Override
     protected int getLayoutId() {
@@ -67,26 +129,45 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
 
     protected void initViews() {
         hideToolbar();
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        lessonChoose_fragment = new LessonChoose_Fragment();
-        fragmentTransaction.replace(R.id.fg_container, lessonChoose_fragment);
-        fragmentTransaction.commit();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         realm = Realm.getDefaultInstance();
-        userBeans = realm.where(People.class).findAll();
-        animator = ValueAnimator.ofInt(0, 100);
+        userBeans = realm.where(FingerprintsBean.class).findAll();
+        userBeans.addChangeListener(new RealmChangeListener<RealmResults<FingerprintsBean>>() {
+            @Override
+            public void onChange(RealmResults<FingerprintsBean> fingerprintsBeans) {
+                groupUsers.clear();
+                groupUsers.addAll(realm.copyFromRealm(fingerprintsBeans));
+            }
+        });
+        animator = ValueAnimator.ofInt(0, 80);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int state = MacApplication.getVenueUtils().getState();
                 if (state == 3) {
-                    String uid = MacApplication.getVenueUtils().identifyNewImg(userBeans);
-                    group_lesson_fragment.onVeuenMsg(uid);
+                    final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
+                    com.orhanobut.logger.Logger.e(uid);
+
+                    ApiFactory.admissionCourse(uid,courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
+                        @Override
+                        public void onNext(ApiResponse apiResponse) {
+                            super.onNext(apiResponse);
+                            onVeuenMsg(uid,"");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                            onVeuenMsg(null,e.getMessage());
+                        }
+                    });
+                }
+                if((int)(animation.getAnimatedValue())>=79){
+                    animator.setCurrentPlayTime(0);
                 }
             }
         });
-        animator.setDuration(40000);
+        animator.setDuration(400);
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
             @Override
@@ -97,9 +178,93 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         };
         service.execute(runnable);
+        viewPager = (ViewPager) findViewById(R.id.viewPageView);
+        scrollIndicatorView = (RecyclerIndicatorView) findViewById(R.id.titleIndicator);
+        int selectColorId = getResources().getColor(R.color.almost_white);
+        int unSelectColorId = getResources().getColor(R.color.dark_black);
+        scrollIndicatorView.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColorId, unSelectColorId));
+        scrollIndicatorView.setScrollBar(new SpringBar(this, getResources().getColor(R.color.red)));
+        indicatorViewPager = new IndicatorViewPager(scrollIndicatorView, viewPager);
+        fragmentManager = getSupportFragmentManager();
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        getListDate();
+    }
 
+
+    private void initGroup() {
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.red));
+        groupInList.clear();
+        getGroupData();
+        loadMoreAdapter = new GroupLesson_Adapter(groupInUserList,this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(loadMoreAdapter);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getGroupData();
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        });
 
     }
+
+    private void getGroupData() {
+        ApiFactory.getRecentLesson().subscribe(new ProgressSubscriber<ApiResponse<ArrayList<GroupLessonInResource>>>(this) {
+            @Override
+            public void onNext(ApiResponse<ArrayList<GroupLessonInResource>> arrayListApiResponse) {
+                super.onNext(arrayListApiResponse);
+                groupInList.addAll(arrayListApiResponse.getData());
+                if(arrayListApiResponse.getData().size()>0){
+                    coachName.setText(arrayListApiResponse.getData().get(0).getStoreCoachName());
+                    lessonName.setText(arrayListApiResponse.getData().get(0).getFitnessCourseName());
+                    courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
+                    ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
+                        @Override
+                        public void onNext(final ApiResponse<GroupLessonUser> groupLessonUserApiResponse) {
+                            super.onNext(groupLessonUserApiResponse);
+                            groupInUserList.clear();
+                            groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
+                            loadMoreAdapter.notifyDataSetChanged();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.copyToRealm(groupLessonUserApiResponse.getData().getFingerprints());
+                                }
+                            });
+                        }
+                    });
+                }
+
+            }
+        });
+    }
+    public void onVeuenMsg(String uid,String msg){
+        if(TextUtils.isEmpty(uid)){
+            View view =View.inflate(this,R.layout.verify_fail,null);
+            dialogUtils.showVeuneFailDialog(view,msg);
+        }else {
+            View view =View.inflate(this,R.layout.verify_success,null);
+            dialogUtils.showVeuneOkDialog(view);
+        }
+        handler.sendEmptyMessageDelayed(0,3000);
+    }
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            dialogUtils.dissMiss();
+            animator.start();
+        }
+    };
     protected void  SendMsgToTcp(String msg){
         nettyClientBootstrap.startNetty(msg);
     }
@@ -128,13 +293,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 chooseLesson.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.almost_white));
                 chooseLesson.setTextColor(getResources().getColor(R.color.red));
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                if (group_lesson_fragment == null) {
-                    group_lesson_fragment = new Group_Lesson_Fragment();
-                }
-                fragmentTransaction.replace(R.id.fg_container, group_lesson_fragment);
-                fragmentTransaction.commit();
+                group_lesson_fragment.setVisibility(View.VISIBLE);
+                choose_lesson_fragment.setVisibility(View.GONE);
+                initGroup();
                 break;
             case R.id.choose_lesson:
                 animator.cancel();
@@ -142,10 +303,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));
                 chooseLesson.setTextColor(getResources().getColor(R.color.almost_white));
-                FragmentManager manager1 = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction1 = manager1.beginTransaction();
-                fragmentTransaction1.replace(R.id.fg_container, lessonChoose_fragment);
-                fragmentTransaction1.commit();
+                choose_lesson_fragment.setVisibility(View.VISIBLE);
+                group_lesson_fragment.setVisibility(View.GONE);
                 break;
 
             case R.id.buy:
@@ -155,7 +314,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-                showActivity(PrePrivateLessonActivity.class);
+                showActivity(PrivateEducationConsumActivity.class);
                 break;
         }
     }
@@ -172,5 +331,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         manager.setBackground(null);
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
+        animator.start();
     }
 }

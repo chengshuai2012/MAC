@@ -3,6 +3,7 @@ package com.zitech.framework.data.network.subscribe;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.Utils;
@@ -57,11 +58,17 @@ public abstract class ProgressSubscriber<T> extends Subscriber<T> {
         showProgressDialog();
     }
 
+    @Override
+    public void onNext(T t) {
+        Log.e("ProgressSubscriber: ", "onNext");
+    }
+
     /**
      * 完成，隐藏ProgressDialog
      */
     @Override
     public void onCompleted() {
+        Log.e("ProgressSubscriber: ", "onCompleted");
         dismissProgressDialog();
         // Toast.makeText(context.getContext(), "Get Top Movie Completed", Toast.LENGTH_SHORT).show();
     }

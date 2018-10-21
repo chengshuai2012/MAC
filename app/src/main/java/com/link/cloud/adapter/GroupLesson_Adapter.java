@@ -11,15 +11,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.link.cloud.R;
+import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<String> dataList;
+    private ArrayList<GroupLessonUser.UserInfosBean> dataList;
 
     private final int TYPE_ITEM = 1;
 
@@ -33,7 +36,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public final int LOADING_END = 3;
     Activity activity;
-    public GroupLesson_Adapter(List<String> dataList, Activity activity) {
+    public GroupLesson_Adapter(ArrayList<GroupLessonUser.UserInfosBean> dataList, Activity activity) {
         this.dataList = dataList;
         this.activity=activity;
     }
@@ -62,7 +65,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-
+            recyclerViewHolder.memeber_name.setText(dataList.get(position).getPhone());
         }
 //        } else if (holder instanceof FootViewHolder) {
 //            FootViewHolder footViewHolder = (FootViewHolder) holder;
@@ -115,12 +118,14 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout lesson_in;
+        TextView status_not_in;
         TextView memeber_name;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
             //tvItem = (TextView) itemView.findViewById(R.id.tv_item);
             lesson_in = (LinearLayout) itemView.findViewById(R.id.lesson_in);
+            status_not_in = (TextView) itemView.findViewById(R.id.status_not_in);
             memeber_name = (TextView) itemView.findViewById(R.id.memeber_name);
         }
     }

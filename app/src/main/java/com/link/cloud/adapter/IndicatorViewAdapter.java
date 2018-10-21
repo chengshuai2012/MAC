@@ -2,6 +2,7 @@ package com.link.cloud.adapter;
 
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -32,7 +33,6 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorFragmentPa
         this.title = title;
     }
 
-
     @Override
     public int getCount() {
         return title.size();
@@ -47,7 +47,6 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorFragmentPa
         textView.setText(title.get(position));
         return convertView;
     }
-
     @Override
     public Fragment getFragmentForPage(int position) {
         return fragmentList.get(position);

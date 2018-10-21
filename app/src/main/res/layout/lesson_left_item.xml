@@ -28,7 +28,7 @@
                 android:layout_marginLeft="@dimen/pre_pay_height"
                 android:background="@drawable/border_red_for_consume"
                 android:gravity="center"
-                android:text="@string/had_consume_lesson"
+                android:text="@string/no_consume_lesson"
                 android:textColor="@color/almost_white"
                 android:textSize="@dimen/text_size_26" />
 
@@ -63,6 +63,7 @@
                 android:layout_marginBottom="@dimen/margin_main"
                 android:layout_marginLeft="@dimen/margin_main"
                 android:text="@string/lesson_name"
+                android:visibility="gone"
                 android:textColor="@color/dark_black"
                 android:textSize="@dimen/text_size_28" />
         </RelativeLayout>

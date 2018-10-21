@@ -10,6 +10,8 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.link.cloud.R;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
+import com.link.cloud.bean.FingerprintsBean;
 import com.link.cloud.bean.People;
 import com.link.cloud.veune.MdDevice;
 import com.link.cloud.veune.MdUsbService;
@@ -179,21 +181,80 @@ public class Venueutils {
         }
 
     }
-    public String identifyNewImg(final RealmResults<People> peoples) {
+    List<People> subListPeople = new ArrayList<>();
+    public String identifyNewImg(final ArrayList<People> peoples) {
         final int nThreads=peoples.size()/1000+1;
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
         List<Future<String>> futures = new ArrayList();
         for (int i = 0; i < nThreads; i++) {
-            final List<People> subList = peoples.subList(1000* nThreads * i, 1000*nThreads * (i + 1));
+                if(i==nThreads-1){
+                    subListPeople= peoples.subList(1000* nThreads * i, peoples.size());
+                }else {
+                    subListPeople= peoples.subList(1000* nThreads * i, 1000*nThreads * (i + 1));
+                }
             Callable<String> task = new Callable<String>() {
                 @Override
                 public String call() throws Exception {
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
                     int position =0;
-                    for (People userBean : subList) {
+                    for (People userBean : subListPeople) {
                         sb.append(userBean.getFingerprint());
-                        uids[position] = userBean.getUid();
+                        uids[position] = userBean.getUuid();
+                        position++;
+
+                    }
+                    byte[] allFeaturesBytes = HexUtil.hexStringToByte(sb.toString());
+                    boolean identifyResult = MicroFingerVein.fv_index(allFeaturesBytes, allFeaturesBytes.length / 3352, img, pos, score);
+                    identifyResult = identifyResult && score[0] > IDENTIFY_SCORE_THRESHOLD;//得分是否达标
+                    if (identifyResult) {//比对通过且得分达标时打印此手指绑定的用户名
+                        String uid = uids[pos[0]];
+                        return uid;
+                    } else {
+                        return null;
+
+                    }
+                }
+            };
+
+            futures.add(executorService.submit(task));
+
+        }
+        for (Future<String> future : futures) {
+            try {
+                if(!TextUtils.isEmpty(future.get())){
+                    return future.get();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executorService.shutdown();
+        return null;
+    }
+    List<FingerprintsBean> subListUser = new ArrayList<>();
+    public String identifyNewImgUser(final ArrayList<FingerprintsBean> peoples) {
+        final int nThreads=peoples.size()/1000+1;
+        ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
+        List<Future<String>> futures = new ArrayList();
+        for (int i = 0; i < nThreads; i++) {
+            if(i==nThreads-1){
+                subListUser= peoples.subList(1000* nThreads * i, peoples.size());
+            }else {
+                subListUser= peoples.subList(1000* nThreads * i, 1000*nThreads * (i + 1));
+            }
+
+            Callable<String> task = new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    StringBuffer sb = new StringBuffer();
+                    String[] uids = new String[1000];
+                    int position =0;
+                    for (FingerprintsBean userBean : subListUser) {
+                        sb.append(userBean.getFingerprint());
+                        uids[position] = userBean.getUuid();
                         position++;
 
                     }

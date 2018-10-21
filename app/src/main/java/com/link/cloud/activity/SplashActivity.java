@@ -1,8 +1,6 @@
 package com.link.cloud.activity;
 
 import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.link.cloud.R;
 import com.link.cloud.User;
@@ -10,9 +8,6 @@ import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
-import com.link.cloud.utils.HexUtil;
-import com.zitech.framework.SP;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
@@ -55,13 +50,19 @@ public class SplashActivity extends AppBarActivity {
             public void onNext(ApiResponse<UserList> apiResponse) {
                 final UserList userList = apiResponse.getData();
                 total = userList.getTotal();
-                getAllData();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
                         realm.copyToRealm(userList.getData());
                     }
                 });
+
+            }
+
+            @Override
+            public void onCompleted() {
+                super.onCompleted();
+                getAllData();
             }
         });
     }
@@ -107,23 +108,18 @@ public class SplashActivity extends AppBarActivity {
                 e.printStackTrace();
             }
         }
+        executorService.shutdown();
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
-        executorService.shutdown();
-
     }
 
     private void getToken() {
         ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onNext(ApiResponse response) {
+                super.onNext(response);
                 User.get().setToken((String) response.getData());
                 getTotal();
-            }
-
-            @Override
-            public void onCompleted() {
-                super.onCompleted();
             }
         });
     }

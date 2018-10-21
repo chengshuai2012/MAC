@@ -103,6 +103,7 @@
             android:src="@drawable/veune_way"
             android:layout_below="@+id/work_introduce"
             android:layout_centerHorizontal="true"
+            android:id="@+id/qrcode"
             />
     </RelativeLayout>
 

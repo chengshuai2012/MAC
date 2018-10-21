@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.link.cloud.R;
+import com.link.cloud.api.request.LessonPred;
 
 import java.util.ArrayList;
 
@@ -24,25 +25,25 @@ import java.util.ArrayList;
 
 public class LessonLeftAdapter extends RecyclerView.Adapter<LessonLeftAdapter.ViewHolder> {
 
-    private ArrayList<String> mDataList;
+    private ArrayList<LessonPred.NotbookBean> mDataList;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView imageAvatar;
-
+        TextView coach;
         TextView nameText;
 
-        TextView contentsText;
 
         public ViewHolder(View itemView) {
 
             super(itemView);
+            nameText = itemView.findViewById(R.id.lesson_name);
+            coach = itemView.findViewById(R.id.coach_name);
 
         }
 
     }
 
-    public  LessonLeftAdapter(ArrayList<String> listDatas){
+    public  LessonLeftAdapter(ArrayList<LessonPred.NotbookBean> listDatas){
 
         mDataList = listDatas;
 
@@ -72,8 +73,9 @@ public class LessonLeftAdapter extends RecyclerView.Adapter<LessonLeftAdapter.Vi
 
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        String listData = mDataList.get(position);
-
+        LessonPred.NotbookBean listData = mDataList.get(position);
+        holder.coach.setText(listData.getCoachName());
+        holder.nameText.setText(listData.getFitnessCourseName());
 
     }
 

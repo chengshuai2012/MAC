@@ -185,7 +185,6 @@
                     android:layout_below="@+id/had_consume_lesson"
                     android:layout_marginBottom="@dimen/margin_main_middle"
                     android:layout_marginLeft="@dimen/margin_main"
-                    android:text="@string/lesson_name"
                     android:textColor="@color/dark_black"
                     android:textSize="@dimen/text_size_32"
                     android:textStyle="bold" />
@@ -219,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_main"
                 android:layout_marginLeft="@dimen/pre_pay_height"
-                android:text="@string/consume_lesson_today"
+                android:text="@string/lesson_left"
                 android:textColor="@color/dark_black"
                 android:textSize="@dimen/text_size_36"
                 android:layout_below="@+id/lesson_consum_now_rl"

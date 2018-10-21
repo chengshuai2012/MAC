@@ -3,14 +3,19 @@ package com.link.cloud.api;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.api.dataSourse.UserList;
+import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.GetUserPages;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.http.Body;
@@ -96,7 +101,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.EDITUSER)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse> edituser(@Header("access-token") String token, @Body EdituserRequest request);
+    Observable<ApiResponse> edituser(@Header("access-token") String token, @Body BindFinger request);
 
     /**
      * 绑定用户
@@ -165,7 +170,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.GETRECENTCLASS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable <ApiResponse> getRecentClass(@Header("access-token")String token);
+    Observable <ApiResponse<ArrayList<GroupLessonInResource>>> getRecentClass(@Header("access-token")String token);
 
     /**
      * 获取团课学员
@@ -174,7 +179,28 @@ public interface ApiService {
      * @returnscheduleReport
      * @see
      */
-    @POST(ApiConstants.GETGROUPLESSONMEMBER)
+    @GET(ApiConstants.GETGROUPLESSONMEMBER)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable getGroupUsers(@Path("app")String app, @Path("courseUsers")String courseUsers, @Header("access-token")String token, @Path("courseUsers")String courseReleasePkcode);
+    Observable<ApiResponse<GroupLessonUser>> getGroupUsers(@Path("app")String app, @Path("courseUsers")String courseUsers, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+
+    /**
+     * 获取团课购买二维码
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.PREBUYCOURSE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse>getBuyQrcode(@Path("app")String app,@Path("prebuyCourse") String prebuyCourse, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+    /**
+     * 获取顾客的私教课
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.GETPERSONALCLASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse<LessonPred>>getPersonalClass(@Path("app")String app, @Path("findPersonalCourse") String findPersonalCourse, @Header("access-token")String token, @Path("uuid")String uuid);
 }

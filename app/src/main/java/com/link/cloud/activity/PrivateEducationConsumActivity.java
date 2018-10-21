@@ -1,5 +1,6 @@
 package com.link.cloud.activity;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,14 +10,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.adapter.LessonConsumeAdapter;
 import com.link.cloud.adapter.LessonLeftAdapter;
+import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.bean.People;
 import com.link.cloud.widget.CardConfig;
 import com.link.cloud.widget.PublicTitleView;
 import com.link.cloud.widget.SwipeCardCallBack;
 import com.link.cloud.widget.SwipeCardLayoutManager;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +31,9 @@ import java.util.Collections;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 @SuppressLint("Registered")
 public class PrivateEducationConsumActivity extends AppBarActivity implements PublicTitleView.onItemClickListener {
@@ -68,25 +78,82 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     @BindView(R.id.lesson_consum_three)
     RelativeLayout lessonConsumThree;
     private PublicTitleView publicTitle;
-    private ArrayList mList;
+    private ArrayList<LessonPred.NotbookBean> mList= new ArrayList();
+    ValueAnimator animator;
+    RealmResults<People> peoples ;
+    ArrayList<People> nowPeople = new ArrayList<>();
+    Realm realm;
+    private LessonLeftAdapter listAdapter;
 
     @Override
     protected void initViews() {
         setTitle(R.drawable.handy_logo);
         publicTitle = (PublicTitleView) findViewById(R.id.publicTitle);
-        publicTitle.setTags("1.教练确认", "2.学员确认", "3.选择课程", "4.消课成功");
+        publicTitle.setTags("1.学员确认", "2.选择课程", "3.教练确认", "4.消课成功");
         publicTitle.setTitleText(getString(R.string.lesson_consum));
         publicTitle.setFinshText(getResources().getString(R.string.back_home));
         publicTitle.setItemClickListener(this);
         customProgress.setProgressFormatter(null);
         mList = new ArrayList<>();
-        initData();
-        setData();
+        realm= Realm.getDefaultInstance();
+         RealmResults<People> peoples = realm.where(People.class).findAll();
+         peoples.addChangeListener(new RealmChangeListener<RealmResults<People>>() {
+             @Override
+             public void onChange(RealmResults<People> people) {
+                 nowPeople.clear();
+                 nowPeople.addAll(realm.copyFromRealm(people));
+             }
+         });
+         bindWay.setText("学员确认");
+         nowPeople.addAll(realm.copyFromRealm(peoples));
+//        setData();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         lessonLeftRecyclerView.setLayoutManager(layoutManager);
-        LessonLeftAdapter listAdapter = new LessonLeftAdapter(mList);
+        listAdapter = new LessonLeftAdapter(mList);
         lessonLeftRecyclerView.setAdapter(listAdapter);
+        animator = ValueAnimator.ofInt(0, 80);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int state = MacApplication.getVenueUtils().getState();
+                int progress = (int) animation.getAnimatedValue();
+                if(customProgress!=null){
+                    customProgress.setProgress(progress);
+                }
+                if (state == 3) {
+                    final String uid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
+                    com.orhanobut.logger.Logger.e(uid);
+
+                    ApiFactory.getPersonalClass(uid).subscribe(new ProgressSubscriber<ApiResponse<LessonPred>>(PrivateEducationConsumActivity.this) {
+                        @Override
+                        public void onNext(ApiResponse<LessonPred> lessonPredApiResponse) {
+                            super.onNext(lessonPredApiResponse);
+                            publicTitle.nextPosition();
+                            bindWay.setText("选择课程");
+                            lessonConsumOne.setVisibility(View.GONE);
+                            lessonConsumThree.setVisibility(View.VISIBLE);
+                            lessonName.setText(lessonPredApiResponse.getData().getBook().get(0).getFitnessCourseName()+"");
+                            lessonTime.setText(lessonPredApiResponse.getData().getBook().get(0).getBegtime()+"");
+                            coachName.setText(lessonPredApiResponse.getData().getBook().get(0).getCoachNikename()+"");
+                            mList.clear();
+                            mList.addAll(lessonPredApiResponse.getData().getNotbook());
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                        }
+                    });
+                }
+                if(progress>=79){
+                    animator.setCurrentPlayTime(0);
+                }
+            }
+        });
+        animator.setDuration(40000);
+        animator.start();
     }
 
     @Override
@@ -100,11 +167,6 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     }
 
 
-    private void initData() {
-        for (int i = 0; i < 8; i++) {
-            mList.add("11111111111" + i);
-        }
-    }
 
     @OnClick({R.id.bind_venue_intro, R.id.confirm_consume, R.id.confirm_consume_finish})
     public void OnClick(View view) {
@@ -121,24 +183,30 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                 break;
             case R.id.confirm_consume_finish:
                 publicTitle.nextPosition();
-                finish();
+                lessonConsumOne.setVisibility(View.VISIBLE);
+                lessonConsumThree.setVisibility(View.GONE);
+                bindWay.setText("教练确认");
                 break;
         }
     }
+//
+//    private void setData() {
+//        SwipeCardLayoutManager swmanamger = new SwipeCardLayoutManager(this);
+//        multi_card.setLayoutManager(swmanamger);
+//        Collections.reverse(mList);
+//        LessonConsumeAdapter mAdatper = new LessonConsumeAdapter(mList, this);
+//        multi_card.setAdapter(mAdatper);
+//        CardConfig.initConfig(this);
+//        ItemTouchHelper.Callback callback = new SwipeCardCallBack(mList, mAdatper, multi_card);
+//        ItemTouchHelper helper = new ItemTouchHelper(callback);
+//        helper.attachToRecyclerView(multi_card);
+//
+//    }
 
-    private void setData() {
-        SwipeCardLayoutManager swmanamger = new SwipeCardLayoutManager(this);
-        multi_card.setLayoutManager(swmanamger);
-        Collections.reverse(mList);
-        LessonConsumeAdapter mAdatper = new LessonConsumeAdapter(mList, this);
-        multi_card.setAdapter(mAdatper);
-        CardConfig.initConfig(this);
-        ItemTouchHelper.Callback callback = new SwipeCardCallBack(mList, mAdatper, multi_card);
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(multi_card);
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
-
-
 }
 

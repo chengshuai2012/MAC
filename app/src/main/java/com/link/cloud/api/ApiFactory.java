@@ -4,15 +4,20 @@ import com.link.cloud.User;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.api.dataSourse.UserList;
+import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.GetUserPages;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.SchedulersCompat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +72,7 @@ public class ApiFactory {
      * 获取准备开课课程详情(开课前30分可获取)
      * @return
      */
-    public static Observable<ApiResponse> getRecentLesson() {
+    public static Observable<ApiResponse<ArrayList<GroupLessonInResource>>> getRecentLesson() {
         return getApiService().getRecentClass(User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
@@ -81,7 +86,7 @@ public class ApiFactory {
      * @return
      */
     public static Observable<ApiResponse> admissionCourse(String uuid, String courseReleasePkcode) {
-        return getApiService().admissionCourse("app", "admissionCourse", uuid, courseReleasePkcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+        return getApiService().admissionCourse("app", "courseAdmission", uuid, courseReleasePkcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
     /**
@@ -99,7 +104,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> edituser(EdituserRequest request) {
+    public static Observable<ApiResponse> edituser(BindFinger request) {
         return getApiService().edituser(User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
@@ -171,8 +176,25 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> getGroupUsers(String  courseReleasePkcode) {
+    public static Observable<ApiResponse<GroupLessonUser>> getGroupUsers(String  courseReleasePkcode) {
         return getApiService().getGroupUsers("app", "courseUsers",User.get().getToken(),courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+
+    /**
+     * 购买二维码
+     *
+     * @return
+     */
+   public static Observable<ApiResponse> getBuyQrcode(String  courseReleasePkcode) {
+        return getApiService().getBuyQrcode("app", "prebuyCourse",User.get().getToken(),courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * 获取顾客的私教课
+     *
+     * @return
+     */
+   public static Observable<ApiResponse<LessonPred>> getPersonalClass(String  uuid) {
+        return getApiService().getPersonalClass("app", "findPersonalCourse",User.get().getToken(),uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

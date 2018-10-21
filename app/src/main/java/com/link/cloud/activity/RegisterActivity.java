@@ -22,6 +22,7 @@ import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
@@ -190,9 +191,9 @@ public class RegisterActivity extends AppBarActivity {
             R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send})
     public void OnClick(View v) {
         switch (v.getId()) {
-//            case R.id.back:
-//                finish();
-//                break;
+            case R.id.back:
+                finish();
+                break;
             case R.id.bind_keypad_0:
             case R.id.bind_keypad_1:
             case R.id.bind_keypad_2:
@@ -246,7 +247,6 @@ public class RegisterActivity extends AppBarActivity {
                     }
                 }
                 break;
-            case R.id.back:
             case R.id.confirm_bind:
                 if(isSendVerify){
                     String code = verifyCode.getText().toString();
@@ -308,8 +308,13 @@ public class RegisterActivity extends AppBarActivity {
     @Override
     public void modelMsg(int state, String msg) {
         if (state == 3) {
-            edituserRequest.setFingerprint(msg);
-            ApiFactory.edituser(edituserRequest).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            BindFinger bindFinger = new BindFinger();
+            bindFinger.setFingerprint(msg);
+            bindFinger.setId(edituserRequest.getId());
+            bindFinger.setMerchantId(edituserRequest.getMerchantId());
+            bindFinger.setUserType(edituserRequest.getUserType());
+            bindFinger.setUuid(edituserRequest.getUuid());
+            ApiFactory.edituser(bindFinger).subscribe(new ProgressSubscriber<ApiResponse>(this) {
                 @Override
                 public void onNext(ApiResponse apiResponse) {
                     bindMiddleTwo.setVisibility(View.INVISIBLE);

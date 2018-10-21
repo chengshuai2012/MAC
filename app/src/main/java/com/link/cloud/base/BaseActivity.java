@@ -153,6 +153,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.startActivity(intent);
         ViewUtils.anima(ViewUtils.RIGHT_IN, this);
     }
+    public void showActivity(Class<?> cls, String name, String extras) {
+        Intent intent = new Intent();
+        intent.setClass(this, cls);
+       intent.putExtra(name,extras);
+        super.startActivity(intent);
+        ViewUtils.anima(ViewUtils.RIGHT_IN, this);
+    }
 
     @Override
     public void finish() {

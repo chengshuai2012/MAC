@@ -8,7 +8,6 @@
     tools:context="com.link.cloud.activity.MainActivity">
 
     <include layout="@layout/activity_top_view"
-        android:visibility="gone"
         >
 
     </include>

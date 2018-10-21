@@ -23,7 +23,7 @@ public class ApiConstants {
     public static final String COURSELIST = "{app}/{courseList}/{begDate}";
 
     //修改指纹
-    public static final String EDITUSER = "app/editUser";
+    public static final String EDITUSER = "app/addFingerprints";
 
     //分页获取指静脉
     public static final String GETUSERS = "app/users";
@@ -48,6 +48,12 @@ public class ApiConstants {
 
     //获取团课学员
     public static final String GETGROUPLESSONMEMBER = "{app}/{courseUsers}/{courseReleasePkcode}";
+
+    //获取购买课程支付信息
+    public static final String PREBUYCOURSE = "{app}/{prebuyCourse}/{courseReleasePkcode}";
+
+    //获取顾客的私教课
+    public static final String GETPERSONALCLASS = "{app}/{findPersonalCourse}/{uuid}";
 
 
 }

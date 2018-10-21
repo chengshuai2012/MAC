@@ -1,12 +1,14 @@
-package com.link.cloud.api.bean;
+package com.link.cloud.api.dataSourse;
 
 /**
- * 作者：qianlu on 2018/10/17 15:09
- * 邮箱：zar.l@qq.com
+ * Created by 49488 on 2018/10/21.
  */
-public class LessonItemBean {
+
+public class GroupLessonInResource {
+
+
     /**
-     * id : 153
+     * id : 50
      * date : 2018-10-21 00:00:00
      * fitnessCourseName : 测试瑜伽团课
      * courseReleaseDiscountStatus : 0
@@ -22,9 +24,7 @@ public class LessonItemBean {
      * storeCoachNikename : 无敌教练
      * branchId : 1
      * merchantId : 1
-     * startTime : 2018-10-21 11:15:00
-     * num : 0
-     * address :
+     * startTime : 2018-10-21 13:15:00
      */
 
     private int id;
@@ -44,8 +44,6 @@ public class LessonItemBean {
     private int branchId;
     private int merchantId;
     private String startTime;
-    private int num;
-    private String address;
 
     public int getId() {
         return id;
@@ -181,21 +179,5 @@ public class LessonItemBean {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

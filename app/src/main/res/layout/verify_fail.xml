@@ -38,7 +38,7 @@
             android:layout_height="@dimen/keyboard_edit_height"
             android:textSize="@dimen/text_size_42"
             android:text="@string/please_confirm_bind"
-            android:id="@+id/back_home"
+            android:id="@+id/verify_you_have_bind"
             android:layout_below="@+id/pay_ok"
             android:gravity="center"
             android:textColor="@color/dark_black"
@@ -47,7 +47,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_80_height"
-            android:layout_below="@+id/back_home"
+            android:layout_below="@+id/verify_you_have_bind"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/margin_main"

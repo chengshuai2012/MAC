@@ -1,13 +1,17 @@
 package com.link.cloud.fragment;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.link.cloud.R;
+import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.adapter.ChooseLesson_Adapter;
 import com.link.cloud.api.bean.LessonItemBean;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.base.BaseFragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
@@ -60,7 +64,9 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
 
             @Override
             public void OnClickPre(int postion) {
-
+                Gson gson= new Gson();
+                String json = gson.toJson(courses.get(postion));
+                ((BaseActivity)getActivity()).showActivity(PreGroupLessonActivity.class,"courseReleasePkcode",json);
             }
 
             @Override

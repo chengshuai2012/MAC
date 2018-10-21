@@ -64,7 +64,6 @@
                     android:layout_width="@dimen/text_big_width_main"
                     android:layout_height="@dimen/text_height_main"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/margin_main"
                     android:layout_marginTop="@dimen/margin_main"
                     android:background="@drawable/border_lesson"
                     android:orientation="horizontal">
@@ -84,13 +83,34 @@
 
                 </LinearLayout>
 
-                <FrameLayout
+                <RelativeLayout
                     android:id="@+id/fg_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/choose_lesson_container">
+                    <RelativeLayout
+                        android:layout_marginTop="@dimen/margin_main"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/group_lesson_fragment"
+                        android:visibility="gone"
+                        >
+                        <include
+                            layout="@layout/group_lesson_fragment"
+                            />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/choose_lesson_fragment"
+                        android:layout_marginTop="@dimen/margin_main_middle"
+                        >
+                        <include
+                            layout="@layout/choose_lesson_fragment"
+                            />
+                    </RelativeLayout>
 
-                </FrameLayout>
+                </RelativeLayout>
 
             </RelativeLayout>
 
