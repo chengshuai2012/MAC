@@ -7,10 +7,10 @@ import android.widget.LinearLayout;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ViewUtils;
 
 import pl.droidsonroids.gif.GifImageButton;
@@ -38,7 +38,7 @@ public class DemoActivity extends AppBarActivity {
 
 
 
-        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
+        ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onNext(ApiResponse response) {
                 User.get().setToken((String) response.getData());
@@ -50,7 +50,7 @@ public class DemoActivity extends AppBarActivity {
 
     private void getCode() {
 
-        ApiFactory.sendVCode("13631629110").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+        ApiFactory.sendVCode("13631629110").subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onNext(ApiResponse response) {
 

@@ -11,6 +11,7 @@ import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
+import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
@@ -136,18 +137,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.FINDCOACH)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> findcoach(@Path("app") String app, @Path("findCoach") String findCoach, @Path("uid") String uid, @Header("access-token") String token);
-
-    /**
-     * 查询顾客私教课程
-     *
-     * @param
-     * @return
-     * @see {app}/{findPersonalCourse}/{uid}/{cid}
-     */
-    @GET(ApiConstants.FINDPERSONALCOURSE)
-    @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> findpersonalcourse(@Path("app") String app, @Path("findPersonalCourse") String findPersonalCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
+    Observable<ApiResponse<CoachBean>> findcoach(@Path("app") String app, @Path("findCoach") String findCoach, @Path("uuid") String uuid, @Path("memberCoursePkcode") String memberCoursePkcode, @Header("access-token") String token);
 
 
     /**
@@ -203,4 +193,34 @@ public interface ApiService {
     @GET(ApiConstants.GETPERSONALCLASS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable <ApiResponse<LessonPred>>getPersonalClass(@Path("app")String app, @Path("findPersonalCourse") String findPersonalCourse, @Header("access-token")String token, @Path("uuid")String uuid);
+    /**
+     * 获取顾客的私教课
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.CONSUNMEPRITE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse>consumePrivate(@Path("app")String app, @Path("finishCourse")String finishCourse,@Header("access-token") String token,  @Path("uuid")String uuid,  @Path("memberCoursePkcode")String memberCoursePkcode,  @Path("coachid")String coachid);
+    /**
+     * 验证用户是否是管理员
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.VALIDATEADMIN)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable  <ApiResponse>validateAdmin(@Path("app")String app, @Path("validateAdmin")String validateAdmin, @Header("access-token")String token, @Path("uuid")String uuid);
+    /**
+     * 验证机器密码
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.VALIDATEPASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable  <ApiResponse>validatePassword(@Path("app")String app,@Path("validatePassword") String validatePassword, @Header("access-token")String token, @Path("password")String password);
 }

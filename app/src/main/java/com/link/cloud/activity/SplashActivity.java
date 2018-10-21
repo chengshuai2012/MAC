@@ -5,12 +5,12 @@ import android.content.Intent;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SplashActivity extends AppBarActivity {
         getUserPages.setContent("HJKF");
         getUserPages.setPageNo(1);
         getUserPages.setPageSize(100);
-        ApiFactory.getUsers(getUserPages).subscribe(new ProgressSubscriber<ApiResponse<UserList>>(this) {
+        ApiFactory.getUsers(getUserPages).subscribe(new BaseProgressSubscriber<ApiResponse<UserList>>(this) {
             @Override
             public void onNext(ApiResponse<UserList> apiResponse) {
                 final UserList userList = apiResponse.getData();
@@ -114,7 +114,7 @@ public class SplashActivity extends AppBarActivity {
     }
 
     private void getToken() {
-        ApiFactory.appLogin().subscribe(new ProgressSubscriber<ApiResponse>(this) {
+        ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onNext(ApiResponse response) {
                 super.onNext(response);

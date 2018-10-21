@@ -12,6 +12,7 @@ import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
+import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
@@ -137,20 +138,8 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> findcoach(String uid) {
-        return getApiService().findcoach("app", "findCoach", uid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
-    }
-
-    /**
-     * 查询顾客私教课程
-     * uid 顾客ID
-     * cid 教练ID
-     * kid 课程ID
-     *
-     * @return
-     */
-    public static Observable<ApiResponse> findpersonalcourse(String uid, String cid) {
-        return getApiService().findpersonalcourse("app", "findPersonalCourse", uid, cid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse<CoachBean>> findcoach(String uid, String memberCoursePkcode) {
+        return getApiService().findcoach("app", "findCoach", uid, memberCoursePkcode,User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 
@@ -195,6 +184,30 @@ public class ApiFactory {
      */
    public static Observable<ApiResponse<LessonPred>> getPersonalClass(String  uuid) {
         return getApiService().getPersonalClass("app", "findPersonalCourse",User.get().getToken(),uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * 消私教课程
+     *
+     * @return
+     */
+   public static Observable<ApiResponse> consumePrivate(String  uuid,String memberCoursePkcode,String coachid) {
+        return getApiService().consumePrivate("app", "finishCourse",User.get().getToken(),uuid,memberCoursePkcode,coachid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * 验证用户是否是管理员
+     *
+     * @return
+     */
+   public static Observable<ApiResponse> validateAdmin(String  uuid) {
+        return getApiService().validateAdmin("app", "validateAdmin",User.get().getToken(),uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     *验证机器密码
+     *
+     * @return
+     */
+   public static Observable<ApiResponse> validatePassword(String  password) {
+        return getApiService().validatePassword("app", "validatePassword",User.get().getToken(),password).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

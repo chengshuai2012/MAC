@@ -3,13 +3,10 @@ package com.link.cloud;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.link.cloud.api.ApiFactory;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.MyLoadViewFactory;
 import com.shizhefei.mvc.MVCHelper;
 import com.zitech.framework.BaseApplication;
-import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;

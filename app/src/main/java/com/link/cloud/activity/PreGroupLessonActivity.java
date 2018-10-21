@@ -2,7 +2,6 @@ package com.link.cloud.activity;
 
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
@@ -24,6 +23,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
@@ -32,13 +32,11 @@ import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
 import java.util.Hashtable;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -283,7 +281,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             case R.id.confirm_bind:
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
-                    ApiFactory.binduser(tel_num, code).subscribe(new ProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
+                    ApiFactory.binduser(tel_num, code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {
                             loginMiddleOne.setVisibility(View.INVISIBLE);
@@ -305,7 +303,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                 dialogUtils.showPreDialog(pre);
                 break;
             case R.id.pay_wechat:
-                ApiFactory.getBuyQrcode(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                ApiFactory.getBuyQrcode(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                     @Override
                     public void onNext(ApiResponse apiResponse) {
                         super.onNext(apiResponse);
@@ -326,7 +324,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             case R.id.send:
                 tel_num = inputTel.getText().toString();
                 if (Utils.isPhoneNum(tel_num)) {
-                    ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                    ApiFactory.sendVCode(tel_num).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
                             isSendVerify = true;

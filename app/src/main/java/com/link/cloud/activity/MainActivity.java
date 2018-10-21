@@ -22,6 +22,7 @@ import com.link.cloud.User;
 import com.link.cloud.adapter.GroupLesson_Adapter;
 import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.dataSourse.GroupLessonUser;
@@ -33,7 +34,6 @@ import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Utils;
-import com.orhanobut.logger.Logger;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
@@ -95,7 +95,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private String courseReleasePkcode;
 
     private void getListDate() {
-        ApiFactory.courseList(Utils.getDate()).subscribe(new ProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
+        ApiFactory.courseList(Utils.getDate()).subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
                 if (!date.isEmpty()) {
@@ -148,7 +148,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
                     com.orhanobut.logger.Logger.e(uid);
 
-                    ApiFactory.admissionCourse(uid,courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
+                    ApiFactory.admissionCourse(uid,courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
                             super.onNext(apiResponse);
@@ -189,6 +189,18 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getListDate();
+        ApiFactory.validateAdmin("11").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+                super.onNext(apiResponse);
+            }
+        });
+        ApiFactory.validatePassword("11").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+                super.onNext(apiResponse);
+            }
+        });
     }
 
 
@@ -217,7 +229,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     }
 
     private void getGroupData() {
-        ApiFactory.getRecentLesson().subscribe(new ProgressSubscriber<ApiResponse<ArrayList<GroupLessonInResource>>>(this) {
+        ApiFactory.getRecentLesson().subscribe(new BaseProgressSubscriber<ApiResponse<ArrayList<GroupLessonInResource>>>(this) {
             @Override
             public void onNext(ApiResponse<ArrayList<GroupLessonInResource>> arrayListApiResponse) {
                 super.onNext(arrayListApiResponse);
@@ -226,7 +238,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     coachName.setText(arrayListApiResponse.getData().get(0).getStoreCoachName());
                     lessonName.setText(arrayListApiResponse.getData().get(0).getFitnessCourseName());
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
-                    ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
+                    ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
                         @Override
                         public void onNext(final ApiResponse<GroupLessonUser> groupLessonUserApiResponse) {
                             super.onNext(groupLessonUserApiResponse);

@@ -20,9 +20,9 @@ import rx.Subscriber;
  */
 public abstract class ProgressSubscriber<T> extends Subscriber<T> {
 
-    private Dialog mDialog;
+    public Dialog mDialog;
 
-    private Context context;
+    public Context context;
 
     public ProgressSubscriber(Context context) {
         this(context, new LoadingDialog(context));
@@ -60,7 +60,7 @@ public abstract class ProgressSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onNext(T t) {
-        Log.e("ProgressSubscriber: ", "onNext");
+        Log.e("BaseProgressSubscriber: ", "onNext");
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onCompleted() {
-        Log.e("ProgressSubscriber: ", "onCompleted");
+        Log.e("BaseProgressSubscriber: ", "onCompleted");
         dismissProgressDialog();
         // Toast.makeText(context.getContext(), "Get Top Movie Completed", Toast.LENGTH_SHORT).show();
     }

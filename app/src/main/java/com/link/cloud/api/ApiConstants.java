@@ -37,15 +37,6 @@ public class ApiConstants {
     //课程详情
     public static final String COURSEDETAIL = "{app}/{courseDetail}/{courseReleasePkcode}";
 
-    //查询顾客的私教信息
-    public static final String FINDCOACH = "{app}/{findCoach}/{uid}";
-
-    //查询顾客私教课程
-    public static final String FINDPERSONALCOURSE = "{app}/{findPersonalCourse}/{uid}/{cid}";
-
-    //查询顾客私教课程
-    public static final String FINISHCOURSE = "{app}/{finishCourse}/{uid}/{cid}/{kid}";
-
     //获取团课学员
     public static final String GETGROUPLESSONMEMBER = "{app}/{courseUsers}/{courseReleasePkcode}";
 
@@ -54,6 +45,18 @@ public class ApiConstants {
 
     //获取顾客的私教课
     public static final String GETPERSONALCLASS = "{app}/{findPersonalCourse}/{uuid}";
+
+    //获取私教课教练
+    public static final String FINDCOACH = "{app}/{findCoach}/{uuid}/{memberCoursePkcode}";
+
+    //消私教课程
+    public static final String CONSUNMEPRITE = "{app}/{finishCourse}/{uuid}/{memberCoursePkcode}/{coachid}";
+
+    //验证用户是否是管理员
+    public static final String VALIDATEADMIN = "{app}/{validateAdmin}/{uuid}";
+
+    //验证机器密码
+    public static final String VALIDATEPASS = "{app}/{validatePassword}/{password}";
 
 
 }

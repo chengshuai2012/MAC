@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,21 +11,17 @@ import android.widget.TextView;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
-import com.link.cloud.adapter.LessonConsumeAdapter;
 import com.link.cloud.adapter.LessonLeftAdapter;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.request.LessonPred;
+import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
-import com.link.cloud.widget.CardConfig;
 import com.link.cloud.widget.PublicTitleView;
-import com.link.cloud.widget.SwipeCardCallBack;
-import com.link.cloud.widget.SwipeCardLayoutManager;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -84,6 +79,8 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     ArrayList<People> nowPeople = new ArrayList<>();
     Realm realm;
     private LessonLeftAdapter listAdapter;
+    private String memberCoursePkcode;
+    private String userUid;
 
     @Override
     protected void initViews() {
@@ -122,10 +119,9 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                     customProgress.setProgress(progress);
                 }
                 if (state == 3) {
-                    final String uid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
-                    com.orhanobut.logger.Logger.e(uid);
-
-                    ApiFactory.getPersonalClass(uid).subscribe(new ProgressSubscriber<ApiResponse<LessonPred>>(PrivateEducationConsumActivity.this) {
+                    userUid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
+                    com.orhanobut.logger.Logger.e(userUid);
+                    ApiFactory.getPersonalClass(userUid).subscribe(new BaseProgressSubscriber<ApiResponse<LessonPred>>(PrivateEducationConsumActivity.this) {
                         @Override
                         public void onNext(ApiResponse<LessonPred> lessonPredApiResponse) {
                             super.onNext(lessonPredApiResponse);
@@ -133,6 +129,7 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                             bindWay.setText("选择课程");
                             lessonConsumOne.setVisibility(View.GONE);
                             lessonConsumThree.setVisibility(View.VISIBLE);
+                            memberCoursePkcode = lessonPredApiResponse.getData().getBook().get(0).getMemberCoursePkcode();
                             lessonName.setText(lessonPredApiResponse.getData().getBook().get(0).getFitnessCourseName()+"");
                             lessonTime.setText(lessonPredApiResponse.getData().getBook().get(0).getBegtime()+"");
                             coachName.setText(lessonPredApiResponse.getData().getBook().get(0).getCoachNikename()+"");
@@ -163,8 +160,20 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
 
     @Override
     public void itemClickListener() {
-        finish();
-    }
+//        finish();
+        ApiFactory.findcoach(userUid,memberCoursePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<CoachBean>>(PrivateEducationConsumActivity.this) {
+            @Override
+            public void onNext(ApiResponse<CoachBean> coachBeanApiResponse) {
+                super.onNext(coachBeanApiResponse);
+                ApiFactory.consumePrivate(userUid,memberCoursePkcode,coachBeanApiResponse.getData().getCoachid()).subscribe(new BaseProgressSubscriber<ApiResponse>(PrivateEducationConsumActivity.this) {
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
+                    }
+                });
+            }
+        });
+   }
 
 
 
@@ -186,6 +195,13 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                 lessonConsumOne.setVisibility(View.VISIBLE);
                 lessonConsumThree.setVisibility(View.GONE);
                 bindWay.setText("教练确认");
+                ApiFactory.findcoach(userUid,memberCoursePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(PrivateEducationConsumActivity.this) {
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
+
+                    }
+                });
                 break;
         }
     }
