@@ -2,6 +2,7 @@ package com.link.cloud.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -166,9 +167,11 @@ public class DialogUtils implements View.OnClickListener {
         window.setContentView(view, params);
     }
 
-    public void showPayDialog(View view) {
+    public void showPayDialog(View view, Bitmap bitmap) {
         dialog.show();
         ImageView close_pay = view.findViewById(R.id.close_pay);
+        ImageView qrcode = view.findViewById(R.id.qrcode);
+        qrcode.setImageBitmap(bitmap);
         close_pay.setOnClickListener(this);
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -186,11 +189,13 @@ public class DialogUtils implements View.OnClickListener {
         params.leftMargin = 30;
         window.setContentView(view, params);
     }
-    public void showVeuneFailDialog(View view) {
+    public void showVeuneFailDialog(View view,String msg) {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         TextView no_bind = view.findViewById(R.id.no_bind);
+        TextView verify_you_have_bind = view.findViewById(R.id.verify_you_have_bind);
+        verify_you_have_bind.setText(msg);
         no_bind.setOnClickListener(this);
         TextView has_bind = view.findViewById(R.id.has_bind);
         has_bind.setOnClickListener(this);
@@ -466,8 +471,14 @@ public class DialogUtils implements View.OnClickListener {
                 ((BaseActivity) context).showActivity(RegisterActivity.class);
                 break;
                 case R.id.has_bind:
-
+                    listener.dialogCancel();
+                dialog.dismiss();
                 break;
+        }
+    }
+    public void dissMiss(){
+        if(dialog.isShowing()){
+            dialog.dismiss();
         }
     }
 }

@@ -25,7 +25,7 @@
         android:textColor="@color/color_black_333333"
         android:textSize="@dimen/text_size_32"
         android:gravity="center"
-        android:text="@string/advantage_name"
+        android:id="@+id/lesson_name"
         />
     <TextView
         android:layout_width="@dimen/activity_top_view_height"
@@ -34,7 +34,7 @@
         android:textColor="@color/color_black_333333"
         android:textSize="@dimen/text_size_32"
         android:gravity="center"
-        android:text="@string/advantage_name"
+        android:id="@+id/coach_name"
         />
 </LinearLayout>
 

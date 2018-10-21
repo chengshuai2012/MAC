@@ -17,13 +17,19 @@ public class ApiConstants {
     public static final String APPLOGIN = "{pub}/{appLogin}/{deviceCode}/{password}";
 
     //团课入场
-    public static final String ADMISSIONCOURSE = "{app}/{admissionCourse}/{uid}/{cid}";
+    public static final String ADMISSIONCOURSE = "{app}/{courseAdmission}/{uuid}/{courseReleasePkcode}";
 
     //课程列表
     public static final String COURSELIST = "{app}/{courseList}/{begDate}";
 
     //修改指纹
-    public static final String EDITUSER = "app/editUser";
+    public static final String EDITUSER = "app/addFingerprints";
+
+    //分页获取指静脉
+    public static final String GETUSERS = "app/users";
+
+    //获取准备开课课程详情(开课前30分可获取)
+    public static final String GETRECENTCLASS = "app/findStartCourse";
 
     //绑定用户
     public static final String BINDUSER = "{app}/{bindUser}/{phone}/{vcode}";
@@ -31,14 +37,26 @@ public class ApiConstants {
     //课程详情
     public static final String COURSEDETAIL = "{app}/{courseDetail}/{courseReleasePkcode}";
 
-    //查询顾客的私教信息
-    public static final String FINDCOACH = "{app}/{findCoach}/{uid}";
+    //获取团课学员
+    public static final String GETGROUPLESSONMEMBER = "{app}/{courseUsers}/{courseReleasePkcode}";
 
-    //查询顾客私教课程
-    public static final String FINDPERSONALCOURSE = "{app}/{findPersonalCourse}/{uid}/{cid}";
+    //获取购买课程支付信息
+    public static final String PREBUYCOURSE = "{app}/{prebuyCourse}/{courseReleasePkcode}";
 
-    //查询顾客私教课程
-    public static final String FINISHCOURSE = "{app}/{finishCourse}/{uid}/{cid}/{kid}";
+    //获取顾客的私教课
+    public static final String GETPERSONALCLASS = "{app}/{findPersonalCourse}/{uuid}";
+
+    //获取私教课教练
+    public static final String FINDCOACH = "{app}/{findCoach}/{uuid}/{memberCoursePkcode}";
+
+    //消私教课程
+    public static final String CONSUNMEPRITE = "{app}/{finishCourse}/{uuid}/{memberCoursePkcode}/{coachid}";
+
+    //验证用户是否是管理员
+    public static final String VALIDATEADMIN = "{app}/{validateAdmin}/{uuid}";
+
+    //验证机器密码
+    public static final String VALIDATEPASS = "{app}/{validatePassword}/{password}";
 
 
 }

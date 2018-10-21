@@ -197,7 +197,6 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/dialog_padding"
-                            android:text="@string/lesson_name"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_36" />
 
@@ -207,7 +206,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="@dimen/dialog_padding"
-                            android:text="@string/should_pay"
+                            android:id="@+id/should_pay"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_36" />
                     </RelativeLayout>
@@ -223,7 +222,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dialog_padding"
                             android:layout_marginTop="@dimen/margin_main"
-                            android:text="@string/pay_info"
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/text_size_28" />
 
@@ -233,7 +231,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dialog_padding"
                             android:layout_marginTop="@dimen/margin_main"
-                            android:text="@string/pay_info"
                             android:textColor="@color/dark_black"
                             android:textSize="@dimen/text_size_28" />
 
@@ -247,7 +244,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/dialog_padding"
-                                android:text="@string/lesson_name"
+                                android:text="@string/people_count"
                                 android:textColor="@color/dark_black"
                                 android:textSize="@dimen/text_size_28" />
 
@@ -258,9 +255,9 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="@dimen/dialog_padding"
                                 android:background="@drawable/border_red_gradient_10px"
-                                android:text="@string/one_person"
                                 android:gravity="center"
                                 android:textColor="@color/white"
+                                android:id="@+id/people_count"
                                 android:textSize="@dimen/text_size_36" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -340,7 +337,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/margin_main_middle"
                                         android:layout_marginTop="@dimen/margin_main"
-                                        android:text="@string/zhifubao"
+                                        android:id="@+id/handy_price"
                                         android:textColor="@color/dark_gray"
                                         android:textSize="@dimen/text_size_28" />
 
@@ -348,7 +345,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/margin_main_middle"
-                                        android:text="@string/zhifubao"
+                                        android:text="@string/handy_pay"
                                         android:textColor="@color/red"
                                         android:textSize="@dimen/text_size_30" />
 
@@ -386,7 +383,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/main_image_height"
-                                    android:text="@string/zhifubao"
+                                    android:id="@+id/wechat_price"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_28" />
 
@@ -395,7 +392,7 @@
                                     android:layout_height="wrap_content"
 
                                     android:layout_marginLeft="@dimen/main_image_height"
-                                    android:text="@string/zhifubao"
+                                    android:text="@string/wechat_pay"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_28" />
 
@@ -417,7 +414,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/main_image_height"
-                                    android:text="@string/zhifubao"
+                                    android:id="@+id/zhifubao_price"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_size_28" />
 

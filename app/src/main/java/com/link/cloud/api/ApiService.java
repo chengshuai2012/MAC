@@ -3,12 +3,20 @@ package com.link.cloud.api;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.GroupLessonUser;
+import com.link.cloud.api.dataSourse.UserList;
+import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
+import com.link.cloud.api.request.GetUserPages;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
+import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.api.response.PageResponse;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.http.Body;
@@ -59,7 +67,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.ADMISSIONCOURSE)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("admissionCourse") String admissionCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
+    Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("courseAdmission") String admissionCourse, @Path("uuid") String uid, @Path("courseReleasePkcode") String cid, @Header("access-token") String token);
 
 
     /**
@@ -75,6 +83,17 @@ public interface ApiService {
 
 
     /**
+     * 分页获取指静脉
+     *
+     * @param
+     * @return
+     *
+     */
+    @POST(ApiConstants.GETUSERS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<UserList>> getUsers(@Header("access-token") String token, @Body GetUserPages request);
+
+ /**
      * 修改指纹
      *
      * @param
@@ -83,7 +102,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.EDITUSER)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse> edituser(@Header("access-token") String token, @Body EdituserRequest request);
+    Observable<ApiResponse> edituser(@Header("access-token") String token, @Body BindFinger request);
 
     /**
      * 绑定用户
@@ -118,18 +137,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.FINDCOACH)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> findcoach(@Path("app") String app, @Path("findCoach") String findCoach, @Path("uid") String uid, @Header("access-token") String token);
-
-    /**
-     * 查询顾客私教课程
-     *
-     * @param
-     * @return
-     * @see {app}/{findPersonalCourse}/{uid}/{cid}
-     */
-    @GET(ApiConstants.FINDPERSONALCOURSE)
-    @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> findpersonalcourse(@Path("app") String app, @Path("findPersonalCourse") String findPersonalCourse, @Path("uid") String uid, @Path("cid") String cid, @Header("access-token") String token);
+    Observable<ApiResponse<CoachBean>> findcoach(@Path("app") String app, @Path("findCoach") String findCoach, @Path("uuid") String uuid, @Path("memberCoursePkcode") String memberCoursePkcode, @Header("access-token") String token);
 
 
     /**
@@ -143,5 +151,76 @@ public interface ApiService {
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<PageResponse<PrivateEduBean>>> privateEduList(@Body PageRequest request);
 
+    /**
+     * 获取准备开课课程详情(开课前30分可获取)
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.GETRECENTCLASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse<ArrayList<GroupLessonInResource>>> getRecentClass(@Header("access-token")String token);
 
+    /**
+     * 获取团课学员
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.GETGROUPLESSONMEMBER)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<GroupLessonUser>> getGroupUsers(@Path("app")String app, @Path("courseUsers")String courseUsers, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+
+    /**
+     * 获取团课购买二维码
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.PREBUYCOURSE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse>getBuyQrcode(@Path("app")String app,@Path("prebuyCourse") String prebuyCourse, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+    /**
+     * 获取顾客的私教课
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.GETPERSONALCLASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse<LessonPred>>getPersonalClass(@Path("app")String app, @Path("findPersonalCourse") String findPersonalCourse, @Header("access-token")String token, @Path("uuid")String uuid);
+    /**
+     * 获取顾客的私教课
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @GET(ApiConstants.CONSUNMEPRITE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable <ApiResponse>consumePrivate(@Path("app")String app, @Path("finishCourse")String finishCourse,@Header("access-token") String token,  @Path("uuid")String uuid,  @Path("memberCoursePkcode")String memberCoursePkcode,  @Path("coachid")String coachid);
+    /**
+     * 验证用户是否是管理员
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.VALIDATEADMIN)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable  <ApiResponse>validateAdmin(@Path("app")String app, @Path("validateAdmin")String validateAdmin, @Header("access-token")String token, @Path("uuid")String uuid);
+    /**
+     * 验证机器密码
+     *
+     * @param
+     * @returnscheduleReport
+     * @see
+     */
+    @POST(ApiConstants.VALIDATEPASS)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable  <ApiResponse>validatePassword(@Path("app")String app,@Path("validatePassword") String validatePassword, @Header("access-token")String token, @Path("password")String password);
 }

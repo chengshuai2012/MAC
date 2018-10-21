@@ -1,16 +1,13 @@
 package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,14 +18,12 @@ import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
-import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.BaseProgressSubscriber;
+import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
 import com.link.cloud.utils.Utils;
-import com.orhanobut.logger.Logger;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
 import butterknife.BindView;
@@ -249,7 +244,7 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.confirm_bind:
                 if(isSendVerify){
                     String code = verifyCode.getText().toString();
-                    ApiFactory.binduser(tel_num,code).subscribe(new ProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
+                    ApiFactory.binduser(tel_num,code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {
                             bindMiddleOne.setVisibility(View.INVISIBLE);
@@ -277,7 +272,7 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.send:
                 tel_num = inputTel.getText().toString();
                 if (Utils.isPhoneNum(tel_num)) {
-                    ApiFactory.sendVCode(tel_num).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+                    ApiFactory.sendVCode(tel_num).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
                             isSendVerify=true;
@@ -307,15 +302,20 @@ public class RegisterActivity extends AppBarActivity {
     @Override
     public void modelMsg(int state, String msg) {
         if (state == 3) {
-            edituserRequest.setFingerprint(msg);
-            ApiFactory.edituser(edituserRequest).subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            BindFinger bindFinger = new BindFinger();
+            bindFinger.setFingerprint(msg);
+            bindFinger.setId(edituserRequest.getId());
+            bindFinger.setMerchantId(edituserRequest.getMerchantId());
+            bindFinger.setUserType(edituserRequest.getUserType());
+            bindFinger.setUuid(edituserRequest.getUuid());
+            ApiFactory.edituser(bindFinger).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                 @Override
                 public void onNext(ApiResponse apiResponse) {
                     bindMiddleTwo.setVisibility(View.INVISIBLE);
                     bindMiddleThree.setVisibility(View.VISIBLE);
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-                    bindWay.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
+                    cardNum.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
                     animator.cancel();
                 }
             });

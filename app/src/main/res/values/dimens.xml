@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="action_bar_size" >360px</dimen>
     <dimen name="navigation_button_size">42dp</dimen>
-    <dimen name="indicator_size">126px</dimen>
+    <dimen name="indicator_size">80px</dimen>
     <dimen name="margin_main">30px</dimen>
     <dimen name="circleProgressBar_width">460px</dimen>
     <dimen name="margin_left_register">47px</dimen>

@@ -2,7 +2,9 @@
     <string name="app_name">MAC</string>
     <string name="member">会员</string>
     <string name="consume_lesson_today">今日上课</string>
+    <string name="lesson_left">剩余课程</string>
     <string name="had_consume_lesson">已上课</string>
+    <string name="no_consume_lesson">待预约</string>
     <string name="manager">管理员</string>
     <string name="choose_lesson">选择课程</string>
     <string name="lesson_in">团课进场</string>
@@ -64,6 +66,9 @@
     <string name="bind_finish">绑定完成</string>
     <string name="back">返回</string>
     <string name="confirm">确定</string>
+    <string name="people_count">人数:</string>
+    <string name="time">时间:</string>
+    <string name="address">地点:</string>
     <string name="confirm_consume_lesson">确认消课</string>
     <string name="confirm_pre_lesson">确认预约</string>
     <string name="pay_count">支付金额：</string>
@@ -117,6 +122,8 @@
     <string name="pay_way">支付方式</string>
     <string name="pay_info">温馨提示：一经售出，此票恕不退款</string>
     <string name="zhifubao">支付宝</string>
+    <string name="wechat_pay">微信支付</string>
+    <string name="handy_pay">汗滴充值卡</string>
     <string name="one_person">1人</string>
     <string name="cancel_pay">确认取消订单？</string>
     <string name="click_error">不，点错啦</string>
