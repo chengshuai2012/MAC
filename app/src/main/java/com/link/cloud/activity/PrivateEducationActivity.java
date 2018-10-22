@@ -41,7 +41,7 @@ public class PrivateEducationActivity extends AppBarActivity {
             }
         });
 
-        publicTitle.setTags("1.选择课程","2.选择时间","3.确认支付","4.支付成功");
+        publicTitle.setTags(getResources().getString(R.string.select_class), getResources().getString(R.string.select_time), getResources().getString(R.string.sure_pay), getResources().getString(R.string.pay_success));
 //        showActivity(RentingActivity.class);
     }
 

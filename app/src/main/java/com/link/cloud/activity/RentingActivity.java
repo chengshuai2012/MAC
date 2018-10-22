@@ -35,7 +35,7 @@ public class RentingActivity extends AppBarActivity {
                 finish();
             }
         });
-        publicTitle.setTags("1.选择时间", "3.填写信息", "3.确认支付", "4.支付成功");
+        publicTitle.setTags(getResources().getString(R.string.one_select_time), getResources().getString(R.string.input_user_info), getResources().getString(R.string.sure_pay), getResources().getString(R.string.pay_success));
     }
 
     @Override

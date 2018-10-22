@@ -165,4 +165,16 @@
     <string name="verify_has_send">验证码已发送</string>
     <string name="verify_first">请先获取验证码</string>
     <string name="now_card">当前手机号：</string>
+    <string name="open_string">开通入场</string>
+    <string name="select_class">1.选择课程</string>
+    <string name="select_time">2.选择时间</string>
+    <string name="sure_pay">3.确认支付</string>
+    <string name="pay_success">4.支付成功</string>
+    <string name="one_select_time">1.选择时间</string>
+    <string name="input_user_info">1.选择时间</string>
+
+
+
+
+
 </resources>

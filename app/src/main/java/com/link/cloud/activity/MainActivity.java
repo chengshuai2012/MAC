@@ -320,7 +320,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
 
             case R.id.buy:
-                showActivity(PrivateEducationActivity.class);
+                showActivity(FunctionalSelectionActivity.class);
                 break;
             case R.id.register:
                 showActivity(RegisterActivity.class);
