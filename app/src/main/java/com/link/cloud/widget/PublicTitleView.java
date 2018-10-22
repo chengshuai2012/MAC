@@ -192,5 +192,9 @@ public class PublicTitleView extends LinearLayout {
         adapter.last();
     }
 
+    public void firstPosition() {
+        adapter.first();
+    }
+
 
 }

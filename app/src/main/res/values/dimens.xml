@@ -69,6 +69,7 @@
     <dimen name="consume_lesson_width">500px</dimen>
     <dimen name="pre_lesson_day_width">108px</dimen>
     <dimen name="pre_lesson_day_height">220px</dimen>
+    <dimen name="consume_ok">200px</dimen>
 
 
 </resources>

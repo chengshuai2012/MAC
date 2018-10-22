@@ -14,7 +14,7 @@ public class CoachBean {
 
     private String phone;
     private String name;
-    private String coachid;
+    private String uuid;
 
     public String getPhone() {
         return phone;
@@ -32,11 +32,11 @@ public class CoachBean {
         this.name = name;
     }
 
-    public String getCoachid() {
-        return coachid;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setCoachid(String coachid) {
-        this.coachid = coachid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

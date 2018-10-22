@@ -201,6 +201,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 super.onNext(apiResponse);
             }
         });
+        ApiFactory.coursedetail("").subscribe(new ProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+                super.onNext(apiResponse);
+            }
+        });
     }
 
 
