@@ -1,5 +1,6 @@
 package com.link.cloud.api.request;
 
+
 import java.util.List;
 
 /**
@@ -11,10 +12,53 @@ public class LessonPred {
     private List<BookBean> book;
     private List<NotbookBean> notbook;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    private User user;
     public List<BookBean> getBook() {
         return book;
     }
+    public class User{
+        /**
+         * phone : 18574107629
+         * name : 匿名会员
+         * nikename : 匿名会员
+         */
 
+        private String phone;
+        private String name;
+        private String nikename;
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNikename() {
+            return nikename;
+        }
+
+        public void setNikename(String nikename) {
+            this.nikename = nikename;
+        }
+    }
     public void setBook(List<BookBean> book) {
         this.book = book;
     }

@@ -73,6 +73,11 @@ public class PublicTitleAdapter extends RecyclerView.Adapter<PublicTitleAdapter.
         return data.size();
     }
 
+    public void first() {
+        mLocation=0;
+        notifyDataSetChanged();
+    }
+
     public static class ContentViewHolder extends RecyclerView.ViewHolder {
         private TextView contentText;
 

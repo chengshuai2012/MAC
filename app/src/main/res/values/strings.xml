@@ -2,11 +2,11 @@
     <string name="app_name">MAC</string>
     <string name="member">会员</string>
     <string name="consume_lesson_today">今日上课</string>
+    <string name="consume_lesson_ok">消课成功</string>
     <string name="lesson_left">剩余课程</string>
     <string name="had_consume_lesson">已上课</string>
     <string name="no_consume_lesson">待预约</string>
     <string name="manager">管理员</string>
-    <string name="choose_lesson">选择课程</string>
     <string name="lesson_in">团课进场</string>
     <string name="register">注册绑定</string>
     <string name="bind_veune">指静脉绑定</string>
@@ -165,6 +165,10 @@
     <string name="verify_has_send">验证码已发送</string>
     <string name="verify_first">请先获取验证码</string>
     <string name="now_card">当前手机号：</string>
+    <string name="coach">教练</string>
+    <string name="choose_lesson">选择课程</string>
+    <string name="coach_confirm">教练确认</string>
+    <string name="member_confirm">学员确认</string>
     <string name="open_string">开通入场</string>
     <string name="select_class">1.选择课程</string>
     <string name="select_time">2.选择时间</string>

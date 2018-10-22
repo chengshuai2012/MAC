@@ -4,6 +4,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,9 +22,8 @@ import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
-
 import java.util.ArrayList;
-
+import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,8 +45,6 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     TextView bindVenueIntroBelow;
     @BindView(R.id.lesson_consum_one)
     RelativeLayout lessonConsumOne;
-    @BindView(R.id.multi_card)
-    RecyclerView multi_card;
     @BindView(R.id.card_num)
     TextView cardNum;
     @BindView(R.id.confirm_consume)
@@ -72,37 +71,47 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     TextView confirmConsumeFinish;
     @BindView(R.id.lesson_consum_three)
     RelativeLayout lessonConsumThree;
+    @BindView(R.id.lesson_consum_now_ok)
+    RelativeLayout lessonConsumOK;
+    @BindView(R.id.user_type)
+    TextView userType;
+    @BindView(R.id.name_multi)
+    TextView nameMulti;
+    @BindView(R.id.tel_multi)
+    TextView telMulti;
+    @BindView(R.id.card_info_re)
+    RelativeLayout cardInfoRe;
     private PublicTitleView publicTitle;
-    private ArrayList<LessonPred.NotbookBean> mList= new ArrayList();
+    private ArrayList<LessonPred.NotbookBean> mList = new ArrayList();
     ValueAnimator animator;
-    RealmResults<People> peoples ;
+    RealmResults<People> peoples;
     ArrayList<People> nowPeople = new ArrayList<>();
     Realm realm;
     private LessonLeftAdapter listAdapter;
     private String memberCoursePkcode;
-    private String userUid;
+    private String userUid,coachUid,uid,ResponseCoachid;
 
     @Override
     protected void initViews() {
         setTitle(R.drawable.handy_logo);
         publicTitle = (PublicTitleView) findViewById(R.id.publicTitle);
-        publicTitle.setTags("1.学员确认", "2.选择课程", "3.教练确认", "4.消课成功");
+        publicTitle.setTags("1."+getResources().getString(R.string.member_confirm), "2."+getResources().getString(R.string.choose_lesson), "3."+getResources().getString(R.string.coach_confirm), "4."+getResources().getString(R.string.consume_lesson_ok));
         publicTitle.setTitleText(getString(R.string.lesson_consum));
         publicTitle.setFinshText(getResources().getString(R.string.back_home));
         publicTitle.setItemClickListener(this);
         customProgress.setProgressFormatter(null);
         mList = new ArrayList<>();
-        realm= Realm.getDefaultInstance();
-         RealmResults<People> peoples = realm.where(People.class).findAll();
-         peoples.addChangeListener(new RealmChangeListener<RealmResults<People>>() {
-             @Override
-             public void onChange(RealmResults<People> people) {
-                 nowPeople.clear();
-                 nowPeople.addAll(realm.copyFromRealm(people));
-             }
-         });
-         bindWay.setText("学员确认");
-         nowPeople.addAll(realm.copyFromRealm(peoples));
+        realm = Realm.getDefaultInstance();
+        final RealmResults<People> peoples = realm.where(People.class).findAll();
+        peoples.addChangeListener(new RealmChangeListener<RealmResults<People>>() {
+            @Override
+            public void onChange(RealmResults<People> people) {
+                nowPeople.clear();
+                nowPeople.addAll(realm.copyFromRealm(people));
+            }
+        });
+        bindWay.setText(R.string.member_confirm);
+        nowPeople.addAll(realm.copyFromRealm(peoples));
 //        setData();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -115,42 +124,71 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
             public void onAnimationUpdate(ValueAnimator animation) {
                 int state = MacApplication.getVenueUtils().getState();
                 int progress = (int) animation.getAnimatedValue();
-                if(customProgress!=null){
+                if (customProgress != null) {
                     customProgress.setProgress(progress);
                 }
                 if (state == 3) {
-                    userUid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
-                    com.orhanobut.logger.Logger.e(userUid);
-                    ApiFactory.getPersonalClass(userUid).subscribe(new BaseProgressSubscriber<ApiResponse<LessonPred>>(PrivateEducationConsumActivity.this) {
-                        @Override
-                        public void onNext(ApiResponse<LessonPred> lessonPredApiResponse) {
-                            super.onNext(lessonPredApiResponse);
-                            publicTitle.nextPosition();
-                            bindWay.setText("选择课程");
-                            lessonConsumOne.setVisibility(View.GONE);
-                            lessonConsumThree.setVisibility(View.VISIBLE);
-                            memberCoursePkcode = lessonPredApiResponse.getData().getBook().get(0).getMemberCoursePkcode();
-                            lessonName.setText(lessonPredApiResponse.getData().getBook().get(0).getFitnessCourseName()+"");
-                            lessonTime.setText(lessonPredApiResponse.getData().getBook().get(0).getBegtime()+"");
-                            coachName.setText(lessonPredApiResponse.getData().getBook().get(0).getCoachNikename()+"");
-                            mList.clear();
-                            mList.addAll(lessonPredApiResponse.getData().getNotbook());
+                    uid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
+                    People first = realm.where(People.class).equalTo("uuid", uid).findFirst();
+                    int userType=0;
+                    Log.e("onAnimationUpdate: ",uid +"");
+                    if(first!=null){
+                        userType = first.getUserType();
+                    }
+                    if(userType==1){
+                        userUid=uid;
+                        ApiFactory.getPersonalClass(userUid).subscribe(new BaseProgressSubscriber<ApiResponse<LessonPred>>(PrivateEducationConsumActivity.this) {
+                            @Override
+                            public void onNext(ApiResponse<LessonPred> lessonPredApiResponse) {
+                                super.onNext(lessonPredApiResponse);
+                                userMessage(lessonPredApiResponse);
+                            }
 
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                            }
+                        });
+                    }else {
+                        if(ResponseCoachid!=null) {
+                            if (ResponseCoachid.equals(uid) ) {
+                                coachUid = uid;
+                                bindWay.setText(R.string.choose_lesson);
+                                lessonConsumTwo.setVisibility(View.VISIBLE);
+                                lessonConsumOne.setVisibility(View.GONE);
+                                lessonConsumThree.setVisibility(View.GONE);
+                            }
                         }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            super.onError(e);
-                        }
-                    });
                 }
-                if(progress>=79){
+                if (progress >= 79) {
                     animator.setCurrentPlayTime(0);
                 }
             }
         });
         animator.setDuration(40000);
         animator.start();
+    }
+
+    private void userMessage(ApiResponse<LessonPred> lessonPredApiResponse) {
+        List<LessonPred.BookBean> book = lessonPredApiResponse.getData().getBook();
+        bindWay.setText(getResources().getString(R.string.member_confirm));
+        publicTitle.firstPosition();
+        if(book.size()>0){
+            memberCoursePkcode = book.get(0).getMemberCoursePkcode();
+            lessonName.setText(book.get(0).getFitnessCourseName() + "");
+            lessonTime.setText(book.get(0).getBegtime() + "");
+            coachName.setText(book.get(0).getCoachNikename() + "");
+        }
+        telMulti.setText(lessonPredApiResponse.getData().getUser().getPhone());
+        nameMulti.setText(lessonPredApiResponse.getData().getUser().getName());
+        userType.setText(getResources().getString(R.string.member));
+        mList.clear();
+        mList.addAll(lessonPredApiResponse.getData().getNotbook());
+        lessonConsumOne.setVisibility(View.GONE);
+        lessonConsumThree.setVisibility(View.GONE);
+        lessonConsumTwo.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -160,46 +198,67 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
 
     @Override
     public void itemClickListener() {
-//        finish();
-        ApiFactory.findcoach(userUid,memberCoursePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<CoachBean>>(PrivateEducationConsumActivity.this) {
-            @Override
-            public void onNext(ApiResponse<CoachBean> coachBeanApiResponse) {
-                super.onNext(coachBeanApiResponse);
-                ApiFactory.consumePrivate(userUid,memberCoursePkcode,coachBeanApiResponse.getData().getCoachid()).subscribe(new BaseProgressSubscriber<ApiResponse>(PrivateEducationConsumActivity.this) {
-                    @Override
-                    public void onNext(ApiResponse apiResponse) {
-                        super.onNext(apiResponse);
-                    }
-                });
-            }
-        });
-   }
+        finish();
 
+    }
 
 
     @OnClick({R.id.bind_venue_intro, R.id.confirm_consume, R.id.confirm_consume_finish})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.bind_venue_intro:
-                publicTitle.nextPosition();
-                lessonConsumOne.setVisibility(View.GONE);
-                lessonConsumTwo.setVisibility(View.VISIBLE);
+//                publicTitle.nextPosition();
+//                lessonConsumOne.setVisibility(View.GONE);
+//                lessonConsumTwo.setVisibility(View.VISIBLE);
                 break;
             case R.id.confirm_consume:
-                publicTitle.nextPosition();
-                lessonConsumTwo.setVisibility(View.GONE);
-                lessonConsumThree.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(userUid)){
+                    if(TextUtils.isEmpty(coachUid)){
+                        publicTitle.nextPosition();
+                        bindWay.setText(R.string.choose_lesson);
+                        lessonConsumTwo.setVisibility(View.GONE);
+                        lessonConsumOne.setVisibility(View.GONE);
+                        lessonConsumThree.setVisibility(View.VISIBLE);
+                    }else {
+                        ApiFactory.consumePrivate(userUid, memberCoursePkcode, ResponseCoachid).subscribe(new BaseProgressSubscriber<ApiResponse>(PrivateEducationConsumActivity.this) {
+                            @Override
+                            public void onNext(ApiResponse apiResponse) {
+                                super.onNext(apiResponse);
+                                lessonConsumNowRl.setVisibility(View.GONE);
+                                consumeLessonToday.setVisibility(View.GONE);
+                                lessonConsumOK.setVisibility(View.VISIBLE);
+                                lessonConsumThree.setVisibility(View.VISIBLE);
+                                lessonConsumOne.setVisibility(View.GONE);
+                                lessonConsumTwo.setVisibility(View.GONE);
+                                confirmConsumeFinish.setVisibility(View.GONE);
+                                bindWay.setText(getResources().getString(R.string.consume_lesson_ok));
+                                publicTitle.nextPosition();
+                            }
+                        });
+                    }
+
+                }
+
+
                 break;
             case R.id.confirm_consume_finish:
                 publicTitle.nextPosition();
                 lessonConsumOne.setVisibility(View.VISIBLE);
                 lessonConsumThree.setVisibility(View.GONE);
-                bindWay.setText("教练确认");
-                ApiFactory.findcoach(userUid,memberCoursePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(PrivateEducationConsumActivity.this) {
+                lessonConsumTwo.setVisibility(View.GONE);
+                bindWay.setText(R.string.coach_confirm);
+                ApiFactory.findcoach(userUid, memberCoursePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<CoachBean>>(PrivateEducationConsumActivity.this) {
                     @Override
-                    public void onNext(ApiResponse apiResponse) {
-                        super.onNext(apiResponse);
-
+                    public void onNext(ApiResponse<CoachBean> coachBeanApiResponse) {
+                        super.onNext(coachBeanApiResponse);
+                        ResponseCoachid =coachBeanApiResponse.getData().getUuid();
+                        Log.e("onNext: ", ResponseCoachid);
+                        lessonConsumOne.setVisibility(View.VISIBLE);
+                        lessonConsumTwo.setVisibility(View.GONE);
+                        lessonConsumThree.setVisibility(View.GONE);
+                        telMulti.setText(coachBeanApiResponse.getData().getPhone());
+                        nameMulti.setText(coachBeanApiResponse.getData().getName());
+                        userType.setText(getResources().getString(R.string.coach));
                     }
                 });
                 break;
@@ -223,6 +282,8 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+        animator.end();
     }
+
 }
 
