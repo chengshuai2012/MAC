@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_function_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="@dimen/w309"
+        android:layout_height="@dimen/h107"
+        android:layout_marginTop="@dimen/h64"
+        android:src="@drawable/handy_logo" />
+
+
+    <ImageView
+        android:layout_width="@dimen/w530"
+        android:layout_height="@dimen/h135"
+        android:layout_marginTop="@dimen/h64"
+        android:src="@drawable/ic_function_english" />
+
+
+    <LinearLayout
+        android:layout_width="@dimen/w632"
+        android:layout_height="@dimen/h363"
+        android:layout_marginLeft="@dimen/w41"
+        android:layout_marginRight="@dimen/w41"
+        android:layout_marginTop="@dimen/h191"
+        android:background="@drawable/bg_white_rectangle_corner_r20"
+        android:gravity="center">
+
+
+        <TextView
+            android:id="@+id/privateEduLayout"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/h52"
+            android:drawableTop="@drawable/ic_private_education_course"
+            android:text="@string/private_edu"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w30" />
+
+
+        <TextView
+            android:id="@+id/openLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/w80"
+            android:gravity="center"
+
+            android:layout_marginRight="@dimen/w80"
+            android:drawablePadding="@dimen/h52"
+            android:drawableTop="@drawable/ic_open"
+            android:text="@string/open_string"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w30" />
+
+
+        <TextView
+            android:id="@+id/rentingCabinetLayout"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/h52"
+            android:drawableTop="@drawable/ic_renting_cabinet"
+            android:text="@string/renting_cabinet"
+            android:textColor="@color/color_black_333333"
+            android:textSize="@dimen/w30" />
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/backLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h85"
+        android:layout_marginLeft="@dimen/w41"
+        android:layout_marginRight="@dimen/w41"
+        android:layout_marginTop="@dimen/h19"
+        android:background="@drawable/border_white_member"
+        android:text="@string/back"
+        android:textColor="@color/color_362B6A"
+        android:textSize="@dimen/w32" />
+
+
+</LinearLayout>

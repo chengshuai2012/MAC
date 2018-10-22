@@ -22,7 +22,6 @@
             android:id="@+id/radioGroup"
             android:layout_width="@dimen/w190"
             android:layout_height="match_parent"
-            android:layout_marginLeft="-20dp"
             android:orientation="vertical">
 
 
