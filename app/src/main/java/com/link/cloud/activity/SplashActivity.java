@@ -124,7 +124,8 @@ public class SplashActivity extends AppBarActivity {
                 User.get().setToken((String) response.getData());
                 RealmResults<People> all = realm.where(People.class).findAll();
                 if(all.size()>0){
-
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
                 }else {
                     getTotal();
                 }

@@ -15,7 +15,9 @@
     <string name="buy">购买</string>
     <string name="advantage_name">减脂增肌</string>
     <string name="coach_introduce">教  练  介  绍</string>
+    <string name="lesson_introduce">课  程  详  情</string>
     <string name="advantage_lesson">擅  长  课  程</string>
+    <string name="lesson_introduce_detail">课  程  介 绍</string>
     <string name="coach_verify">教  练  认  证</string>
     <string name="message">擅长曾几何时，健身的代名词还是而现在提到健身，大家想到的都是到底是什么？它为何能风靡世界甚至成为健身的代名词？今天百科君就带你认识一下</string>
     <string name="please_input_tel">请输入手机号</string>
@@ -124,6 +126,8 @@
     <string name="zhifubao">支付宝</string>
     <string name="wechat_pay">微信支付</string>
     <string name="handy_pay">汗滴充值卡</string>
+    <string name="private_coach">私教</string>
+    <string name="how_to_use">如    何    使   用</string>
     <string name="one_person">1人</string>
     <string name="cancel_pay">确认取消订单？</string>
     <string name="click_error">不，点错啦</string>

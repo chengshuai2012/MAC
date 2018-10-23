@@ -20,7 +20,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
+public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<LessonItemBean> dataList;
 
@@ -68,22 +68,14 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof RecyclerViewHolder) {
-
             LessonItemBean lessonItemBean = dataList.get(position);
-
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
             recyclerViewHolder.lesson_pre_check.setTag(position);
-
             Glide.with(mContext).load(lessonItemBean.getStoreCoachTopimg()).into(recyclerViewHolder.coach_image);
-//            private TextView lessonIntroduce;
-//            private TextView lessonPriceMemeber;
-
             recyclerViewHolder.lessonName.setText(lessonItemBean.getFitnessCourseName());
-//            recyclerViewHolder.lessonIntroduce.setText(lessonItemBean.);
             recyclerViewHolder.lessonTime.setText(lessonItemBean.getCoursePlanBegtime());
             recyclerViewHolder.lessonPrice.setText(lessonItemBean.getCourseReleaseMoney());
             recyclerViewHolder.lessonPriceMemeber.setText(lessonItemBean.getCoursePlanEndtime());
-
             ViewUtils.setOnClickListener(recyclerViewHolder.coach_image, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,6 +89,14 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View v) {
                     if (mListner != null) {
                         mListner.OnClickPre(position);
+                    }
+                }
+            });
+            ViewUtils.setOnClickListener(recyclerViewHolder.lessonName, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListner != null) {
+                        mListner.OnClickLesson(position);
                     }
                 }
             });
@@ -123,18 +123,6 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.coach_image:
-                mListner.OnClickCoachImage((int) v.getTag());
-                break;
-            case R.id.lesson_pre_check:
-                mListner.OnClickPre((int) v.getTag());
-                break;
-
-        }
-    }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
         ImageView coach_image;
@@ -151,16 +139,12 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
             super(itemView);
             coach_image = (ImageView) itemView.findViewById(R.id.coach_image);
             lesson_pre_check = (TextView) itemView.findViewById(R.id.lesson_pre_check);
-            coach_image.setOnClickListener(ChooseLesson_Adapter.this);
-            lesson_pre_check.setOnClickListener(ChooseLesson_Adapter.this);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             lessonName = (TextView) itemView.findViewById(R.id.lesson_name);
             lessonIntroduce = (TextView) itemView.findViewById(R.id.lesson_introduce);
             lessonPrice = (TextView) itemView.findViewById(R.id.lesson_price);
             lessonPriceMemeber = (TextView) itemView.findViewById(R.id.lesson_price_memeber);
             lessonTime = (TextView) itemView.findViewById(R.id.lesson_time);
-
-
         }
     }
 

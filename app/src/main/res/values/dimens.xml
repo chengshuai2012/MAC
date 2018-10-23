@@ -70,6 +70,9 @@
     <dimen name="pre_lesson_day_width">108px</dimen>
     <dimen name="pre_lesson_day_height">220px</dimen>
     <dimen name="consume_ok">200px</dimen>
+    <dimen name="lesson_dialog_small_image_size">40px</dimen>
+    <dimen name="lesson_dialog_use_width">252px</dimen>
+    <dimen name="lesson_dialog_use_height">45px</dimen>
 
 
 </resources>

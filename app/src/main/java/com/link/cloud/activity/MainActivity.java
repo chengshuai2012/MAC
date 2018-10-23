@@ -28,6 +28,7 @@ import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.FingerprintsBean;
+import com.link.cloud.bean.People;
 import com.link.cloud.fragment.LessonListFragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
@@ -121,7 +122,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         });
 
     }
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -145,9 +145,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             public void onAnimationUpdate(ValueAnimator animation) {
                 int state = MacApplication.getVenueUtils().getState();
                 if (state == 3) {
-                    final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
-                    com.orhanobut.logger.Logger.e(uid);
-
+                        final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
                     ApiFactory.admissionCourse(uid,courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
@@ -161,6 +159,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             onVeuenMsg(null,e.getMessage());
                         }
                     });
+
                 }
                 if((int)(animation.getAnimatedValue())>=79){
                     animator.setCurrentPlayTime(0);
@@ -201,12 +200,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 super.onNext(apiResponse);
             }
         });
-        ApiFactory.coursedetail("").subscribe(new ProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse apiResponse) {
-                super.onNext(apiResponse);
-            }
-        });
+
     }
 
 
@@ -231,7 +225,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 }, 1000);
             }
         });
-
     }
 
     private void getGroupData() {
@@ -279,8 +272,27 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            dialogUtils.dissMiss();
-            animator.start();
+            switch (msg.what){
+                case 0:
+                dialogUtils.dissMiss();
+                animator.start();
+                break;
+                case 1:
+                    int state = MacApplication.getVenueUtils().getState();
+                    if (state == 3) {
+                        RealmResults<People> all = realm.where(People.class).findAll();
+                        final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
+                        ApiFactory.validateAdmin(uid).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
+                            @Override
+                            public void onNext(ApiResponse apiResponse) {
+                                super.onNext(apiResponse);
+                            }
+                        });
+                    }
+                    handler.sendEmptyMessageDelayed(1,1000);
+                    break;
+            }
+
         }
     };
     protected void  SendMsgToTcp(String msg){
@@ -292,12 +304,14 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         switch (v.getId()) {
 
             case R.id.member:
+                handler.removeMessages(1);
                 member.setBackground(getResources().getDrawable(R.drawable.border_red));
                 manager.setBackground(null);
                 member.setTextColor(getResources().getColor(R.color.almost_white));
                 manager.setTextColor(getResources().getColor(R.color.text_gray));
                 break;
             case R.id.manager:
+                handler.sendEmptyMessageDelayed(1,1000);
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
                 dialogUtils.showManagerDialog(view);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
@@ -307,6 +321,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.lesson_in:
                 animator.start();
+
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.almost_white));
@@ -316,7 +331,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 initGroup();
                 break;
             case R.id.choose_lesson:
-                animator.cancel();
+                animator.end();
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));
@@ -349,6 +364,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         manager.setBackground(null);
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
-        animator.start();
+        animator.end();
+        handler.removeMessages(1);
     }
+
 }

@@ -182,7 +182,7 @@ public class Venueutils {
 
     }
     List<People> subListPeople = new ArrayList<>();
-    public String identifyNewImg(final ArrayList<People> peoples) {
+    public String identifyNewImg(final List<People> peoples) {
         final int nThreads=peoples.size()/1000+1;
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
         List<Future<String>> futures = new ArrayList();

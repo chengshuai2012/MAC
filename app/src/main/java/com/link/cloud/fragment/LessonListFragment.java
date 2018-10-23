@@ -10,11 +10,14 @@ import com.google.gson.Gson;
 import com.link.cloud.R;
 import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.adapter.ChooseLesson_Adapter;
+import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.base.BaseFragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.List;
 
@@ -71,7 +74,14 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
 
             @Override
             public void OnClickLesson(int postion) {
+                String courseReleasePkcode = courses.get(postion).getCourseReleasePkcode();
+                ApiFactory.coursedetail(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse>(getActivity()) {
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
 
+                    }
+                });
             }
         });
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
