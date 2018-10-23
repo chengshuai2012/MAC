@@ -40,34 +40,20 @@ public class PrivateEduListDataSource implements IAsyncDataSource<List<PrivateEd
 
     private RequestHandle load(final ResponseSender<List<PrivateEduBean>> sender, final int page) throws Exception {
 
-        PageRequest request = new PageRequest();
-        request.setToken(User.get().getToken());
-        request.setPageSize(10);
-        request.setPageNum(mPage);
-        final Subscription subscription = ApiFactory.privateEduList(request).subscribe(new PagedListConsumer<ApiResponse<PageResponse<PrivateEduBean>>>() {
 
-            @Override
-            protected void accept(ApiResponse<PageResponse<PrivateEduBean>> response) {
+        final Subscription subscription = ApiFactory.privatecourselist().subscribe(new PagedListConsumer<ApiResponse<List<PrivateEduBean>>>() {
 
-//                List<PrivateEduBean> items = response.getData().getRows();
-//
-//                if (mPage < response.getData().getPages()) {
-//                    mPage++;
-//                    hasMore = true;
-//                    sender.sendData(items);
-//                } else if (mPage <= response.getData().getPages()) {
-//                    hasMore = false;
-//                    sender.sendData(items);
-//                } else {
-//                    hasMore = false;
-//                    sender.sendData(items);
-//                }
-            }
 
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
                 sender.sendError(new Exception(e));
+            }
+
+            @Override
+            protected void accept(ApiResponse<List<PrivateEduBean>> listApiResponse) {
+                hasMore = false;
+                sender.sendData(listApiResponse.getData());
             }
         });
 

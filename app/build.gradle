@@ -49,4 +49,5 @@ dependencies {
     implementation files('libs/netty-all-4.0.14.Final.jar')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
     compile 'com.google.zxing:core:3.2.1'
+
 }

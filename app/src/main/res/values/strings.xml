@@ -180,9 +180,13 @@
     <string name="pay_success">4.支付成功</string>
     <string name="one_select_time">1.选择时间</string>
     <string name="input_user_info">1.选择时间</string>
-
-
-
+    <string name="select_class_time">请先选择课时</string>
+    <string name="sure_pay_money">应付¥</string>
+    <string name="jie_string">/节</string>
+    <string name="yuan">￥</string>
+    <string name="sure_other_pay">应付款:</string>
+    <string name="sure_ali_pay">支付宝支付</string>
+    <string name="sure_handy_pay">汗的充值卡</string>
 
 
 </resources>

@@ -69,8 +69,10 @@ public class ApiFactory {
     public static Observable<ApiResponse> appLogin() {
         return getApiService().appLogin("pub", "appLogin", "HJKF", "0D874A5A3B0C3AAB71E35EE325693762").map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
-   /**
+
+    /**
      * 获取准备开课课程详情(开课前30分可获取)
+     *
      * @return
      */
     public static Observable<ApiResponse<ArrayList<GroupLessonInResource>>> getRecentLesson() {
@@ -95,7 +97,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse<List<LessonBean>>>  courseList(String begDate) {
+    public static Observable<ApiResponse<List<LessonBean>>> courseList(String begDate) {
         return getApiService().courseList("app", "courseList", begDate, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
@@ -139,7 +141,7 @@ public class ApiFactory {
      * @return
      */
     public static Observable<ApiResponse<CoachBean>> findcoach(String uid, String memberCoursePkcode) {
-        return getApiService().findcoach("app", "findCoach", uid, memberCoursePkcode,User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+        return getApiService().findcoach("app", "findCoach", uid, memberCoursePkcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 
@@ -151,13 +153,14 @@ public class ApiFactory {
     public static Observable<ApiResponse<PageResponse<PrivateEduBean>>> privateEduList(PageRequest request) {
         return getApiService().privateEduList(request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+
     /**
      * 用户列表
      *
      * @return
      */
     public static Observable<ApiResponse<UserList>> getUsers(GetUserPages request) {
-        return getApiService().getUsers(User.get().getToken(),request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+        return getApiService().getUsers(User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
     /**
@@ -165,8 +168,8 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse<GroupLessonUser>> getGroupUsers(String  courseReleasePkcode) {
-        return getApiService().getGroupUsers("app", "courseUsers",User.get().getToken(),courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse<GroupLessonUser>> getGroupUsers(String courseReleasePkcode) {
+        return getApiService().getGroupUsers("app", "courseUsers", User.get().getToken(), courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
     /**
@@ -174,40 +177,53 @@ public class ApiFactory {
      *
      * @return
      */
-   public static Observable<ApiResponse> getBuyQrcode(String  courseReleasePkcode) {
-        return getApiService().getBuyQrcode("app", "prebuyCourse",User.get().getToken(),courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> getBuyQrcode(String courseReleasePkcode) {
+        return getApiService().getBuyQrcode("app", "prebuyCourse", User.get().getToken(), courseReleasePkcode).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+
     /**
      * 获取顾客的私教课
      *
      * @return
      */
-   public static Observable<ApiResponse<LessonPred>> getPersonalClass(String  uuid) {
-        return getApiService().getPersonalClass("app", "findPersonalCourse",User.get().getToken(),uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse<LessonPred>> getPersonalClass(String uuid) {
+        return getApiService().getPersonalClass("app", "findPersonalCourse", User.get().getToken(), uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+
     /**
      * 消私教课程
      *
      * @return
      */
-   public static Observable<ApiResponse> consumePrivate(String  uuid,String memberCoursePkcode,String coachid) {
-        return getApiService().consumePrivate("app", "finishCourse",User.get().getToken(),uuid,memberCoursePkcode,coachid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> consumePrivate(String uuid, String memberCoursePkcode, String coachid) {
+        return getApiService().consumePrivate("app", "finishCourse", User.get().getToken(), uuid, memberCoursePkcode, coachid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+
     /**
      * 验证用户是否是管理员
      *
      * @return
      */
-   public static Observable<ApiResponse> validateAdmin(String  uuid) {
-        return getApiService().validateAdmin("app", "validateAdmin",User.get().getToken(),uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> validateAdmin(String uuid) {
+        return getApiService().validateAdmin("app", "validateAdmin", User.get().getToken(), uuid).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+
     /**
-     *验证机器密码
+     * 验证机器密码
      *
      * @return
      */
-   public static Observable<ApiResponse> validatePassword(String  password) {
-        return getApiService().validatePassword("app", "validatePassword",User.get().getToken(),password).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    public static Observable<ApiResponse> validatePassword(String password) {
+        return getApiService().validatePassword("app", "validatePassword", User.get().getToken(), password).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+
+    /**
+     * 验证机器密码
+     *
+     * @return
+     */
+    public static Observable<ApiResponse<List<PrivateEduBean>>> privatecourselist() {
+        return getApiService().privatecourselist("app", "privateCourseList", User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

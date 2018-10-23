@@ -18,6 +18,7 @@ public class Constants {
 
     public interface FragmentExtra {
         String BEAN="BEAN";
+        String PRICELEVELBEAN="PRICELEVELBEAN";
 
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.link.cloud.Constants;
 import com.link.cloud.R;
+import com.link.cloud.api.bean.PriceLevelBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.RentTimeBean;
 import com.link.cloud.base.AppBarActivity;
@@ -46,9 +47,11 @@ public class PrivateEducationActivity extends AppBarActivity {
     }
 
 
-    public void showDate(PrivateEduBean rentTimeBean) {
+    public void showDate(PriceLevelBean priceLevelBean, PrivateEduBean rentTimeBean) {
         final Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.FragmentExtra.BEAN, rentTimeBean);
+        bundle.putSerializable(Constants.FragmentExtra.PRICELEVELBEAN, priceLevelBean);
+
         publicTitle.nextPosition();
 
         BottomBuyDialog dialog = new BottomBuyDialog(this);
@@ -78,6 +81,10 @@ public class PrivateEducationActivity extends AppBarActivity {
     protected int getLayoutId() {
         return R.layout.activity_privateeducation;
     }
+
+
+
+
 
 
 }

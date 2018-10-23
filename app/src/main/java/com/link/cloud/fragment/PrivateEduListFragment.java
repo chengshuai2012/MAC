@@ -8,13 +8,19 @@ import android.view.View;
 import com.link.cloud.R;
 import com.link.cloud.activity.PrivateEducationActivity;
 import com.link.cloud.adapter.PrivateEduAdapter;
+import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.bean.PriceLevelBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.dataSourse.PrivateEduListDataSource;
 import com.link.cloud.base.BaseFragment;
 import com.link.cloud.base.BaseViewHolder;
 import com.link.cloud.widget.MVCSwipeRefreshHelper;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * @author qianlu
@@ -46,6 +52,21 @@ public class PrivateEduListFragment extends BaseFragment {
         recycleView = (RecyclerView) contentView.findViewById(R.id.recycleView);
         swipeLayout = (SwipeRefreshLayout) contentView.findViewById(R.id.swipeLayout);
         initDate();
+        getDates();
+    }
+
+    private void getDates() {
+        ApiFactory.privatecourselist().subscribe(new Action1<ApiResponse>() {
+            @Override
+            public void call(ApiResponse response) {
+
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+
+            }
+        });
     }
 
     private void initDate() {
@@ -62,8 +83,8 @@ public class PrivateEduListFragment extends BaseFragment {
         privateEduAdapter.setOnItemClickListener(new BaseViewHolder.OnItemClickListener() {
             @Override
             public void onItemClick(Object data, int position) {
-                ((PrivateEducationActivity) getActivity()).showDate((PrivateEduBean) data);
-                privateEduAdapter.init(false,position);
+                ((PrivateEducationActivity) getActivity()).showDate((PriceLevelBean) data,privateEduAdapter.getData().get(position));
+                privateEduAdapter.init(false, position);
                 privateEduAdapter.notifyDataSetChanged();
             }
 
