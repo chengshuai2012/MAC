@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/border_red_gradient_10px" android:state_selected="true"/>
-    <item android:drawable="@drawable/bg_white_rectangle_corner_r20" />
+    <item android:drawable="@drawable/border_red_gradient_30px" android:state_selected="true" />
+    <item android:drawable="@drawable/border_red_gradient_30px" android:state_pressed="true"/>
+    <item android:drawable="@drawable/bg_white_rectangle_corner_r30" />
 </selector>

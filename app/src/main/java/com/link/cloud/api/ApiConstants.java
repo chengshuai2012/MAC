@@ -58,5 +58,22 @@ public class ApiConstants {
     //验证机器密码
     public static final String VALIDATEPASS = "{app}/{validatePassword}/{password}";
 
+    //获取私教课程列表
+    public static final String PRIVATECOURSELIST = "{app}/{privateCourseList}";
+
+    //获取购买私教课程支付信息
+    public static final String PREBUYPRIVATECOURSE = "/{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

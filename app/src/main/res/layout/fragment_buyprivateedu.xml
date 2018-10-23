@@ -165,41 +165,74 @@
 
                 <TextView
                     style="@style/CommonText"
+                    android:text="@string/pay_time_sheng"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/w22"
-                    tools:text="@string/pay_time_sheng" />
+                    android:textSize="@dimen/w21" />
 
                 <cn.iwgang.countdownview.CountdownView
                     android:id="@+id/countDownView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:isHideTimeBackground="true"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/w41"
+                    app:isShowDay="false"
+                    app:isShowHour="false"
+                    app:isShowMillisecond="false"
                     app:isShowMinute="true"
                     app:isShowSecond="true"
-                    app:isTimeTextBold="true"
-                    app:suffixGravity="bottom"
                     app:suffixMinute="@string/minute"
-                    android:layout_marginRight="@dimen/w37"
                     app:suffixSecond="@string/second"
                     app:suffixTextColor="@color/white"
-                    app:suffixTextSize="@dimen/w17"
+                    app:suffixTextSize="@dimen/w14"
                     app:timeTextColor="@color/white"
-                    app:timeTextSize="@dimen/w17" />
+                    app:timeTextSize="@dimen/w14" />
+
+
             </LinearLayout>
 
 
             <android.support.v7.widget.CardView
+                android:id="@+id/handyPayLayout"
                 android:layout_width="@dimen/w300"
                 android:layout_height="@dimen/h98"
                 android:layout_marginLeft="@dimen/w36"
                 android:layout_marginTop="@dimen/h22">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/w72"
-                    android:layout_height="@dimen/w72"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/handy_pay" />
+
+                    <ImageView
+                        android:layout_width="@dimen/w72"
+                        android:layout_height="@dimen/w72"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/w14"
+                        android:src="@drawable/ic_handy_pay" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/w25"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CommonText"
+                            android:text="@string/sure_handy_pay"
+                            android:textColor="@color/color_black_333333"
+                            android:textSize="@dimen/w18" />
+
+                        <TextView
+                            android:id="@+id/handyPayButton"
+                            style="@style/CommonText"
+                            android:text="asdfas"
+                            android:textColor="@color/color_black_333333"
+                            android:textSize="@dimen/w18" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
             </android.support.v7.widget.CardView>
@@ -219,6 +252,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/wechatPayButton"
                     android:layout_width="@dimen/w264"
                     android:layout_height="@dimen/h78"
                     android:layout_marginLeft="@dimen/w36"
@@ -229,34 +263,37 @@
 
                     <TextView
                         style="@style/CommonText"
-                        android:text="asdfas"
+                        android:text="@string/wechat_pay"
                         android:textColor="@color/white"
                         android:textSize="@dimen/w18" />
 
                     <TextView
+                        android:id="@+id/surePayWechatButton"
                         style="@style/CommonText"
-                        android:text="应付款：￥8911.00"
+                        android:text="应付款："
                         android:textColor="@color/white"
-                        android:textSize="@dimen/w18" />
+                        android:textSize="@dimen/w16" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/aliPayButton"
                     android:layout_width="@dimen/w264"
                     android:layout_height="@dimen/h78"
-                    android:layout_marginTop="@dimen/h22"
                     android:layout_marginLeft="@dimen/w37"
+                    android:layout_marginTop="@dimen/h22"
                     android:background="@drawable/pay_zhifubao"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/CommonText"
-                        android:text="asdfas"
+                        android:text="@string/sure_ali_pay"
                         android:textColor="@color/white"
                         android:textSize="@dimen/w18" />
 
                     <TextView
+                        android:id="@+id/surePayalipayButton"
                         style="@style/CommonText"
                         android:text="asdfas"
                         android:textColor="@color/white"

@@ -31,11 +31,6 @@ public class PrivateEduAdapter extends RecyclerView.Adapter implements IDataAdap
 
     public PrivateEduAdapter(Context context) {
         this.context = context;
-        items.add(new PrivateEduBean());
-        items.add(new PrivateEduBean());
-        items.add(new PrivateEduBean());
-        items.add(new PrivateEduBean());
-        items.add(new PrivateEduBean());
         init(false,-1);
     }
 

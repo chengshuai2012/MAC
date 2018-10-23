@@ -87,13 +87,12 @@ public interface ApiService {
      *
      * @param
      * @return
-     *
      */
     @POST(ApiConstants.GETUSERS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<UserList>> getUsers(@Header("access-token") String token, @Body GetUserPages request);
 
- /**
+    /**
      * 修改指纹
      *
      * @param
@@ -160,7 +159,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.GETRECENTCLASS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable <ApiResponse<ArrayList<GroupLessonInResource>>> getRecentClass(@Header("access-token")String token);
+    Observable<ApiResponse<ArrayList<GroupLessonInResource>>> getRecentClass(@Header("access-token") String token);
 
     /**
      * 获取团课学员
@@ -171,7 +170,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.GETGROUPLESSONMEMBER)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse<GroupLessonUser>> getGroupUsers(@Path("app")String app, @Path("courseUsers")String courseUsers, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+    Observable<ApiResponse<GroupLessonUser>> getGroupUsers(@Path("app") String app, @Path("courseUsers") String courseUsers, @Header("access-token") String token, @Path("courseReleasePkcode") String courseReleasePkcode);
 
     /**
      * 获取团课购买二维码
@@ -182,7 +181,8 @@ public interface ApiService {
      */
     @POST(ApiConstants.PREBUYCOURSE)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable <ApiResponse>getBuyQrcode(@Path("app")String app,@Path("prebuyCourse") String prebuyCourse, @Header("access-token")String token, @Path("courseReleasePkcode")String courseReleasePkcode);
+    Observable<ApiResponse> getBuyQrcode(@Path("app") String app, @Path("prebuyCourse") String prebuyCourse, @Header("access-token") String token, @Path("courseReleasePkcode") String courseReleasePkcode);
+
     /**
      * 获取顾客的私教课
      *
@@ -192,7 +192,8 @@ public interface ApiService {
      */
     @GET(ApiConstants.GETPERSONALCLASS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable <ApiResponse<LessonPred>>getPersonalClass(@Path("app")String app, @Path("findPersonalCourse") String findPersonalCourse, @Header("access-token")String token, @Path("uuid")String uuid);
+    Observable<ApiResponse<LessonPred>> getPersonalClass(@Path("app") String app, @Path("findPersonalCourse") String findPersonalCourse, @Header("access-token") String token, @Path("uuid") String uuid);
+
     /**
      * 获取顾客的私教课
      *
@@ -202,7 +203,8 @@ public interface ApiService {
      */
     @GET(ApiConstants.CONSUNMEPRITE)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable <ApiResponse>consumePrivate(@Path("app")String app, @Path("finishCourse")String finishCourse,@Header("access-token") String token,  @Path("uuid")String uuid,  @Path("memberCoursePkcode")String memberCoursePkcode,  @Path("coachid")String coachid);
+    Observable<ApiResponse> consumePrivate(@Path("app") String app, @Path("finishCourse") String finishCourse, @Header("access-token") String token, @Path("uuid") String uuid, @Path("memberCoursePkcode") String memberCoursePkcode, @Path("coachid") String coachid);
+
     /**
      * 验证用户是否是管理员
      *
@@ -212,7 +214,8 @@ public interface ApiService {
      */
     @POST(ApiConstants.VALIDATEADMIN)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable  <ApiResponse>validateAdmin(@Path("app")String app, @Path("validateAdmin")String validateAdmin, @Header("access-token")String token, @Path("uuid")String uuid);
+    Observable<ApiResponse> validateAdmin(@Path("app") String app, @Path("validateAdmin") String validateAdmin, @Header("access-token") String token, @Path("uuid") String uuid);
+
     /**
      * 验证机器密码
      *
@@ -222,5 +225,20 @@ public interface ApiService {
      */
     @POST(ApiConstants.VALIDATEPASS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable  <ApiResponse>validatePassword(@Path("app")String app,@Path("validatePassword") String validatePassword, @Header("access-token")String token, @Path("password")String password);
+    Observable<ApiResponse> validatePassword(@Path("app") String app, @Path("validatePassword") String validatePassword, @Header("access-token") String token, @Path("password") String password);
+
+
+    /**
+     * 获取私教课程列表
+     *
+     * @param
+     * @returnscheduleReport
+     * {app}/{privateCourseList}
+     * @see
+     */
+    @GET(ApiConstants.PRIVATECOURSELIST)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<List<PrivateEduBean>>> privatecourselist(@Path("app") String app, @Path("privateCourseList") String privateCourseList, @Header("access-token") String token);
+
+
 }
