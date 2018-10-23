@@ -9,6 +9,7 @@ import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.bean.People;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 
@@ -21,6 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by 49488 on 2018/10/20.
@@ -37,14 +39,14 @@ public class SplashActivity extends AppBarActivity {
 
     }
 
-    int pageNum = 1;
+    int pageNum = 100;
     int total = 0;
 
     private void getTotal() {
         GetUserPages getUserPages = new GetUserPages();
         getUserPages.setContent("HJKF");
         getUserPages.setPageNo(1);
-        getUserPages.setPageSize(100);
+        getUserPages.setPageSize(pageNum);
         ApiFactory.getUsers(getUserPages).subscribe(new BaseProgressSubscriber<ApiResponse<UserList>>(this) {
             @Override
             public void onNext(ApiResponse<UserList> apiResponse) {
@@ -71,15 +73,16 @@ public class SplashActivity extends AppBarActivity {
         int totalPage = total / pageNum + 1;
         ExecutorService executorService = Executors.newFixedThreadPool(totalPage);
         List<Future<Boolean>> futures = new ArrayList();
-        if (totalPage >= 1) {
-            for (int i = 1; i < totalPage; i++) {
+        if (totalPage >= 2) {
+            for (int i = 2; i < totalPage; i++) {
+                final int finalI = i;
                 Callable<Boolean> task = new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
                         GetUserPages getUserPages = new GetUserPages();
                         getUserPages.setContent("HJKF");
-                        getUserPages.setPageNo(1);
-                        getUserPages.setPageSize(100);
+                        getUserPages.setPageNo(finalI);
+                        getUserPages.setPageSize(pageNum);
                         ApiFactory.getUsers(getUserPages).subscribe(new NoProgressSubscriber<ApiResponse<UserList>>(SplashActivity.this) {
                             @Override
                             public void onNext(ApiResponse<UserList> apiResponse) {
@@ -119,7 +122,12 @@ public class SplashActivity extends AppBarActivity {
             public void onNext(ApiResponse response) {
                 super.onNext(response);
                 User.get().setToken((String) response.getData());
-                getTotal();
+                RealmResults<People> all = realm.where(People.class).findAll();
+                if(all.size()>0){
+
+                }else {
+                    getTotal();
+                }
             }
         });
     }
