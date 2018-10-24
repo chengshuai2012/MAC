@@ -232,13 +232,23 @@ public interface ApiService {
      * 获取私教课程列表
      *
      * @param
-     * @returnscheduleReport
-     * {app}/{privateCourseList}
+     * @returnscheduleReport {app}/{privateCourseList}
      * @see
      */
     @GET(ApiConstants.PRIVATECOURSELIST)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<List<PrivateEduBean>>> privatecourselist(@Path("app") String app, @Path("privateCourseList") String privateCourseList, @Header("access-token") String token);
+
+    /**
+     * 获取付款二维码
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @POST(ApiConstants.PREBUYPRIVATECOURSE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> prebuyprivatecourse(@Path("app") String app, @Path("prebuyPrivateCourse") String prebuyPrivateCourse,@Path("courseReleasePkcode") String courseReleasePkcode,@Path("level") String level ,@Header("access-token") String token);
 
 
 }

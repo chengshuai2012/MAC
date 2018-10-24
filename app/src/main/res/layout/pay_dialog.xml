@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="770px"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -12,99 +13,109 @@
         android:background="@drawable/message_border">
 
         <TextView
-            android:layout_marginTop="@dimen/margin_main"
+            android:id="@+id/pay_restTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_main"
             android:gravity="center_vertical"
             android:text="@string/pay_restTime"
-            android:id="@+id/pay_restTime"
             android:textColor="@color/dark_black"
             android:textSize="@dimen/text_size_30" />
+
         <LinearLayout
-            android:layout_marginTop="@dimen/margin_main_middle"
+            android:id="@+id/rest_time_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_main"
             android:layout_below="@+id/pay_restTime"
-            android:id="@+id/rest_time_container"
-            >
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="@dimen/text_size_32"
                 android:layout_height="@dimen/text_size_32"
-                android:src="@drawable/time"
                 android:layout_gravity="center_vertical"
-                />
-            <TextView
+                android:src="@drawable/time" />
+
+            <cn.iwgang.countdownview.CountdownView
+                android:id="@+id/countDownView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/pay_restTime"
-                android:textColor="@color/red"
-                android:id="@+id/pay_rest_time"
-                android:textSize="@dimen/text_size_30" />
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/margin_main"
+                app:isShowDay="false"
+                app:isShowHour="false"
+                app:isShowMillisecond="false"
+                app:isShowMinute="true"
+                app:isShowSecond="true"
+                app:suffixMinute="@string/minute"
+                app:suffixSecond="@string/second"
+                app:suffixTextColor="@color/red"
+                app:suffixTextSize="@dimen/w14"
+                app:timeTextColor="@color/red"
+                app:timeTextSize="@dimen/w14" />
 
         </LinearLayout>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_centerHorizontal="true"
-    android:layout_below="@+id/rest_time_container"
-    android:id="@+id/pay_count_ll"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="@dimen/text_size_28"
-        android:text="@string/pay_count"
-        android:gravity="center"
-        />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_36"
-            android:textColor="@color/red"
-            android:text="@string/confirm"
-            />
 
-</LinearLayout>
-        <TextView
-            android:layout_marginTop="@dimen/margin_main_middle"
-            android:layout_below="@+id/pay_count_ll"
+        <LinearLayout
+            android:id="@+id/pay_count_ll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rest_time_container"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_size_28"
-            android:layout_alignStart="@+id/pay_count_ll"
-            android:text="@string/work_step"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/pay_count"
+                android:textSize="@dimen/text_size_28" />
+
+            <TextView
+                android:id="@+id/money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm"
+                android:textColor="@color/red"
+                android:textSize="@dimen/text_size_36" />
+
+        </LinearLayout>
+
+        <TextView
             android:id="@+id/work_step"
-            android:gravity="center"
-            />
-        <TextView
-            android:layout_marginTop="@dimen/margin_main_middle"
-            android:layout_below="@+id/work_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/text_size_24"
             android:layout_alignStart="@+id/pay_count_ll"
-            android:text="@string/work_intro"
-            android:id="@+id/work_introduce"
+            android:layout_below="@+id/pay_count_ll"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
             android:gravity="center"
-            />
+            android:text="@string/work_step"
+            android:textSize="@dimen/text_size_28" />
+
+        <TextView
+            android:id="@+id/work_introduce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/pay_count_ll"
+            android:layout_below="@+id/work_step"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_main_middle"
+            android:gravity="center"
+            android:text="@string/work_intro"
+            android:textSize="@dimen/text_size_24" />
+
         <ImageView
-            android:layout_marginTop="@dimen/margin_main"
+            android:id="@+id/qrcode"
             android:layout_width="@dimen/sqaure_code_size"
             android:layout_height="@dimen/sqaure_code_size"
-            android:src="@drawable/veune_way"
             android:layout_below="@+id/work_introduce"
             android:layout_centerHorizontal="true"
-            android:id="@+id/qrcode"
-            />
+            android:layout_marginTop="@dimen/margin_main"
+            android:src="@drawable/veune_way" />
     </RelativeLayout>
 
     <ImageView

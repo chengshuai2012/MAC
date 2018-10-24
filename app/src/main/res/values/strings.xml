@@ -76,6 +76,7 @@
     <string name="pay_count">支付金额：</string>
     <string name="work_step">操作步骤：</string>
     <string name="work_intro">打开支付宝，扫描下面二维码</string>
+    <string name="work_intro_wechat">打开微信，扫描下面二维码</string>
     <string name="lesson_name">塑形杠铃操</string>
     <string name="should_pay">应付￥89.00</string>
     <string name="pay_time">剩余支付时间：9分48秒</string>

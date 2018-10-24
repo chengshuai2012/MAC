@@ -62,7 +62,7 @@ public class ApiConstants {
     public static final String PRIVATECOURSELIST = "{app}/{privateCourseList}";
 
     //获取购买私教课程支付信息
-    public static final String PREBUYPRIVATECOURSE = "/{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+    public static final String PREBUYPRIVATECOURSE = "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
 
 
 

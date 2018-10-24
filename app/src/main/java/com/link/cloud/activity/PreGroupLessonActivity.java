@@ -171,31 +171,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         peopleCount.setText(lessonItemBean.getNum()+"人");
     }
 
-    public static Bitmap createQRCode(String text, int size) {
-        try {
-            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-            BitMatrix bitMatrix = new QRCodeWriter().encode(text,
-                    BarcodeFormat.QR_CODE, size, size, hints);
-            int[] pixels = new int[size * size];
-            for (int y = 0; y < size; y++) {
-                for (int x = 0; x < size; x++) {
-                    if (bitMatrix.get(x, y)) {
-                        pixels[y * size + x] = 0xff000000;
-                    } else {
-                        pixels[y * size + x] = 0xffffffff;
-                    }
-                }
-            }
-            Bitmap bitmap = Bitmap.createBitmap(size, size,
-                    Bitmap.Config.ARGB_8888);
-            bitmap.setPixels(pixels, 0, size, 0, 0, size, size);
-            return bitmap;
-        } catch (WriterException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
     public void setHintSize(EditText editText, int size, String hint) {
         String hintStr = hint;
@@ -308,14 +284,16 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                     public void onNext(ApiResponse apiResponse) {
                         super.onNext(apiResponse);
                         View pay_wechat = View.inflate(PreGroupLessonActivity.this, R.layout.pay_dialog, null);
-                        dialogUtils.showPayDialog(pay_wechat, createQRCode((String) apiResponse.getData(), 220));
+                        long time = (long) 4 * 60 * 1000;
+                        dialogUtils.showPayDialog(pay_wechat, Utils.createQRCode((String) apiResponse.getData(), 220),"12",getString(R.string.work_intro),time);
                     }
                 });
 
                 break;
             case R.id.pay_zhifubao:
                 View pay_zhifubao = View.inflate(this, R.layout.pay_dialog, null);
-                dialogUtils.showPayDialog(pay_zhifubao, null);
+                long time = (long) 4 * 60 * 1000;
+                dialogUtils.showPayDialog(pay_zhifubao, null,"12",getString(R.string.work_intro),time);
                 break;
             case R.id.handy_pay:
                 View handy_pay = View.inflate(this, R.layout.pay_conform_dialog, null);

@@ -8,11 +8,21 @@ import android.widget.TextView;
 
 import com.link.cloud.Constants;
 import com.link.cloud.R;
+import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.activity.PrivateEducationActivity;
+import com.link.cloud.activity.PrivateEducationConsumActivity;
 import com.link.cloud.activity.RentingActivity;
+import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.PriceLevelBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.base.BaseFragment;
+import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.utils.DialogUtils;
+import com.link.cloud.utils.Utils;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.ViewUtils;
 
@@ -25,7 +35,7 @@ import cn.iwgang.countdownview.CountdownView;
  * email：zar.l@qq.com
  * description：购买私教课
  */
-public class BuyPrivateEduFragment extends BaseFragment {
+public class BuyPrivateEduFragment extends BaseFragment implements DialogCancelListener {
 
 
     private android.widget.TextView className;
@@ -45,6 +55,7 @@ public class BuyPrivateEduFragment extends BaseFragment {
     private TextView handyPayButton;
     private android.widget.LinearLayout wechatPayButton;
     private android.widget.LinearLayout aliPayButton;
+    private DialogUtils dialogUtils;
 
     @Override
     public void onInflateView(View contentView) {
@@ -60,7 +71,7 @@ public class BuyPrivateEduFragment extends BaseFragment {
     }
 
     private void initView(View contentView) {
-        ToastMaster.shortToast(rentTimeBean.getAddress());
+        dialogUtils = DialogUtils.getDialogUtils(getActivity(), this);
         className = (TextView) contentView.findViewById(R.id.className);
         costText = (TextView) contentView.findViewById(R.id.costText);
         unitpriceText = (TextView) contentView.findViewById(R.id.unitpriceText);
@@ -88,19 +99,16 @@ public class BuyPrivateEduFragment extends BaseFragment {
         countDownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
             @Override
             public void onEnd(CountdownView cv) {
-                ToastMaster.shortToast("倒计时完了");
+                    getActivity().finish();
             }
         });
         countDownView.setTag("test1");
         long time1 = (long) 10 * 60 * 1000;
         countDownView.start(time1);
-
-
         ViewUtils.setOnClickListener(lastButton, this);
         ViewUtils.setOnClickListener(wechatPayButton, this);
         ViewUtils.setOnClickListener(aliPayButton, this);
         ViewUtils.setOnClickListener(handyPayLayout, this);
-
     }
 
     @Override
@@ -109,14 +117,38 @@ public class BuyPrivateEduFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.lastButton:
                 ((PrivateEducationActivity) getActivity()).showPosition();
+                ((PrivateEducationActivity) getActivity()).showPosition();
                 getActivity().onBackPressed();
                 break;
             case R.id.wechatPayButton:
+                getCode(rentTimeBean.getCourseReleasePkcode(), String.valueOf(rentTimeBean.getPriceLevel().indexOf(priceLevelBean)), getString(R.string.work_intro_wechat));
                 break;
             case R.id.aliPayButton:
+                getCode(rentTimeBean.getCourseReleasePkcode(), String.valueOf(rentTimeBean.getPriceLevel().indexOf(priceLevelBean)), getString(R.string.work_intro));
                 break;
             case R.id.handyPayLayout:
                 break;
         }
+    }
+
+    private void getCode(String courseReleasePkcode, String level, final String payType) {
+        ApiFactory.prebuyPrivateCourse(courseReleasePkcode, level).subscribe(new BaseProgressSubscriber<ApiResponse>(getActivity()) {
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+                View pay_wechat = View.inflate(getActivity(), R.layout.pay_dialog, null);
+                long time = (long) 4 * 60 * 1000;
+                dialogUtils.showPayDialog(pay_wechat, Utils.createQRCode((String) apiResponse.getData(), 220), priceLevelBean.getTotalPrice(), payType, time);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public void dialogCancel() {
+
     }
 }
