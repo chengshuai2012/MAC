@@ -192,7 +192,6 @@ public class DialogUtils implements View.OnClickListener {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
         params.leftMargin = 30;
         window.setContentView(view, params);
-
         countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
             @Override
             public void onEnd(CountdownView cv) {
