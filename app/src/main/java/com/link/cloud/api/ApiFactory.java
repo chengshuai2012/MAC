@@ -227,6 +227,16 @@ public class ApiFactory {
         return getApiService().privatecourselist("app", "privateCourseList", User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
+    /**
+     * 验证机器密码
+     *
+     * @return
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     */
+    public static Observable<ApiResponse> prebuyPrivateCourse(String courseReleasePkcode,String level) {
+        return getApiService().prebuyprivatecourse("app", "prebuyPrivateCourse", courseReleasePkcode, level, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+
 
 //    /**
 //     * 发送短信验证码

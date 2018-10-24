@@ -98,7 +98,7 @@ public class PrivateEduAdapter extends RecyclerView.Adapter implements IDataAdap
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return items.isEmpty() ;
     }
 
 

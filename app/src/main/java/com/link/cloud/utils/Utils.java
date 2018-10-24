@@ -26,6 +26,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.jakewharton.rxbinding.view.RxView;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
@@ -53,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -133,6 +139,33 @@ public class Utils extends com.zitech.framework.utils.Utils {
         Date begDate = new Date(System.currentTimeMillis());
         String date = simpleDateFormat.format(begDate);
         return date;
+    }
+
+
+    public static Bitmap createQRCode(String text, int size) {
+        try {
+            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            BitMatrix bitMatrix = new QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints);
+            int[] pixels = new int[size * size];
+            for (int y = 0; y < size; y++) {
+                for (int x = 0; x < size; x++) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * size + x] = 0xff000000;
+                    } else {
+                        pixels[y * size + x] = 0xffffffff;
+                    }
+                }
+            }
+            Bitmap bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size);
+            return bitmap;
+        } catch (WriterException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

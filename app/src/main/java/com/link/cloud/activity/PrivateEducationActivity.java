@@ -51,9 +51,7 @@ public class PrivateEducationActivity extends AppBarActivity {
         final Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.FragmentExtra.BEAN, rentTimeBean);
         bundle.putSerializable(Constants.FragmentExtra.PRICELEVELBEAN, priceLevelBean);
-
         publicTitle.nextPosition();
-
         BottomBuyDialog dialog = new BottomBuyDialog(this);
         dialog.setOnCancelButtonClickListener(new BottomBuyDialog.OnCancelButtonClickListener() {
             @Override
@@ -64,12 +62,13 @@ public class PrivateEducationActivity extends AppBarActivity {
         dialog.setOnPositiveButtonClickListener(new BottomBuyDialog.OnPositiveButtonClickListener() {
             @Override
             public void onClick(Dialog dialog) {
+                publicTitle.nextPosition();
                 showFragment(BuyPrivateEduFragment.class, bundle);
                 dialog.dismiss();
             }
         });
         dialog.show();
-        publicTitle.nextPosition();
+
     }
 
 

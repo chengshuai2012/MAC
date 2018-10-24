@@ -29,11 +29,14 @@ import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.DialogCancelListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
+import com.zitech.framework.utils.ToastMaster;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.iwgang.countdownview.CountdownView;
 
 /**
  * Created by OFX002 on 2018/9/21.
@@ -171,17 +174,32 @@ public class DialogUtils implements View.OnClickListener {
         window.setContentView(view, params);
     }
 
-    public void showPayDialog(View view, Bitmap bitmap) {
+    public void showPayDialog(View view, Bitmap bitmap,String payment,String payString,long time) {
         dialog.show();
         ImageView close_pay = view.findViewById(R.id.close_pay);
         ImageView qrcode = view.findViewById(R.id.qrcode);
+        TextView money = view.findViewById(R.id.money);
+        TextView payTyte = view.findViewById(R.id.work_introduce);
+        CountdownView countdownView = view.findViewById(R.id.countDownView);
+        countdownView.setTag("test1");
+        countdownView.start(time);
+        payTyte.setText(payString);
         qrcode.setImageBitmap(bitmap);
         close_pay.setOnClickListener(this);
+        money.setText(payment);
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
         params.leftMargin = 30;
         window.setContentView(view, params);
+
+        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+            @Override
+            public void onEnd(CountdownView cv) {
+                dissMiss();
+            }
+        });
+
     }
     public void showVeuneOkDialog(View view) {
         dialog.show();
