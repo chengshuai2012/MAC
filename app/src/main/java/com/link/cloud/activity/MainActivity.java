@@ -188,19 +188,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getListDate();
-        ApiFactory.validateAdmin("11").subscribe(new ProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse apiResponse) {
-                super.onNext(apiResponse);
-            }
-        });
-        ApiFactory.validatePassword("11").subscribe(new ProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse apiResponse) {
-                super.onNext(apiResponse);
-            }
-        });
-
     }
 
 

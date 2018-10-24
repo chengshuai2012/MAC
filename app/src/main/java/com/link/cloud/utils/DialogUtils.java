@@ -15,15 +15,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.link.cloud.R;
 import com.link.cloud.activity.RegisterActivity;
 import com.link.cloud.activity.SettingActivity;
 import com.link.cloud.adapter.Lesson_Advantager;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Black;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Gray;
+import com.link.cloud.adapter.TipsAdapter;
+import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.DialogCancelListener;
+import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,21 +40,17 @@ import java.util.List;
  */
 
 public class DialogUtils implements View.OnClickListener {
-
-    private TextView tv_desc_short;
-    private TextView tv_desc_long;
-    private TextView inputTel;
-    private ImageView ivMoreLine;
-    private ImageView btn_delete;
-    private ImageView advantage_lesson_detail_more;
-    private ListView advantage_lesson_detail;
-    private List<String> list;
     private Lesson_Advantager adapter;
     private DialogCancelListener listener;
     private AlertDialog dialog;
     StringBuilder builder = new StringBuilder();
     private Pay_GridView_Adapter_Black pay_gridView_adapter_black;
     boolean isPay;
+    private TextView inputTel;
+    private TextView tv_desc_short;
+    private TextView tv_desc_long;
+    private ImageView ivMoreLine;
+    private ListView advantage_lesson_detail;
 
     private DialogUtils(Activity context,DialogCancelListener listener) {
         this.listener = listener;
@@ -243,6 +247,7 @@ public class DialogUtils implements View.OnClickListener {
         ImageView close = view.findViewById(R.id.close);
         close.setOnClickListener(this);
         venue_login.setOnClickListener(this);
+        confirm.setOnClickListener(this);
         bind_keypad_0.setOnClickListener(this);
         bind_keypad_1.setOnClickListener(this);
         bind_keypad_2.setOnClickListener(this);
@@ -264,22 +269,22 @@ public class DialogUtils implements View.OnClickListener {
     boolean isInit = false;
     boolean isShowShortText = false;
     Activity context;
-
-    public void showIntroCoachDialog(View view) {
+ArrayList<String> list;
+    public void showIntroCoachDialog(View view, CoachInfo coachInfo) {
         dialog.show();
         FrameLayout fl_desc = (FrameLayout) view.findViewById(R.id.fl_desc);
         tv_desc_short = (TextView) view.findViewById(R.id.tv_desc_short);
         tv_desc_long = (TextView) view.findViewById(R.id.tv_desc_long);
         ivMoreLine = (ImageView) view.findViewById(R.id.iv_more_line);
-        btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
-        advantage_lesson_detail_more = (ImageView) view.findViewById(R.id.advantage_lesson_detail_more);
+        ImageView  btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
+        ImageView  advantage_lesson_detail_more = (ImageView) view.findViewById(R.id.advantage_lesson_detail_more);
         advantage_lesson_detail = (ListView) view.findViewById(R.id.advantage_lesson_detail);
         list = new ArrayList();
         for (int x = 0; x < 3; x++) {
             list.add("111");
         }
         adapter = new Lesson_Advantager(context, list);
-        setListViewHeight(advantage_lesson_detail, adapter, context);
+        setListViewHeight(advantage_lesson_detail, adapter, context,coachInfo);
         advantage_lesson_detail.setAdapter(adapter);
         isInit = false;
         isShowShortText = true;
@@ -306,6 +311,29 @@ public class DialogUtils implements View.OnClickListener {
         window.setContentView(view, params);
         btn_delete.setOnClickListener(this);
     }
+    public void showIntroLessonDialog(View view, CoachInfo coachInfo) {
+        dialog.show();
+        ImageView dialog_big_image = (ImageView) view.findViewById(R.id.dialog_big_image);
+        ImageView btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
+        TextView private_coach_name = (TextView) view.findViewById(R.id.private_coach_name);
+        TextView had_pay_num = (TextView) view.findViewById(R.id.had_pay_num);
+        TextView lesson_address = (TextView) view.findViewById(R.id.lesson_address);
+        TextView lesson_detial = (TextView) view.findViewById(R.id.lesson_detial);
+        ListView lvtips = view.findViewById(R.id.tips_lv);
+        TipsAdapter adapter = new TipsAdapter(context,coachInfo.getFitnessCourseContext().getReminder());
+        setListViewHeight(lvtips, adapter, context,coachInfo);
+        lvtips.setAdapter(adapter);
+        Glide.with(context).load(coachInfo.getFitnessCourseCoverimg()).placeholder(R.drawable.coach_main_img).error(R.drawable.coach_main_img).into(dialog_big_image);
+        private_coach_name.setText(coachInfo.getCoachName());
+        had_pay_num.setText(context.getResources().getString(R.string.have_mun)+coachInfo.getNum()+context.getResources().getString(R.string.peoples_buy));
+        lesson_address.setText(coachInfo.getAddress());
+        lesson_detial.setText(coachInfo.getFitnessCourseContext().getFitnessCourseintroduce());
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(850, 1750);
+        window.setContentView(view, params);
+        btn_delete.setOnClickListener(this);
+    }
 
     private boolean mesureDescription(TextView shortView, TextView longView) {
         final int shortHeight = shortView.getHeight();
@@ -320,12 +348,12 @@ public class DialogUtils implements View.OnClickListener {
         return false;
     }
 
-    private void setListViewHeight(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity) {
+    private void setListViewHeight(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity,CoachInfo coachInfo) {
         int totalHeight = 0;
         for (int i = 0, len = mListviewAdapter.getCount(); i < len; i++) {
             View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
-            TextView tv = (TextView) listItem.findViewById(R.id.message);
-            tv.setText(activity.getResources().getString(R.string.message));
+            TextView tv= listItem.findViewById(R.id.message);
+            tv.setText(coachInfo.getFitnessCourseContext().getReminder().get(i).getText());
             int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
             int tvHeight = tv.getLineHeight();
             int width = 700;
@@ -355,7 +383,7 @@ public class DialogUtils implements View.OnClickListener {
                     list.add("111");
                 }
                 adapter.setData(list);
-                setListViewHeight(advantage_lesson_detail, adapter, context);
+                setListViewHeight(advantage_lesson_detail, adapter, context,null);
                 break;
             case R.id.iv_more_line:
                 if (isShowShortText) {
@@ -460,9 +488,18 @@ public class DialogUtils implements View.OnClickListener {
 
                 break;
             case R.id.confirm:
-                dialog.dismiss();
-                ((BaseActivity) context).showActivity(SettingActivity.class);
-                listener.dialogCancel();
+                String fisrt = Utils.getMD5("123123").toUpperCase();
+                String second = Utils.getMD5(fisrt).toUpperCase();
+                ApiFactory.validatePassword(second).subscribe(new ProgressSubscriber<ApiResponse>(context) {
+                        @Override
+                        public void onNext(ApiResponse apiResponse) {
+                            super.onNext(apiResponse);
+                            ((BaseActivity) context).showActivity(SettingActivity.class);
+                            listener.dialogCancel();
+                            dialog.dismiss();
+                        }
+                });
+
                 break;
             case R.id.back_home:
                 ((BaseActivity) context).finish();

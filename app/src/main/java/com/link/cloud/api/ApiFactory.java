@@ -4,6 +4,7 @@ import com.link.cloud.User;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.api.dataSourse.UserList;
@@ -126,7 +127,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> coursedetail(String courseReleasePkcode) {
+    public static Observable<ApiResponse<CoachInfo>> coursedetail(String courseReleasePkcode) {
         return getApiService().coursedetail("app", "courseDetail", courseReleasePkcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 

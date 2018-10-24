@@ -12,10 +12,12 @@ import com.link.cloud.activity.PreGroupLessonActivity;
 import com.link.cloud.adapter.ChooseLesson_Adapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.bean.LessonItemBean;
+import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.base.BaseFragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
+import com.link.cloud.utils.DialogUtils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
@@ -56,6 +58,7 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
     private void initView(View contentView) {
         swipe = (SwipeRefreshLayout) contentView.findViewById(R.id.swipe);
         recycle = (RecyclerView) contentView.findViewById(R.id.recycle);
+        swipe.setColorSchemeColors(getResources().getColor(R.color.red));
         recycle.setLayoutManager(new LinearLayoutManager(getActivity()));
         ChooseLesson_Adapter loadMoreAdapter = new ChooseLesson_Adapter(courses, getActivity());
         recycle.setAdapter(loadMoreAdapter);
@@ -75,11 +78,12 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
             @Override
             public void OnClickLesson(int postion) {
                 String courseReleasePkcode = courses.get(postion).getCourseReleasePkcode();
-                ApiFactory.coursedetail(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse>(getActivity()) {
+                ApiFactory.coursedetail(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse<CoachInfo>>(getActivity()) {
                     @Override
-                    public void onNext(ApiResponse apiResponse) {
-                        super.onNext(apiResponse);
-
+                    public void onNext(ApiResponse<CoachInfo> coachInfoApiResponse) {
+                        super.onNext(coachInfoApiResponse);
+                        View view = View.inflate(getActivity(),R.layout.lesson_dialog,null);
+                        DialogUtils.getDialogUtils(getActivity(),LessonListFragment.this).showIntroLessonDialog(view,coachInfoApiResponse.getData());
                     }
                 });
             }

@@ -5,26 +5,28 @@ package com.link.cloud.api.bean;
  * 邮箱：zar.l@qq.com
  */
 public class LessonItemBean {
+
     /**
-     * id : 153
-     * date : 2018-10-21 00:00:00
+     * id : 297
+     * date : 2018-10-23 00:00:00
      * fitnessCourseName : 测试瑜伽团课
      * courseReleaseDiscountStatus : 0
-     * courseReleasePkcode : m4fg2e2z
-     * storeCoachHeadimg : null
-     * storeCoachTopimg : null
-     * coursePlanBegtime : 11:15
-     * storeCoachName : 无敌教练
+     * courseReleasePkcode : jmpmsm72
+     * storeCoachHeadimg : http://www.handyfitness.com.cn:8094/api/file/uploadfile/img/1540200682958.png
+     * storeCoachTopimg : http://www.handyfitness.com.cn:8094/api/file/uploadfile/img/1540200686358.png
+     * coursePlanBegtime : 19:30
+     * storeCoachName : 贾
      * storeName : 宁店
      * storeNikename : 宁店
      * courseReleaseMoney : 0.01
-     * coursePlanEndtime : 11:45
-     * storeCoachNikename : 无敌教练
+     * coursePlanEndtime : 20:30
+     * storeCoachNikename : 贾
      * branchId : 1
      * merchantId : 1
-     * startTime : 2018-10-21 11:15:00
+     * startTime : 2018-10-23 19:30:00
      * num : 0
      * address :
+     * courseReleaseFlag : 减肥,增肌
      */
 
     private int id;
@@ -32,8 +34,8 @@ public class LessonItemBean {
     private String fitnessCourseName;
     private int courseReleaseDiscountStatus;
     private String courseReleasePkcode;
-    private Object storeCoachHeadimg;
-    private Object storeCoachTopimg;
+    private String storeCoachHeadimg;
+    private String storeCoachTopimg;
     private String coursePlanBegtime;
     private String storeCoachName;
     private String storeName;
@@ -46,6 +48,7 @@ public class LessonItemBean {
     private String startTime;
     private int num;
     private String address;
+    private String courseReleaseFlag;
 
     public int getId() {
         return id;
@@ -87,19 +90,19 @@ public class LessonItemBean {
         this.courseReleasePkcode = courseReleasePkcode;
     }
 
-    public Object getStoreCoachHeadimg() {
+    public String getStoreCoachHeadimg() {
         return storeCoachHeadimg;
     }
 
-    public void setStoreCoachHeadimg(Object storeCoachHeadimg) {
+    public void setStoreCoachHeadimg(String storeCoachHeadimg) {
         this.storeCoachHeadimg = storeCoachHeadimg;
     }
 
-    public Object getStoreCoachTopimg() {
+    public String getStoreCoachTopimg() {
         return storeCoachTopimg;
     }
 
-    public void setStoreCoachTopimg(Object storeCoachTopimg) {
+    public void setStoreCoachTopimg(String storeCoachTopimg) {
         this.storeCoachTopimg = storeCoachTopimg;
     }
 
@@ -197,5 +200,13 @@ public class LessonItemBean {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCourseReleaseFlag() {
+        return courseReleaseFlag;
+    }
+
+    public void setCourseReleaseFlag(String courseReleaseFlag) {
+        this.courseReleaseFlag = courseReleaseFlag;
     }
 }

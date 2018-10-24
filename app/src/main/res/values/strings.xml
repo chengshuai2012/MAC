@@ -14,6 +14,7 @@
     <string name="lesson_consume">私教消课</string>
     <string name="buy">购买</string>
     <string name="advantage_name">减脂增肌</string>
+    <string name="tips">温  馨  提  示</string>
     <string name="coach_introduce">教  练  介  绍</string>
     <string name="lesson_introduce">课  程  详  情</string>
     <string name="advantage_lesson">擅  长  课  程</string>
@@ -187,6 +188,8 @@
     <string name="sure_other_pay">应付款:</string>
     <string name="sure_ali_pay">支付宝支付</string>
     <string name="sure_handy_pay">汗的充值卡</string>
+    <string name="have_mun">已有</string>
+    <string name="peoples_buy">人购买课程</string>
 
 
 </resources>

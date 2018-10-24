@@ -73,9 +73,9 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
             recyclerViewHolder.lesson_pre_check.setTag(position);
             Glide.with(mContext).load(lessonItemBean.getStoreCoachTopimg()).into(recyclerViewHolder.coach_image);
             recyclerViewHolder.lessonName.setText(lessonItemBean.getFitnessCourseName());
-            recyclerViewHolder.lessonTime.setText(lessonItemBean.getCoursePlanBegtime());
-            recyclerViewHolder.lessonPrice.setText(lessonItemBean.getCourseReleaseMoney());
-            recyclerViewHolder.lessonPriceMemeber.setText(lessonItemBean.getCoursePlanEndtime());
+            recyclerViewHolder.lessonTime.setText(lessonItemBean.getCoursePlanBegtime()+"-"+lessonItemBean.getCoursePlanEndtime());
+            recyclerViewHolder.lessonPrice.setText("￥:"+lessonItemBean.getCourseReleaseMoney());
+            recyclerViewHolder.lessonIntroduce.setText(lessonItemBean.getCourseReleaseFlag());
             ViewUtils.setOnClickListener(recyclerViewHolder.coach_image, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -131,7 +131,6 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView lessonName;
         private TextView lessonIntroduce;
         private TextView lessonPrice;
-        private TextView lessonPriceMemeber;
         private TextView lessonTime;
 
 
@@ -143,7 +142,6 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
             lessonName = (TextView) itemView.findViewById(R.id.lesson_name);
             lessonIntroduce = (TextView) itemView.findViewById(R.id.lesson_introduce);
             lessonPrice = (TextView) itemView.findViewById(R.id.lesson_price);
-            lessonPriceMemeber = (TextView) itemView.findViewById(R.id.lesson_price_memeber);
             lessonTime = (TextView) itemView.findViewById(R.id.lesson_time);
         }
     }

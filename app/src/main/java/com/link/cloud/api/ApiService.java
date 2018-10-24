@@ -3,6 +3,7 @@ package com.link.cloud.api;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.UserBindBean;
+import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.api.dataSourse.UserList;
@@ -124,7 +125,7 @@ public interface ApiService {
      */
     @GET(ApiConstants.COURSEDETAIL)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> coursedetail(@Path("app") String app, @Path("courseDetail") String courseDetail, @Path("courseReleasePkcode") String courseReleasePkcode, @Header("access-token") String token);
+    Observable<ApiResponse<CoachInfo>> coursedetail(@Path("app") String app, @Path("courseDetail") String courseDetail, @Path("courseReleasePkcode") String courseReleasePkcode, @Header("access-token") String token);
 
 
     /**

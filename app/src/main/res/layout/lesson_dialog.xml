@@ -5,22 +5,20 @@
     >
 
     <ScrollView
-        android:background="@drawable/message_border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_main"
         android:layout_marginTop="@dimen/margin_main"
-        android:paddingLeft="@dimen/dialog_padding"
+        android:background="@drawable/message_border"
         android:paddingBottom="@dimen/margin_main_middle"
-        android:paddingTop="@dimen/margin_main_middle"
-        >
+        android:paddingLeft="@dimen/dialog_padding"
+        android:paddingTop="@dimen/margin_main_middle">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingRight="@dimen/dialog_padding"
-            >
-            
+            android:paddingRight="@dimen/dialog_padding">
+
             <TextView
                 android:id="@+id/coach_introduce"
                 android:layout_width="@dimen/activity_top_view_height"
@@ -32,165 +30,213 @@
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="match_parent"
                 android:id="@+id/dialog_big_image"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/dialog_imageView_height"
                 android:layout_below="@+id/coach_introduce"
                 android:layout_marginTop="@dimen/margin_main_middle"
-                android:background="@drawable/coach_main_img" />
+                android:scaleType="fitXY" />
 
             <LinearLayout
+                android:id="@+id/intro_lesson_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dialog_big_image"
-                android:id="@+id/intro_lesson_ll"
-                android:orientation="vertical"
                 android:layout_marginLeft="@dimen/margin_left_register"
-                >
+                android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_main"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="@dimen/indicator_size"
                         android:layout_height="@dimen/margin_left_register"
-                        android:textSize="@dimen/text_size_24"
-                        android:textColor="@color/almost_white"
                         android:background="@color/red"
+                        android:gravity="center"
                         android:text="@string/private_coach"
-                        android:gravity="center"
-                        />
+                        android:textColor="@color/almost_white"
+                        android:textSize="@dimen/text_size_24" />
+
                     <TextView
-                        android:layout_width="@dimen/indicator_size"
-                        android:layout_height="@dimen/margin_left_register"
-                        android:textSize="@dimen/text_size_32"
-                        android:textColor="@color/dark_black"
-                        android:gravity="center"
-                        android:textStyle="bold"
                         android:id="@+id/private_coach_name"
-                        />
+                        android:layout_width="@dimen/indicator_size"
+                        android:layout_height="@dimen/margin_left_register"
+                        android:gravity="center"
+                        android:textColor="@color/dark_black"
+                        android:textSize="@dimen/text_size_32"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_main"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="@dimen/lesson_dialog_small_image_size"
                         android:layout_height="@dimen/lesson_dialog_small_image_size"
-                        android:src="@drawable/pay_lesson"
-                        />
+                        android:src="@drawable/pay_lesson" />
+
                     <TextView
-                        android:layout_width="@dimen/indicator_size"
-                        android:layout_height="@dimen/margin_left_register"
-                        android:textSize="@dimen/text_size_30"
-                        android:textColor="@color/text_gray"
-                        android:gravity="center"
                         android:id="@+id/had_pay_num"
-                        />
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_left_register"
+                        android:layout_marginLeft="@dimen/margin_main"
+                        android:textColor="@color/text_gray"
+                        android:textSize="@dimen/text_size_30" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_main"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="@dimen/lesson_dialog_small_image_size"
                         android:layout_height="@dimen/lesson_dialog_small_image_size"
-                        android:src="@drawable/address"
-                        />
+                        android:src="@drawable/address" />
+
                     <TextView
-                        android:layout_width="@dimen/indicator_size"
-                        android:layout_height="@dimen/margin_left_register"
-                        android:textSize="@dimen/text_size_30"
-                        android:textColor="@color/text_gray"
-                        android:gravity="center"
                         android:id="@+id/lesson_address"
-                        />
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_left_register"
+                        android:layout_marginLeft="@dimen/margin_main"
+                        android:textColor="@color/text_gray"
+                        android:textSize="@dimen/text_size_30" />
 
                 </LinearLayout>
             </LinearLayout>
+
             <TextView
                 android:id="@+id/advantage_lesson"
                 android:layout_width="@dimen/activity_top_view_height"
                 android:layout_height="@dimen/dialog_padding"
+                android:layout_below="@id/intro_lesson_ll"
+                android:layout_marginTop="@dimen/dialog_icon_margin"
                 android:background="@color/red"
                 android:gravity="center"
-                android:layout_below="@id/intro_lesson_ll"
                 android:text="@string/lesson_introduce_detail"
                 android:textColor="@color/white"
-                android:layout_marginTop="@dimen/dialog_icon_margin"
                 android:textSize="@dimen/text_size_30" />
-            <ListView
+            <!--<ListView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/advantage_lesson"-->
+            <!--android:id="@+id/advantage_lesson_detail"-->
+            <!--android:dividerHeight="@dimen/margin_main"-->
+            <!--android:layout_marginTop="@dimen/margin_main"-->
+            <!--android:scrollbars="none"-->
+            <!--android:divider="@null"-->
+            <!--android:focusable="false"-->
+            <!--&gt;-->
+
+            <!--</ListView>-->
+            <TextView
+                android:id="@+id/lesson_detial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/advantage_lesson"
-                android:id="@+id/advantage_lesson_detail"
-                android:dividerHeight="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_main"
-                android:scrollbars="none"
-                android:divider="@null"
-                android:focusable="false"
-                >
-
-            </ListView>
-            <ImageView
-                android:layout_width="@dimen/margin_main"
-                android:layout_centerHorizontal="true"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/down"
-                android:id="@+id/advantage_lesson_detail_more"
-                android:layout_height="@dimen/margin_main"
-                android:layout_below="@+id/advantage_lesson_detail"
+                android:layout_marginBottom="@dimen/margin_main_middle"
                 android:layout_marginTop="@dimen/margin_main_middle"
-                />
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_size_30" />
 
-
-
-        <ImageView
-        android:layout_width="@dimen/consume_lesson_height"
-        android:layout_height="@dimen/dialog_80_height"
-        android:layout_below="@id/advantage_lesson_detail_more"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/handy_logo"
-            android:id="@+id/handy_loge"
-
-        />
-            <TextView
-                android:layout_width="@dimen/lesson_dialog_use_width"
-                android:layout_height="@dimen/lesson_dialog_use_height"
-                android:textSize="@dimen/text_size_32"
-                android:textColor="@color/almost_white"
-                android:background="@color/red"
-                android:text="@string/how_to_use"
-                android:gravity="center"
-                android:layout_below="@+id/handy_loge"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/how_to_use_chinese"
-                />
-            <TextView
+            <LinearLayout
+                android:id="@+id/tips_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/text_gray"
-                android:gravity="center"
-                android:id="@+id/how_to_use_english"
-                android:layout_below="@+id/how_to_use_chinese"
-                android:text="how to use"
+                android:layout_below="@+id/lesson_detial"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/text_front"
+                    android:layout_height="match_parent"
+                    android:background="@color/red" />
+
+                <TextView
+                    android:id="@+id/advantage_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tips"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/text_size_32"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/tips_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tips_ll"
+                android:layout_marginTop="@dimen/margin_main_middle"
+                android:divider="@null"
+                android:dividerHeight="@dimen/margin_main_middle"
+                android:focusable="false"
+                android:scrollbars="none">
+
+            </ListView>
+            <!--<ImageView-->
+            <!--android:layout_width="@dimen/margin_main"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:src="@drawable/down"-->
+            <!--android:id="@+id/advantage_lesson_detail_more"-->
+            <!--android:layout_height="@dimen/margin_main"-->
+            <!--android:layout_below="@+id/lesson_detial"-->
+            <!--android:layout_marginTop="@dimen/margin_main_middle"-->
+            <!--/>-->
+
+
+            <ImageView
+
+                android:id="@+id/handy_loge"
+                android:layout_width="@dimen/consume_lesson_height"
+                android:layout_height="@dimen/dialog_80_height"
+                android:layout_below="@id/tips_lv"
                 android:layout_centerHorizontal="true"
+                android:src="@drawable/handy_logo"
+
                 />
+
+            <TextView
+                android:id="@+id/how_to_use_chinese"
+                android:layout_width="@dimen/lesson_dialog_use_width"
+                android:layout_height="@dimen/lesson_dialog_use_height"
+                android:layout_below="@+id/handy_loge"
+                android:layout_centerHorizontal="true"
+                android:background="@color/red"
+                android:gravity="center"
+                android:text="@string/how_to_use"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_32" />
+
+            <TextView
+                android:id="@+id/how_to_use_english"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/how_to_use_chinese"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="how to use"
+                android:textColor="@color/text_gray"
+                android:textSize="@dimen/text_size_30" />
         </RelativeLayout>
     </ScrollView>
+
     <ImageView
+        android:id="@+id/btn_delete"
         android:layout_width="@dimen/keyboard_edit_height"
         android:layout_height="@dimen/keyboard_edit_height"
-        android:src="@drawable/close"
-        android:id="@+id/btn_delete"
-        />
+        android:src="@drawable/close" />
 </RelativeLayout>
