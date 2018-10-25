@@ -97,7 +97,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private IndicatorViewAdapter indicatorViewAdapter;
 
     private void getListDate(final boolean isRefresh) {
-        ApiFactory.courseList(Utils.getDate()).subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
+        ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
                 if (isRefresh) {
@@ -127,6 +127,14 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     indicatorViewAdapter.notifyDataSetChanged();
                 }
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                if (isRefresh) {
+                    ((LessonListFragment) indicatorViewAdapter.getCurrentFragment()).swipe.setRefreshing(false);
+                }
             }
         });
 

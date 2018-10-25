@@ -63,22 +63,27 @@ public class PrivateEduViewHolder extends BaseViewHolder<PrivateEduBean> {
         }
         List<String> tagsList = new ArrayList<>();
 
-        for (PriceLevelBean priceLevelBean : data.getPriceLevel()) {
-            tagsList.add(priceLevelBean.getCourseTotal());
-        }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        tagLayout.setLayoutManager(layoutManager);
-        final TagAdapter tagAdapter = new TagAdapter(activity, tagsList);
-        tagAdapter.setIsSeceterPosition(selecterPosition);
-        tagLayout.setAdapter(tagAdapter);
-        tagAdapter.setOnItemClickListner(new TagAdapter.onItemClickLister() {
-            @Override
-            public void OnClickPre(int thisPosition) {
-                tagAdapter.setIsSeceterPosition(thisPosition);
-                selecterPosition=thisPosition;
+
+        if (data.getPriceLevel()!=null){
+            for (PriceLevelBean priceLevelBean : data.getPriceLevel()) {
+                tagsList.add(priceLevelBean.getCourseTotal());
             }
-        });
+            LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            tagLayout.setLayoutManager(layoutManager);
+            final TagAdapter tagAdapter = new TagAdapter(activity, tagsList);
+            tagAdapter.setIsSeceterPosition(selecterPosition);
+            tagLayout.setAdapter(tagAdapter);
+            tagAdapter.setOnItemClickListner(new TagAdapter.onItemClickLister() {
+                @Override
+                public void OnClickPre(int thisPosition) {
+                    tagAdapter.setIsSeceterPosition(thisPosition);
+                    selecterPosition=thisPosition;
+                }
+            });
+
+        }
+
         ViewUtils.setOnClickListener(rootViewLayout, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

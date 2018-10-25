@@ -80,7 +80,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.COURSELIST)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse<List<LessonBean>>> courseList(@Path("app") String app, @Path("courseList") String courseList, @Path("begDate") String begDate, @Header("access-token") String token);
+    Observable<ApiResponse<List<LessonBean>>> courseList(@Path("app") String app, @Path("courseList") String courseList, @Header("access-token") String token);
 
 
     /**
