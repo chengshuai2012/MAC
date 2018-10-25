@@ -18,12 +18,14 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_main"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:textColor="@color/dark_black"
             android:textSize="@dimen/text_size_30" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:visibility="gone"
             android:layout_below="@+id/use_psw"
             android:background="@color/almost_white" />
 
@@ -51,7 +53,6 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:textSize="@dimen/text_size_60"
-         android:text="$:89"
          android:id="@+id/lesson_price"
          android:gravity="center"
          android:textColor="@color/dark_black"

@@ -22,6 +22,7 @@ import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * 作者：qianlu on 2018/10/17 17:17
@@ -30,9 +31,10 @@ import java.util.List;
 public class LessonListFragment extends BaseFragment implements DialogCancelListener {
 
     private List<LessonItemBean> courses;
-    private android.support.v4.widget.SwipeRefreshLayout swipe;
+    public android.support.v4.widget.SwipeRefreshLayout swipe;
     private android.support.v7.widget.RecyclerView recycle;
     private FragmentListener fragmentListener;
+    private DialogUtils dialogUtils;
 
 
     public void setFragmentListener(FragmentListener fragmentListener) {
@@ -47,6 +49,7 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
     public void onInflateView(View contentView) {
         super.onInflateView(contentView);
         initView(contentView);
+        dialogUtils= DialogUtils.getDialogUtils(getActivity(),this);
     }
 
     @Override
@@ -65,6 +68,23 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
         loadMoreAdapter.setOnItemClickListner(new ChooseLesson_Adapter.onItemClickLister() {
             @Override
             public void OnClickCoachImage(int postion) {
+                com.orhanobut.logger.Logger.e(postion+"");
+                String courseReleasePkcode = courses.get(postion).getCourseReleasePkcode();
+                ApiFactory.coursedetail(courseReleasePkcode).subscribe(new ProgressSubscriber<ApiResponse<CoachInfo>>(getActivity()) {
+                    @Override
+                    public void onNext(ApiResponse<CoachInfo> coachInfoApiResponse) {
+                        super.onNext(coachInfoApiResponse);
+                        View view = View.inflate(getActivity(),R.layout.coach_dialog,null);
+                        dialogUtils = DialogUtils.getDialogUtils(getActivity(), LessonListFragment.this);
+                        dialogUtils.showIntroCoachDialog(view,coachInfoApiResponse.getData());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        dialogUtils.dissMiss();
+                    }
+                });
 
             }
 
@@ -83,7 +103,13 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
                     public void onNext(ApiResponse<CoachInfo> coachInfoApiResponse) {
                         super.onNext(coachInfoApiResponse);
                         View view = View.inflate(getActivity(),R.layout.lesson_dialog,null);
-                        DialogUtils.getDialogUtils(getActivity(),LessonListFragment.this).showIntroLessonDialog(view,coachInfoApiResponse.getData());
+                        dialogUtils.showIntroLessonDialog(view,coachInfoApiResponse.getData());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        dialogUtils.dissMiss();
                     }
                 });
             }
@@ -102,6 +128,11 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
 
     @Override
     public void dialogCancel() {
+
+    }
+
+    @Override
+    public void onVenuePay() {
 
     }
 }

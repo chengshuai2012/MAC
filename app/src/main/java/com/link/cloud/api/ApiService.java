@@ -250,6 +250,14 @@ public interface ApiService {
     @POST(ApiConstants.PREBUYPRIVATECOURSE)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse> prebuyprivatecourse(@Path("app") String app, @Path("prebuyPrivateCourse") String prebuyPrivateCourse,@Path("courseReleasePkcode") String courseReleasePkcode,@Path("level") String level ,@Header("access-token") String token);
-
-
+    /**
+     * 余额支付
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @POST(ApiConstants.BUYBYREST)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> payByRest(@Path("app") String app, @Path("balanceBuyCourse") String balanceBuyCourse,@Path("courseReleasePkcode")  String courseReleasePkcode, @Path("uuid") String uuid,@Header("access-token") String token);
 }

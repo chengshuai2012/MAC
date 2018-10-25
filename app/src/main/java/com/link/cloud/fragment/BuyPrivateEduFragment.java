@@ -151,4 +151,9 @@ public class BuyPrivateEduFragment extends BaseFragment implements DialogCancelL
     public void dialogCancel() {
 
     }
+
+    @Override
+    public void onVenuePay() {
+
+    }
 }

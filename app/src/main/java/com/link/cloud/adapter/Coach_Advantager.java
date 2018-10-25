@@ -16,16 +16,16 @@ import java.util.List;
  * Created by OFX002 on 2018/9/25.
  */
 
-public class Lesson_Advantager extends BaseAdapter{
-    List<CoachInfo.StoreCoachIntroduceBean.GoodCourseBean> data = new ArrayList();
+public class Coach_Advantager extends BaseAdapter{
+    List<CoachInfo.StoreCoachIntroduceBean.CertificateListBean> data = new ArrayList();
     Context mContext;
-    public Lesson_Advantager(Context mContext, List <CoachInfo.StoreCoachIntroduceBean.GoodCourseBean>list){
+    public Coach_Advantager(Context mContext, List <CoachInfo.StoreCoachIntroduceBean.CertificateListBean>list){
         data.clear();
         data.addAll(list);
         this.mContext =mContext;
     }
 
-    public void setData(List<CoachInfo.StoreCoachIntroduceBean.GoodCourseBean> data) {
+    public void setData(List<CoachInfo.StoreCoachIntroduceBean.CertificateListBean> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -47,11 +47,9 @@ public class Lesson_Advantager extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View inflate = View.inflate(mContext, R.layout.advantage_lesson_item, null);
+        View inflate = View.inflate(mContext, R.layout.certify_item, null);
         TextView message = inflate.findViewById(R.id.message);
-        TextView advantage_name = inflate.findViewById(R.id.advantage_name);
         message.setText(data.get(position).getText());
-        advantage_name.setText(data.get(position).getGoods());
         return inflate;
     }
 }

@@ -6,4 +6,6 @@ package com.link.cloud.listener;
 
  public interface DialogCancelListener {
      void dialogCancel();
+
+    void onVenuePay();
 }

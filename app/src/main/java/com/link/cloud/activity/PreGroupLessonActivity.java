@@ -1,13 +1,17 @@
 package com.link.cloud.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,23 +25,31 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.bean.People;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.PublicTitleView;
+import com.orhanobut.logger.Logger;
 import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
 import java.util.Hashtable;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.iwgang.countdownview.CountdownView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by OFX002 on 2018/9/26.
@@ -139,10 +151,17 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     LinearLayout payZhifubao;
     @BindView(R.id.pre)
     TextView pre;
+    @BindView(R.id.pay_restTime)
+    CountdownView payRestTime;
     private PublicTitleView publicTitle;
     private DialogUtils dialogUtils;
     private String courseReleasePkcode;
     private LessonItemBean lessonItemBean;
+    Realm realm;
+    String uuid;
+    private int minute;
+    private int second;
+    private long payRest;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -162,15 +181,15 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
         verifyCode.setShowSoftInputOnFocus(false);
         inputTel.setShowSoftInputOnFocus(false);
-        wechatPrice.setText(lessonItemBean.getCourseReleaseMoney()+"元");
-        zhifubaoPrice.setText(lessonItemBean.getCourseReleaseMoney()+"元");
-        handyPrice.setText(lessonItemBean.getCourseReleaseMoney()+"元");
-        lessonName.setText(lessonItemBean.getFitnessCourseName()+"");
-        address.setText(getResources().getString(R.string.address)+lessonItemBean.getAddress());
-        lessonTime.setText(getResources().getString(R.string.time)+lessonItemBean.getCoursePlanBegtime());
-        peopleCount.setText(lessonItemBean.getNum()+"人");
+        wechatPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
+        zhifubaoPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
+        handyPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
+        lessonName.setText(lessonItemBean.getFitnessCourseName() + "");
+        address.setText(getResources().getString(R.string.address) + lessonItemBean.getAddress());
+        lessonTime.setText(getResources().getString(R.string.time) + lessonItemBean.getCoursePlanBegtime());
+        peopleCount.setText(lessonItemBean.getNum() + "人");
+        realm = Realm.getDefaultInstance();
     }
-
 
 
     public void setHintSize(EditText editText, int size, String hint) {
@@ -212,14 +231,14 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
                 if (inputTel.isFocused()) {
-                    if (builder.length() <= 11) {
+                    if (builder.length() <11) {
                         builder.append(((TextView) v).getText());
                         inputTel.setText(builder.toString());
                         inputTel.setSelection(builder.length());
                     }
 
                 } else {
-                    if (verify.length() <= 11) {
+                    if (verify.length() < 11) {
                         verify.append(((TextView) v).getText());
                         verifyCode.setText(verify.toString());
                         verifyCode.setSelection(verify.length());
@@ -265,7 +284,16 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                             registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                             registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
                             loginWay.setText(getResources().getString(R.string.choose_pay));
+                            uuid = apiResponse.getData().getUuid();
                             edituserRequest = apiResponse.getData();
+                            long time = (long) 4 * 60 * 1000;
+                            payRestTime.start(time);
+                            payRestTime.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                                @Override
+                                public void onEnd(CountdownView cv) {
+                                    finish();
+                                }
+                            });
                         }
                     });
 
@@ -279,25 +307,33 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                 dialogUtils.showPreDialog(pre);
                 break;
             case R.id.pay_wechat:
+                minute = payRestTime.getMinute();
+                second = payRestTime.getSecond();
+                payRest = (minute *60+ second)*1000;
+                Logger.e(payRest+"");
                 ApiFactory.getBuyQrcode(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                     @Override
                     public void onNext(ApiResponse apiResponse) {
                         super.onNext(apiResponse);
                         View pay_wechat = View.inflate(PreGroupLessonActivity.this, R.layout.pay_dialog, null);
-                        long time = (long) 4 * 60 * 1000;
-                        dialogUtils.showPayDialog(pay_wechat, Utils.createQRCode((String) apiResponse.getData(), 220),"12",getString(R.string.work_intro),time);
+                        dialogUtils.showPayDialog(pay_wechat, Utils.createQRCode((String) apiResponse.getData(), 220), lessonItemBean.getCourseReleaseMoney(), getString(R.string.work_intro_wechat), payRest);
                     }
                 });
 
                 break;
             case R.id.pay_zhifubao:
+                minute = payRestTime.getMinute();
+                second = payRestTime.getSecond();
+                payRest =  (minute *60+ second)*1000;
                 View pay_zhifubao = View.inflate(this, R.layout.pay_dialog, null);
-                long time = (long) 4 * 60 * 1000;
-                dialogUtils.showPayDialog(pay_zhifubao, null,"12",getString(R.string.work_intro),time);
+                dialogUtils.showPayDialog(pay_zhifubao, null, "12", getString(R.string.work_intro), payRest);
                 break;
             case R.id.handy_pay:
+                minute = payRestTime.getMinute();
+                second = payRestTime.getSecond();
+                payRest = minute *60+ second;
                 View handy_pay = View.inflate(this, R.layout.pay_conform_dialog, null);
-                dialogUtils.showHanyPayDialog(handy_pay);
+                dialogUtils.showHanyPayDialog(handy_pay, "￥" + lessonItemBean.getCourseReleaseMoney());
                 break;
             case R.id.send:
                 tel_num = inputTel.getText().toString();
@@ -321,7 +357,63 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     @Override
     public void dialogCancel() {
         finish();
+        Logger.e("dialogCancel: " );
     }
 
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 3:
+                    int state = MacApplication.getVenueUtils().getState();
+                    Logger.e("onVenuePay"+state);
+                    if (state == 3) {
+                        RealmResults<People> all = realm.where(People.class).equalTo("uuid", uuid).findAll();
+                        Logger.e(all.size()+"");
+                        Logger.e(uuid+"");
+                        final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
+                        if (uuid.equals(uid)) {
+                            ApiFactory.payByRest(courseReleasePkcode,uid).subscribe(new ProgressSubscriber<ApiResponse>(PreGroupLessonActivity.this) {
+                                @Override
+                                public void onNext(ApiResponse apiResponse) {
+                                    super.onNext(apiResponse);
+                                    View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_ok_dialog, null);
+                                    dialogUtils.showVeuneOkDialog(view);
+                                }
 
+                                @Override
+                                public void onError(Throwable e) {
+                                    super.onError(e);
+                                    View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
+                                    dialogUtils.showVeunePayFailDialog(view,getResources().getString(R.string.please_confirm_bind));
+                                }
+                            });
+                        } else {
+                            View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
+                            dialogUtils.showVeunePayFailDialog(view,getResources().getString(R.string.please_confirm_bind));
+//                            View view = View.inflate(PreGroupLessonActivity.this, R.layout.verify_fail, null);
+//                            dialogUtils.showVeuneFailDialog(view, getString(R.string.verify_fail));
+                        }
+                    }
+                    handler.sendEmptyMessageDelayed(3, 1000);
+                    break;
+            }
+
+        }
+    };
+
+    @Override
+    public void onVenuePay() {
+        Logger.e("onVenuePay");
+        handler.sendEmptyMessage(3);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        handler.removeMessages(3);
+    }
 }

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginTop="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_left_register"
         android:paddingLeft="@dimen/dialog_padding"
         android:paddingBottom="@dimen/margin_main_middle"
         android:paddingTop="@dimen/margin_main_middle"
@@ -22,6 +22,7 @@
             >
             
             <TextView
+                android:layout_marginTop="@dimen/margin_main"
                 android:id="@+id/coach_introduce"
                 android:layout_width="@dimen/activity_top_view_height"
                 android:layout_height="@dimen/dialog_padding"
@@ -36,8 +37,9 @@
                 android:id="@+id/dialog_big_image"
                 android:layout_height="@dimen/dialog_imageView_height"
                 android:layout_below="@+id/coach_introduce"
+                android:scaleType="fitXY"
                 android:layout_marginTop="@dimen/margin_main_middle"
-                android:background="@drawable/coach_main_img" />
+             />
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/coach_image"
@@ -105,39 +107,43 @@
                 android:layout_below="@+id/advantage_lesson"
                 android:id="@+id/advantage_lesson_detail"
                 android:dividerHeight="@dimen/margin_main"
-                android:layout_marginTop="@dimen/margin_main"
+                android:layout_marginTop="@dimen/margin_main_middle"
                 android:scrollbars="none"
                 android:divider="@null"
                 android:focusable="false"
                 >
 
             </ListView>
-            <ImageView
-                android:layout_width="@dimen/margin_main"
-                android:layout_centerHorizontal="true"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/down"
-                android:id="@+id/advantage_lesson_detail_more"
-                android:layout_height="@dimen/margin_main"
-                android:layout_below="@+id/advantage_lesson_detail"
-                android:layout_marginTop="@dimen/margin_main_middle"
-                />
+            <!--<ImageView-->
+                <!--android:layout_width="@dimen/margin_main"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:contentDescription="@string/app_name"-->
+                <!--android:src="@drawable/down"-->
+                <!--android:id="@+id/advantage_lesson_detail_more"-->
+                <!--android:layout_height="@dimen/margin_main"-->
+                <!--android:layout_below="@+id/advantage_lesson_detail"-->
+                <!--android:layout_marginTop="@dimen/margin_main_middle"-->
+                <!--/>-->
             <TextView
                 android:id="@+id/coach_verify"
                 android:layout_width="@dimen/activity_top_view_height"
                 android:layout_height="@dimen/dialog_padding"
                 android:background="@color/red"
                 android:gravity="center"
-                android:layout_below="@id/advantage_lesson_detail_more"
+                android:layout_below="@id/advantage_lesson_detail"
                 android:text="@string/coach_verify"
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/dialog_icon_margin"
                 android:textSize="@dimen/text_size_30" />
             <ListView
+                android:layout_marginTop="@dimen/margin_main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/coach_verify"
                 android:id="@+id/coach_verify_detail"
+                android:scrollbars="none"
+                android:divider="@null"
+                android:focusable="false"
                 >
 
             </ListView>

@@ -236,6 +236,15 @@ public class ApiFactory {
     public static Observable<ApiResponse> prebuyPrivateCourse(String courseReleasePkcode,String level) {
         return getApiService().prebuyprivatecourse("app", "prebuyPrivateCourse", courseReleasePkcode, level, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+/**
+     * 余额支付
+     *
+     * @return
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     */
+    public static Observable<ApiResponse> payByRest(String courseReleasePkcode,String uuid) {
+        return getApiService().payByRest("app", "balanceBuyCourse", courseReleasePkcode, uuid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
 
 
 //    /**

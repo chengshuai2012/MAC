@@ -94,34 +94,44 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private ArrayList<GroupLessonUser.UserInfosBean> groupInUserList = new ArrayList<>();
     RealmResults<FingerprintsBean> userBeans;
     private String courseReleasePkcode;
+    private IndicatorViewAdapter indicatorViewAdapter;
 
-    private void getListDate() {
+    private void getListDate(final boolean isRefresh) {
         ApiFactory.courseList(Utils.getDate()).subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
+                if (isRefresh) {
+                    ((LessonListFragment) indicatorViewAdapter.getCurrentFragment()).swipe.setRefreshing(false);
+                }
                 if (!date.isEmpty()) {
                     date.clear();
                     fragmentList.clear();
                 }
                 for (LessonBean lessonBean : response.getData()) {
-                    date.add("    "+lessonBean.getDate().substring(5)+"    ");
+                    date.add("    " + lessonBean.getDate().substring(5) + "    ");
                     LessonListFragment lessonListFragment = new LessonListFragment();
                     lessonListFragment.setCourses(lessonBean.getCourses());
                     lessonListFragment.setFragmentListener(new FragmentListener() {
                         @Override
                         public void OnRefreshListener() {
-                            getListDate();
+                            getListDate(true);
                         }
                     });
                     fragmentList.add(lessonListFragment);
-
                 }
-                IndicatorViewAdapter indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
-                indicatorViewPager.setAdapter(indicatorViewAdapter);
+
+                if (indicatorViewAdapter == null) {
+                    indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
+                    indicatorViewPager.setAdapter(indicatorViewAdapter);
+                } else {
+                    indicatorViewAdapter.notifyDataSetChanged();
+                }
+
             }
         });
 
     }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -145,35 +155,41 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             public void onAnimationUpdate(ValueAnimator animation) {
                 int state = MacApplication.getVenueUtils().getState();
                 if (state == 3) {
-                        final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
-                    ApiFactory.admissionCourse(uid,courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
-                        @Override
-                        public void onNext(ApiResponse apiResponse) {
-                            super.onNext(apiResponse);
-                            onVeuenMsg(uid,"");
-                        }
+                    final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
+                    if (uid != null) {
+                        ApiFactory.admissionCourse(uid, courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
+                            @Override
+                            public void onNext(ApiResponse apiResponse) {
+                                super.onNext(apiResponse);
+                                onVeuenMsg(uid, "");
+                                loadMoreAdapter.notifyDataSetChanged();
+                            }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            super.onError(e);
-                            onVeuenMsg(null,e.getMessage());
-                        }
-                    });
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                onVeuenMsg(null, e.getMessage());
+                            }
+                        });
+                    } else {
+                        View view = View.inflate(MainActivity.this, R.layout.verify_fail, null);
+                        dialogUtils.showVeuneFailDialog(view, getResources().getString(R.string.please_confirm_bind));
+                    }
 
                 }
-                if((int)(animation.getAnimatedValue())>=79){
+                if ((int) (animation.getAnimatedValue()) >= 79) {
                     animator.setCurrentPlayTime(0);
                 }
             }
         });
-        animator.setDuration(400);
+        animator.setDuration(4000);
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                nettyClientBootstrap = new NettyClientBootstrap(MainActivity.this,MainActivity. this,TCP_PORT, TCP_URL,"{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\""+User.get().getToken()+"\"}");
+                nettyClientBootstrap = new NettyClientBootstrap(MainActivity.this, MainActivity.this, TCP_PORT, TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
                 nettyClientBootstrap.start();
-                SendMsgToTcp("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\""+User.get().getToken()+"\"}");
+                SendMsgToTcp("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
             }
         };
         service.execute(runnable);
@@ -185,9 +201,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         scrollIndicatorView.setScrollBar(new SpringBar(this, getResources().getColor(R.color.red)));
         indicatorViewPager = new IndicatorViewPager(scrollIndicatorView, viewPager);
         fragmentManager = getSupportFragmentManager();
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        getListDate();
+        getListDate(false);
     }
 
 
@@ -195,7 +211,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.red));
         groupInList.clear();
         getGroupData();
-        loadMoreAdapter = new GroupLesson_Adapter(groupInUserList,this);
+        loadMoreAdapter = new GroupLesson_Adapter(groupInUserList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(loadMoreAdapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -220,7 +236,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             public void onNext(ApiResponse<ArrayList<GroupLessonInResource>> arrayListApiResponse) {
                 super.onNext(arrayListApiResponse);
                 groupInList.addAll(arrayListApiResponse.getData());
-                if(arrayListApiResponse.getData().size()>0){
+                if (arrayListApiResponse.getData().size() > 0) {
                     coachName.setText(arrayListApiResponse.getData().get(0).getStoreCoachName());
                     lessonName.setText(arrayListApiResponse.getData().get(0).getFitnessCourseName());
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
@@ -244,26 +260,28 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
     }
-    public void onVeuenMsg(String uid,String msg){
-        if(TextUtils.isEmpty(uid)){
-            View view =View.inflate(this,R.layout.verify_fail,null);
-            dialogUtils.showVeuneFailDialog(view,msg);
-        }else {
-            View view =View.inflate(this,R.layout.verify_success,null);
-            dialogUtils.showVeuneOkDialog(view);
+
+    public void onVeuenMsg(String uid, String msg) {
+        if (TextUtils.isEmpty(uid)) {
+            View view = View.inflate(this, R.layout.verify_fail, null);
+            dialogUtils.showVeuneFailDialog(view, msg);
+        } else {
+            View view = View.inflate(this, R.layout.verify_success, null);
+            dialogUtils.showVeuneInOkDialog(view);
         }
-        handler.sendEmptyMessageDelayed(0,3000);
+        handler.sendEmptyMessageDelayed(0, 3000);
     }
+
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
-                dialogUtils.dissMiss();
-                animator.start();
-                break;
+                    dialogUtils.dissMiss();
+                    animator.start();
+                    break;
                 case 1:
                     int state = MacApplication.getVenueUtils().getState();
                     if (state == 3) {
@@ -276,15 +294,17 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             }
                         });
                     }
-                    handler.sendEmptyMessageDelayed(1,1000);
+                    handler.sendEmptyMessageDelayed(1, 1000);
                     break;
             }
 
         }
     };
-    protected void  SendMsgToTcp(String msg){
+
+    protected void SendMsgToTcp(String msg) {
         nettyClientBootstrap.startNetty(msg);
     }
+
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
     public void onClick(View v) {
 
@@ -298,7 +318,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.text_gray));
                 break;
             case R.id.manager:
-                handler.sendEmptyMessageDelayed(1,1000);
+                handler.sendEmptyMessageDelayed(1, 1000);
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
                 dialogUtils.showManagerDialog(view);
                 manager.setBackground(getResources().getDrawable(R.drawable.border_red));
@@ -308,7 +328,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.lesson_in:
                 animator.start();
-
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.almost_white));
@@ -319,6 +338,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.choose_lesson:
                 animator.end();
+                getListDate(false);
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));
@@ -343,6 +363,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -351,8 +372,20 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         manager.setBackground(null);
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
-        animator.end();
         handler.removeMessages(1);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(group_lesson_fragment.isFocusable()){
+            animator.start();
+        }
+    }
+
+    @Override
+    public void onVenuePay() {
+
     }
 
 }

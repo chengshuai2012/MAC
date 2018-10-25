@@ -295,12 +295,28 @@
                             android:id="@+id/pay_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_toLeftOf="@+id/pay_restTime"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="@dimen/dialog_padding"
+                            android:layout_marginRight="@dimen/margin_main_middle"
                             android:text="@string/pay_time"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_36" />
+                        <cn.iwgang.countdownview.CountdownView
+                            android:id="@+id/pay_restTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:isShowDay="false"
+                            app:isShowHour="false"
+                            app:isShowMillisecond="false"
+                            app:isShowMinute="true"
+                            app:isShowSecond="true"
+                            app:suffixMinute="@string/minute"
+                            android:layout_alignParentRight="true"
+                            app:suffixSecond="@string/second"
+                            app:suffixTextColor="@color/white"
+                            app:suffixTextSize="@dimen/text_size_36"
+                            app:timeTextColor="@color/white"
+                            app:timeTextSize="@dimen/text_size_36" />
                     </RelativeLayout>
 
                     <LinearLayout

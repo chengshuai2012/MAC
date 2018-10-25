@@ -8,9 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_main"
-        android:layout_marginTop="@dimen/margin_main"
+        android:layout_marginTop="@dimen/margin_left_register"
         android:background="@drawable/message_border"
         android:paddingBottom="@dimen/margin_main_middle"
+        android:id="@+id/scrollView"
         android:paddingLeft="@dimen/dialog_padding"
         android:paddingTop="@dimen/margin_main_middle">
 
@@ -20,6 +21,7 @@
             android:paddingRight="@dimen/dialog_padding">
 
             <TextView
+                android:layout_marginTop="@dimen/margin_main"
                 android:id="@+id/coach_introduce"
                 android:layout_width="@dimen/activity_top_view_height"
                 android:layout_height="@dimen/dialog_padding"
@@ -205,8 +207,8 @@
                 android:layout_height="@dimen/dialog_80_height"
                 android:layout_below="@id/tips_lv"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/handy_logo"
-
+                android:src="@drawable/handy_red"
+                android:layout_marginBottom="@dimen/margin_main_middle"
                 />
 
             <TextView

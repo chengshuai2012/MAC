@@ -65,7 +65,15 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-            recyclerViewHolder.memeber_name.setText(dataList.get(position).getPhone());
+            recyclerViewHolder.memeber_name.setText(dataList.get(position).getNickname());
+            recyclerViewHolder.tel_member.setText(dataList.get(position).getPhone());
+            if(dataList.get(position).getStatus()==0){
+                recyclerViewHolder.status_not_in.setText(activity.getResources().getString(R.string.status_not_in));
+                recyclerViewHolder.status_not_in.setBackground(activity.getResources().getDrawable(R.drawable.border_red_gradient));
+            }else {
+                recyclerViewHolder.status_not_in.setText(activity.getResources().getString(R.string.status_in));
+                recyclerViewHolder.status_not_in.setBackground(activity.getResources().getDrawable(R.drawable.border_gray_gradient));
+            }
         }
 //        } else if (holder instanceof FootViewHolder) {
 //            FootViewHolder footViewHolder = (FootViewHolder) holder;
@@ -120,6 +128,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LinearLayout lesson_in;
         TextView status_not_in;
         TextView memeber_name;
+        TextView tel_member;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -127,6 +136,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             lesson_in = (LinearLayout) itemView.findViewById(R.id.lesson_in);
             status_not_in = (TextView) itemView.findViewById(R.id.status_not_in);
             memeber_name = (TextView) itemView.findViewById(R.id.memeber_name);
+            tel_member = (TextView) itemView.findViewById(R.id.tel_member);
         }
     }
 

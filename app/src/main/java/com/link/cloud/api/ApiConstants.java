@@ -64,6 +64,9 @@ public class ApiConstants {
     //获取购买私教课程支付信息
     public static final String PREBUYPRIVATECOURSE = "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
 
+    //余额支付
+    public static final String BUYBYREST = "{app}/{balanceBuyCourse}/{uuid}/{courseReleasePkcode}";
+
 
 
 

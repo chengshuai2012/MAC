@@ -199,14 +199,14 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
                 if (inputTel.isFocused()) {
-                    if (builder.length() <= 11) {
+                    if (builder.length() < 11) {
                         builder.append(((TextView) v).getText());
                         inputTel.setText(builder.toString());
                         inputTel.setSelection(builder.length());
                     }
 
                 } else {
-                    if (verify.length() <= 11) {
+                    if (verify.length() < 11) {
                         verify.append(((TextView) v).getText());
                         verifyCode.setText(verify.toString());
                         verifyCode.setSelection(verify.length());

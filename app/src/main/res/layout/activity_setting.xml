@@ -1,135 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<RelativeLayout
-android:layout_width="match_parent"
-android:layout_height="@dimen/activity_top_view_height"
-android:background="@color/red">
 
-<ImageView
-    android:layout_width="@dimen/main_image_width"
-    android:layout_height="@dimen/main_image_height"
-    android:layout_centerInParent="true"
-    android:src="@drawable/handy_logo" />
-
-<LinearLayout
-    android:layout_width="@dimen/text_width_main"
-    android:layout_height="@dimen/text_height_main"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="@dimen/margin_main"
-    android:layout_marginTop="@dimen/margin_main"
-    android:background="@drawable/border_member"
-    android:orientation="horizontal"
-    android:padding="2dp">
-
-    <TextView
-        android:id="@+id/member"
-        style="@style/TextView_Top_Main"
-
-        android:text="@string/member"
-        android:textColor="@color/dark_black" />
-
-    <TextView
-        android:id="@+id/manager"
-        style="@style/TextView_Top_Main"
-        android:text="@string/manager"
-        android:textColor="@color/almost_white"
-        android:background="@drawable/border_red"/>
-</LinearLayout>
-</RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/setting_text_black"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:layout_above="@+id/open_or_close"
-            android:text="@string/device_id"
-            android:textSize="@dimen/text_size_60"
-            android:layout_marginBottom="@dimen/margin_main"
-            />
-        <LinearLayout
-            android:background="@drawable/manager_text_bg"
-            android:layout_width="@dimen/setting_text_view_width"
-            android:layout_height="100px"
-            android:id="@+id/open_or_close"
-            android:layout_above="@+id/back_system_setting"
-            android:layout_centerHorizontal="true"
+        android:layout_height="@dimen/activity_top_view_height"
+        android:background="@color/red">
 
-            >
+        <ImageView
+            android:layout_width="@dimen/main_image_width"
+            android:layout_height="@dimen/main_image_height"
+            android:layout_centerInParent="true"
+            android:src="@drawable/handy_logo" />
+
         <LinearLayout
-            android:layout_width="@dimen/setting_text_view_width"
-            android:layout_height="@dimen/setting_text_view_height"
+            android:layout_width="@dimen/text_width_main"
+            android:layout_height="@dimen/text_height_main"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_main"
+            android:background="@drawable/border_member"
             android:orientation="horizontal"
-            android:layout_above="@+id/back_system_setting"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="8px"
-            android:paddingBottom="8px"
-            android:gravity="center">
+            android:padding="2dp">
 
             <TextView
-                android:id="@+id/open"
-                android:layout_width="@dimen/card_imageView_height"
-                android:layout_height="match_parent"
-                android:text="@string/open_door"
-                android:textSize="@dimen/text_size_28"
-                android:gravity="center"
+                android:id="@+id/member"
+                style="@style/TextView_Top_Main"
+
+                android:text="@string/member"
                 android:textColor="@color/dark_black" />
 
             <TextView
-                android:id="@+id/close"
-                android:layout_width="@dimen/card_imageView_height"
-                android:layout_height="match_parent"
-                android:textSize="@dimen/text_size_28"
-                android:gravity="center"
-                android:text="@string/close_door"
-                android:textColor="@color/almost_white"
-                android:background="@drawable/border_red_gradient"/>
+                android:id="@+id/manager"
+                style="@style/TextView_Top_Main"
+                android:background="@drawable/border_red"
+                android:text="@string/manager"
+                android:textColor="@color/almost_white" />
         </LinearLayout>
-        </LinearLayout>
-        <TextView
-            android:background="@drawable/manager_text_bg"
-            android:layout_width="@dimen/setting_text_view_width"
-            android:layout_height="100px"
-            android:textColor="@color/setting_text_black"
-            android:paddingTop="10px"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:id="@+id/back_system_setting"
-            android:text="@string/back_system"
-            android:textSize="@dimen/text_size_32"
-            />
-        <TextView
-            android:background="@drawable/manager_text_bg"
-            android:layout_width="@dimen/setting_text_view_width"
-            android:layout_height="100px"
-            android:textColor="@color/setting_text_black"
-            android:paddingTop="10px"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:id="@+id/back_app"
-            android:text="@string/back_app"
-            android:layout_below="@+id/back_system_setting"
-            android:textSize="@dimen/text_size_32"
-            />
-        <TextView
-            android:background="@drawable/manager_text_bg"
-            android:layout_width="@dimen/setting_text_view_width"
-            android:layout_height="100px"
-            android:textColor="@color/setting_text_black"
-            android:paddingTop="10px"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:id="@+id/back_system_main"
-            android:text="@string/back_system_main"
-            android:textSize="@dimen/text_size_32"
-            android:layout_below="@+id/back_app"
-            />
     </RelativeLayout>
 
-    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/open_or_close"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/margin_main"
+            android:gravity="center_horizontal"
+            android:text="@string/device_id"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_60" />
+
+        <LinearLayout
+            android:id="@+id/open_or_close"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:layout_above="@+id/back_system_setting"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/manager_text_bg"
+
+            >
+
+            <LinearLayout
+                android:layout_width="@dimen/setting_text_view_width"
+                android:layout_height="@dimen/setting_text_view_height"
+                android:layout_above="@+id/back_system_setting"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="8px"
+                android:paddingTop="8px">
+
+                <TextView
+                    android:id="@+id/open"
+                    android:layout_width="@dimen/card_imageView_height"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/open_door"
+                    android:textColor="@color/dark_black"
+                    android:textSize="@dimen/text_size_28" />
+
+                <TextView
+                    android:id="@+id/close"
+                    android:layout_width="@dimen/card_imageView_height"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_red_gradient"
+                    android:gravity="center"
+                    android:text="@string/close_door"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_28" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/back_system_setting"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:layout_centerInParent="true"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_system"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/back_app"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:layout_below="@+id/back_system_setting"
+            android:layout_centerInParent="true"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_app"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+
+        <TextView
+            android:id="@+id/back_system_main"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:layout_below="@+id/back_app"
+            android:layout_centerInParent="true"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/back_system_main"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+    </RelativeLayout>
+
+</LinearLayout>

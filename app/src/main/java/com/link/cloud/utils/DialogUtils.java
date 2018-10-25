@@ -13,12 +13,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.link.cloud.R;
 import com.link.cloud.activity.RegisterActivity;
 import com.link.cloud.activity.SettingActivity;
+import com.link.cloud.adapter.Coach_Advantager;
 import com.link.cloud.adapter.Lesson_Advantager;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Black;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Gray;
@@ -55,7 +57,7 @@ public class DialogUtils implements View.OnClickListener {
     private ImageView ivMoreLine;
     private ListView advantage_lesson_detail;
 
-    private DialogUtils(Activity context,DialogCancelListener listener) {
+    private DialogUtils(Activity context, DialogCancelListener listener) {
         this.listener = listener;
         this.context = context;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -66,13 +68,13 @@ public class DialogUtils implements View.OnClickListener {
 
     private static DialogUtils dialogUtils;
 
-    public static synchronized DialogUtils getDialogUtils(Activity context,DialogCancelListener listener) {
+    public static synchronized DialogUtils getDialogUtils(Activity context, DialogCancelListener listener) {
         if (dialogUtils == null) {
-            dialogUtils = new DialogUtils(context,listener);
-        }else {
-            dialogUtils=null;
+            dialogUtils = new DialogUtils(context, listener);
+        } else {
+            dialogUtils = null;
             System.gc();
-            dialogUtils = new DialogUtils(context,listener);
+            dialogUtils = new DialogUtils(context, listener);
         }
         return dialogUtils;
     }
@@ -151,12 +153,13 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
-        TextView cancel = view.findViewById(R.id.cancel);
+        ImageView close_pay_veune = view.findViewById(R.id.close_pay_veune);
+        TextView cancel_buy_group_lesson = view.findViewById(R.id.cancel_buy_group_lesson);
         TextView psw_login = view.findViewById(R.id.psw_pay);
         ImageView close = view.findViewById(R.id.close);
-        cancel.setOnClickListener(this);
+        close_pay_veune.setOnClickListener(this);
+        cancel_buy_group_lesson.setOnClickListener(this);
         psw_login.setOnClickListener(this);
-        close.setOnClickListener(this);
         params.leftMargin = 30;
         window.setContentView(view, params);
     }
@@ -174,7 +177,7 @@ public class DialogUtils implements View.OnClickListener {
         window.setContentView(view, params);
     }
 
-    public void showPayDialog(View view, Bitmap bitmap,String payment,String payString,long time) {
+    public void showPayDialog(View view, Bitmap bitmap, String payment, String payString, long time) {
         dialog.show();
         ImageView close_pay = view.findViewById(R.id.close_pay);
         ImageView qrcode = view.findViewById(R.id.qrcode);
@@ -186,7 +189,7 @@ public class DialogUtils implements View.OnClickListener {
         payTyte.setText(payString);
         qrcode.setImageBitmap(bitmap);
         close_pay.setOnClickListener(this);
-        money.setText(payment);
+        money.setText(payment + "元");
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
@@ -200,7 +203,22 @@ public class DialogUtils implements View.OnClickListener {
         });
 
     }
+
     public void showVeuneOkDialog(View view) {
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        ImageView close_pay_veune = view.findViewById(R.id.close_pay);
+        TextView back_home = view.findViewById(R.id.back_home);
+        dialog.setCancelable(true);
+        back_home.setOnClickListener(this);
+        close_pay_veune.setOnClickListener(this);
+        dialog.setCanceledOnTouchOutside(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 569);
+        params.leftMargin = 30;
+        window.setContentView(view, params);
+    }
+    public void showVeuneInOkDialog(View view) {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -210,7 +228,7 @@ public class DialogUtils implements View.OnClickListener {
         params.leftMargin = 30;
         window.setContentView(view, params);
     }
-    public void showVeuneFailDialog(View view,String msg) {
+    public void showVeuneFailDialog(View view, String msg) {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
@@ -227,16 +245,35 @@ public class DialogUtils implements View.OnClickListener {
         window.setContentView(view, params);
     }
 
-    public void showHanyPayDialog(View view) {
+    public void showVeunePayFailDialog(View view, String msg) {
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        TextView no_bind = view.findViewById(R.id.pay_no_bind);
+        TextView verify_you_have_bind = view.findViewById(R.id.verify_you_have_bind);
+        verify_you_have_bind.setText(msg);
+        no_bind.setOnClickListener(this);
+        TextView has_bind = view.findViewById(R.id.pay_has_bind);
+        has_bind.setOnClickListener(this);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 630);
+        params.leftMargin = 30;
+        window.setContentView(view, params);
+    }
+
+    public void showHanyPayDialog(View view, String money) {
         dialog.show();
         ImageView close_pay = view.findViewById(R.id.close_pay);
         TextView confirm_pay = view.findViewById(R.id.confirm_pay);
+        TextView lesson_price = view.findViewById(R.id.lesson_price);
         close_pay.setOnClickListener(this);
         confirm_pay.setOnClickListener(this);
         Window window = dialog.getWindow();
+        lesson_price.setText(money);
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 467);
-        params.leftMargin =30;
+        params.leftMargin = 30;
         window.setContentView(view, params);
     }
 
@@ -286,29 +323,34 @@ public class DialogUtils implements View.OnClickListener {
     boolean isInit = false;
     boolean isShowShortText = false;
     Activity context;
-ArrayList<String> list;
+    ArrayList<String> list;
+
     public void showIntroCoachDialog(View view, CoachInfo coachInfo) {
         dialog.show();
         FrameLayout fl_desc = (FrameLayout) view.findViewById(R.id.fl_desc);
         tv_desc_short = (TextView) view.findViewById(R.id.tv_desc_short);
         tv_desc_long = (TextView) view.findViewById(R.id.tv_desc_long);
         ivMoreLine = (ImageView) view.findViewById(R.id.iv_more_line);
-        ImageView  btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
-        ImageView  advantage_lesson_detail_more = (ImageView) view.findViewById(R.id.advantage_lesson_detail_more);
+        ImageView btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
+        ImageView dialog_big_image = (ImageView) view.findViewById(R.id.dialog_big_image);
+        ImageView icon_coach = (ImageView) view.findViewById(R.id.coach_image);
+       // ImageView advantage_lesson_detail_more = (ImageView) view.findViewById(R.id.advantage_lesson_detail_more);
         advantage_lesson_detail = (ListView) view.findViewById(R.id.advantage_lesson_detail);
-        list = new ArrayList();
-        for (int x = 0; x < 3; x++) {
-            list.add("111");
-        }
-        adapter = new Lesson_Advantager(context, list);
-        setListViewHeight(advantage_lesson_detail, adapter, context,coachInfo);
+        ListView coach_verify_detail = (ListView) view.findViewById(R.id.coach_verify_detail);
+        Glide.with(context).load(coachInfo.getStoreCoachTopimg()).placeholder(R.drawable.coach_main_img).error(R.drawable.coach_main_img).into(dialog_big_image);
+        Glide.with(context).load(coachInfo.getStoreCoachHeadimg()).placeholder(R.drawable.icon_coach).error(R.drawable.icon_coach).into(icon_coach);
+        List<CoachInfo.StoreCoachIntroduceBean.GoodCourseBean> goodCourse = coachInfo.getStoreCoachIntroduce().getGoodCourse();
+        adapter = new Lesson_Advantager(context, goodCourse);
+        Coach_Advantager advantager = new Coach_Advantager(context,coachInfo.getStoreCoachIntroduce().getCertificateList());
+        coach_verify_detail.setAdapter(advantager);
+        setListViewHeightCoach(advantage_lesson_detail, adapter, context, coachInfo);
         advantage_lesson_detail.setAdapter(adapter);
         isInit = false;
         isShowShortText = true;
-        advantage_lesson_detail_more.setOnClickListener(this);
+      //  advantage_lesson_detail_more.setOnClickListener(this);
         ivMoreLine.setOnClickListener(this);
-        tv_desc_short.setText(context.getResources().getString(R.string.message));
-        tv_desc_long.setText(context.getResources().getString(R.string.message));
+        tv_desc_short.setText(coachInfo.getStoreCoachSynopsis());
+        tv_desc_long.setText(coachInfo.getStoreCoachSynopsis());
         ViewTreeObserver vto = fl_desc.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -328,8 +370,10 @@ ArrayList<String> list;
         window.setContentView(view, params);
         btn_delete.setOnClickListener(this);
     }
+
     public void showIntroLessonDialog(View view, CoachInfo coachInfo) {
         dialog.show();
+        ScrollView scrollView = view.findViewById(R.id.scrollView);
         ImageView dialog_big_image = (ImageView) view.findViewById(R.id.dialog_big_image);
         ImageView btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
         TextView private_coach_name = (TextView) view.findViewById(R.id.private_coach_name);
@@ -337,19 +381,22 @@ ArrayList<String> list;
         TextView lesson_address = (TextView) view.findViewById(R.id.lesson_address);
         TextView lesson_detial = (TextView) view.findViewById(R.id.lesson_detial);
         ListView lvtips = view.findViewById(R.id.tips_lv);
-        TipsAdapter adapter = new TipsAdapter(context,coachInfo.getFitnessCourseContext().getReminder());
-        setListViewHeight(lvtips, adapter, context,coachInfo);
+        TipsAdapter adapter = new TipsAdapter(context, coachInfo.getFitnessCourseContext().getReminder());
+        setListViewHeight(lvtips, adapter, context, coachInfo);
         lvtips.setAdapter(adapter);
+        lvtips.setFocusable(false);
         Glide.with(context).load(coachInfo.getFitnessCourseCoverimg()).placeholder(R.drawable.coach_main_img).error(R.drawable.coach_main_img).into(dialog_big_image);
         private_coach_name.setText(coachInfo.getCoachName());
-        had_pay_num.setText(context.getResources().getString(R.string.have_mun)+coachInfo.getNum()+context.getResources().getString(R.string.peoples_buy));
+        had_pay_num.setText(context.getResources().getString(R.string.have_mun) + coachInfo.getNum() + context.getResources().getString(R.string.peoples_buy));
         lesson_address.setText(coachInfo.getAddress());
         lesson_detial.setText(coachInfo.getFitnessCourseContext().getFitnessCourseintroduce());
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(850, 1750);
+        scrollView.scrollTo(0,0);
         window.setContentView(view, params);
         btn_delete.setOnClickListener(this);
+
     }
 
     private boolean mesureDescription(TextView shortView, TextView longView) {
@@ -365,11 +412,11 @@ ArrayList<String> list;
         return false;
     }
 
-    private void setListViewHeight(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity,CoachInfo coachInfo) {
+    private void setListViewHeight(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity, CoachInfo coachInfo) {
         int totalHeight = 0;
         for (int i = 0, len = mListviewAdapter.getCount(); i < len; i++) {
             View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
-            TextView tv= listItem.findViewById(R.id.message);
+            TextView tv = listItem.findViewById(R.id.message);
             tv.setText(coachInfo.getFitnessCourseContext().getReminder().get(i).getText());
             int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
             int tvHeight = tv.getLineHeight();
@@ -391,17 +438,39 @@ ArrayList<String> list;
         params.height = totalHeight + (user_reviews_listview.getDividerHeight() * (mListviewAdapter.getCount() - 1));
         user_reviews_listview.setLayoutParams(params);
     }
-
+    private void setListViewHeightCoach(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity, CoachInfo coachInfo) {
+        int totalHeight = 0;
+        for (int i = 0, len = mListviewAdapter.getCount(); i < len; i++) {
+            View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
+            TextView tv = listItem.findViewById(R.id.message);
+            tv.setText(coachInfo.getStoreCoachIntroduce().getGoodCourse().get(i).getText());
+            int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
+            int tvHeight = tv.getLineHeight();
+            int width = 700;
+            int newTVHeight;
+            listItem.measure(0, 0);
+            if (textWidth > width) {
+                if (textWidth % width > 0) {
+                    newTVHeight = tvHeight * ((textWidth / width) + 1);
+                } else {
+                    newTVHeight = tvHeight * ((textWidth / width));
+                }
+            } else {
+                newTVHeight = tvHeight;
+            }
+            totalHeight += listItem.getMeasuredHeight() + newTVHeight - tvHeight;
+        }
+        ViewGroup.LayoutParams params = user_reviews_listview.getLayoutParams();
+        params.height = totalHeight + (user_reviews_listview.getDividerHeight() * (mListviewAdapter.getCount() - 1));
+        user_reviews_listview.setLayoutParams(params);
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.advantage_lesson_detail_more:
-                for (int x = 0; x < 3; x++) {
-                    list.add("111");
-                }
-                adapter.setData(list);
-                setListViewHeight(advantage_lesson_detail, adapter, context,null);
-                break;
+//            case R.id.advantage_lesson_detail_more:
+//
+//                setListViewHeight(advantage_lesson_detail, adapter, context, null);
+//                break;
             case R.id.iv_more_line:
                 if (isShowShortText) {
                     tv_desc_short.setVisibility(View.GONE);
@@ -419,31 +488,33 @@ ArrayList<String> list;
             case R.id.cancel:
 
             case R.id.close:
-                if (listener != null) {
-                    listener.dialogCancel();
-                }
+                listener.dialogCancel();
                 dialog.dismiss();
                 break;
             case R.id.close_pay:
+            case R.id.close_pay_veune:
+            case R.id.cancel_buy_group_lesson:
             case R.id.cancel_pre:
                 dialog.dismiss();
                 break;
             case R.id.psw_login:
                 dialog.dismiss();
+                builder.delete(0,builder.length());
                 View psw_dialog = View.inflate(context, R.layout.psw_dialog, null);
                 showPsdDialog(psw_dialog);
                 break;
             case R.id.confirm_pay:
                 dialog.dismiss();
+                listener.onVenuePay();
                 View pay_veune_dialog = View.inflate(context, R.layout.pay_veune_dialog, null);
                 showVeunePayDialog(pay_veune_dialog);
                 break;
             case R.id.venue_login:
+
                 dialog.dismiss();
                 View veune_dialog = View.inflate(context, R.layout.veune_dialog, null);
                 showManagerDialog(veune_dialog);
                 break;
-
             case R.id.cancel_pre_pay:
                 listener.dialogCancel();
                 break;
@@ -508,30 +579,35 @@ ArrayList<String> list;
                 String fisrt = Utils.getMD5("123123").toUpperCase();
                 String second = Utils.getMD5(fisrt).toUpperCase();
                 ApiFactory.validatePassword(second).subscribe(new ProgressSubscriber<ApiResponse>(context) {
-                        @Override
-                        public void onNext(ApiResponse apiResponse) {
-                            super.onNext(apiResponse);
-                            ((BaseActivity) context).showActivity(SettingActivity.class);
-                            listener.dialogCancel();
-                            dialog.dismiss();
-                        }
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
+                        ((BaseActivity) context).showActivity(SettingActivity.class);
+                        listener.dialogCancel();
+                        dialog.dismiss();
+                    }
                 });
 
                 break;
             case R.id.back_home:
                 ((BaseActivity) context).finish();
                 break;
-                case R.id.no_bind:
+            case R.id.no_bind:
+            case R.id.pay_no_bind:
                 ((BaseActivity) context).showActivity(RegisterActivity.class);
                 break;
-                case R.id.has_bind:
-                    listener.dialogCancel();
+            case R.id.pay_has_bind:
+                dialog.dismiss();
+                break;
+            case R.id.has_bind:
+                listener.dialogCancel();
                 dialog.dismiss();
                 break;
         }
     }
-    public void dissMiss(){
-        if(dialog.isShowing()){
+
+    public void dissMiss() {
+        if (dialog.isShowing()) {
             dialog.dismiss();
         }
     }
