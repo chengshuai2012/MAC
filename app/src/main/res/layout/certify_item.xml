@@ -7,7 +7,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="@dimen/margin_main_middle"
         >
         <ImageView
             android:layout_width="@dimen/lesson_dialog_small_image_size"
@@ -17,10 +16,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:textColor="@color/text_gray"
             android:textSize="@dimen/text_size_30"
-            android:text="@string/message"
             android:id="@+id/message"
             android:singleLine="true"
             />

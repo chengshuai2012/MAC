@@ -299,6 +299,9 @@ public class RegisterActivity extends AppBarActivity {
         isSendVerify=false;
     }
 
+
+
+
     @Override
     public void modelMsg(int state, String msg) {
         if (state == 3) {

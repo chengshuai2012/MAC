@@ -195,7 +195,8 @@ public class PrePrivateLessonActivity extends AppBarActivity implements LessonDa
     }
 
 
-int HourPosition= 0;
+
+    int HourPosition= 0;
 int MinPosition= 0;
     @Override
     public void onLessonHourItemClick(int i, int postion) {

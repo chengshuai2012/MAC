@@ -40,6 +40,8 @@ public class SinglePurchaseActivity extends AppBarActivity {
         return R.layout.activity_singlepurchase;
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

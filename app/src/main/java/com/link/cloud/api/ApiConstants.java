@@ -7,7 +7,7 @@ package com.link.cloud.api;
  */
 public class ApiConstants {
     //API接口地址
-    public static final String DAILY_DAILY_URL = "http://alx.patpang.cn/";
+    public static final String DAILY_DAILY_URL = "http://www.deviceplatform.linkgooo.com";
 
 
     //获取验证码

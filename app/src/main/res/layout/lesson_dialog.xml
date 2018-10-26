@@ -59,15 +59,14 @@
                         android:layout_height="@dimen/margin_left_register"
                         android:background="@color/red"
                         android:gravity="center"
-                        android:text="@string/private_coach"
+                        android:text="@string/coach"
                         android:textColor="@color/almost_white"
                         android:textSize="@dimen/text_size_24" />
 
                     <TextView
                         android:id="@+id/private_coach_name"
-                        android:layout_width="@dimen/indicator_size"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_left_register"
-                        android:gravity="center"
                         android:textColor="@color/dark_black"
                         android:textSize="@dimen/text_size_32"
                         android:textStyle="bold" />

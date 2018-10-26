@@ -344,6 +344,7 @@ public class DialogUtils implements View.OnClickListener {
         Coach_Advantager advantager = new Coach_Advantager(context,coachInfo.getStoreCoachIntroduce().getCertificateList());
         coach_verify_detail.setAdapter(advantager);
         setListViewHeightCoach(advantage_lesson_detail, adapter, context, coachInfo);
+        setListViewHeightCoach(coach_verify_detail, advantager, context, coachInfo);
         advantage_lesson_detail.setAdapter(adapter);
         isInit = false;
         isShowShortText = true;
@@ -443,7 +444,7 @@ public class DialogUtils implements View.OnClickListener {
         for (int i = 0, len = mListviewAdapter.getCount(); i < len; i++) {
             View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
             TextView tv = listItem.findViewById(R.id.message);
-            tv.setText(coachInfo.getStoreCoachIntroduce().getGoodCourse().get(i).getText());
+            tv.setText(coachInfo.getStoreCoachIntroduce().getGoodCourse().get(i).getGoods());
             int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
             int tvHeight = tv.getLineHeight();
             int width = 700;

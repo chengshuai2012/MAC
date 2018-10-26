@@ -64,12 +64,11 @@ public class Venueutils {
         if (!bOpen) {
             modOkProgress = 0;
             modelImgMng.reset();
-            Logger.e(mdDeviceBinder+"");
             bOpen = mdDeviceBinder.openDevice(0);//开启指定索引的设备
             if (bOpen) {
-                Logger.e( "open device success");
+
             } else {
-                Logger.e("open device failed,stop identifying and modeling.");
+
 
             }
         }

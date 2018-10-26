@@ -3,6 +3,7 @@ package com.link.cloud;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.MyLoadViewFactory;
 import com.shizhefei.mvc.MVCHelper;
@@ -16,6 +17,7 @@ public class MacApplication extends BaseApplication {
     private User user;
     private Handler mainThreadHandler;
     public static Venueutils venueUtils;
+    private static NettyClientBootstrap nettyClientBootstrap;
 
     public static Venueutils getVenueUtils() {
         synchronized (Venueutils.class) {
@@ -24,6 +26,10 @@ public class MacApplication extends BaseApplication {
             }
             return venueUtils;
         }
+    }
+
+    public static NettyClientBootstrap getNettyClientBootstrap() {
+       return nettyClientBootstrap;
     }
 
     @Override
@@ -38,6 +44,8 @@ public class MacApplication extends BaseApplication {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(configuration);
+        nettyClientBootstrap = NettyClientBootstrap.getNetty(getApplicationContext(), Constants.TCP_PORT,Constants.TCP_URL,"");
+
     }
 
     public void post(Runnable r) {

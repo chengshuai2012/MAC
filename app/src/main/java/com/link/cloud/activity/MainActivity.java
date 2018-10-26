@@ -100,6 +100,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private void getListDate(final boolean isRefresh) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();
+            }
+
+            @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
                 if (isRefresh) {
                     ((LessonListFragment) indicatorViewAdapter.getCurrentFragment()).swipe.setRefreshing(false);
@@ -200,8 +206,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                nettyClientBootstrap = new NettyClientBootstrap(MainActivity.this, MainActivity.this, TCP_PORT, TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
-                nettyClientBootstrap.start();
                 SendMsgToTcp("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
             }
         };
@@ -246,6 +250,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private void getGroupData() {
         ApiFactory.getRecentLesson().subscribe(new BaseProgressSubscriber<ApiResponse<ArrayList<GroupLessonInResource>>>(this) {
             @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();
+            }
+
+            @Override
             public void onNext(ApiResponse<ArrayList<GroupLessonInResource>> arrayListApiResponse) {
                 super.onNext(arrayListApiResponse);
                 groupInList.addAll(arrayListApiResponse.getData());
@@ -255,9 +265,17 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
                     ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
                         @Override
+                        public void onStart() {
+                            super.onStart();
+                            dismissProgressDialog();
+                        }
+
+                        @Override
                         public void onNext(final ApiResponse<GroupLessonUser> groupLessonUserApiResponse) {
                             super.onNext(groupLessonUserApiResponse);
+
                             groupInUserList.clear();
+                            if(groupLessonUserApiResponse.getData()!=null){
                             groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
                             loadMoreAdapter.notifyDataSetChanged();
                             realm.executeTransaction(new Realm.Transaction() {
@@ -266,7 +284,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                                     realm.copyToRealm(groupLessonUserApiResponse.getData().getFingerprints());
                                 }
                             });
-                        }
+                        }}
                     });
                 }
 
@@ -315,7 +333,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     };
 
     protected void SendMsgToTcp(String msg) {
-        nettyClientBootstrap.startNetty(msg);
+        MacApplication.getNettyClientBootstrap().startNetty(msg);
     }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
@@ -371,6 +389,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
         }
     }
+
 
     @Override
     protected void onDestroy() {

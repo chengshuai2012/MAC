@@ -285,5 +285,7 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
         animator.end();
     }
 
+
+
 }
 

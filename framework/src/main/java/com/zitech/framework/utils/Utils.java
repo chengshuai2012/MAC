@@ -476,7 +476,7 @@ public class Utils {
             if (e instanceof ApiException) {
                 return e.getMessage();
             } else {
-                return BaseApplication.getInstance().getString(R.string.request_failed);
+                return e.getMessage();
             }
         } else {
             return BaseApplication.getInstance().getString(R.string.network_unavailable);

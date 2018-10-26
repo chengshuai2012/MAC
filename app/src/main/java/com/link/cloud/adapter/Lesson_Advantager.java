@@ -49,9 +49,7 @@ public class Lesson_Advantager extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View inflate = View.inflate(mContext, R.layout.advantage_lesson_item, null);
         TextView message = inflate.findViewById(R.id.message);
-        TextView advantage_name = inflate.findViewById(R.id.advantage_name);
-        message.setText(data.get(position).getText());
-        advantage_name.setText(data.get(position).getGoods());
+        message.setText(data.get(position).getGoods());
         return inflate;
     }
 }

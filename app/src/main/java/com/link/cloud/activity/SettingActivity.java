@@ -53,4 +53,8 @@ public class SettingActivity extends AppBarActivity {
                 break;
         }
   }
+
+
+
+
 }

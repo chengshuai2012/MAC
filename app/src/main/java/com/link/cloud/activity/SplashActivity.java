@@ -80,7 +80,7 @@ public class SplashActivity extends AppBarActivity {
                     @Override
                     public Boolean call() throws Exception {
                         GetUserPages getUserPages = new GetUserPages();
-                        getUserPages.setContent("HJKF");
+                        getUserPages.setContent("CHINA00001");
                         getUserPages.setPageNo(finalI);
                         getUserPages.setPageSize(pageNum);
                         ApiFactory.getUsers(getUserPages).subscribe(new NoProgressSubscriber<ApiResponse<UserList>>(SplashActivity.this) {
@@ -138,6 +138,7 @@ public class SplashActivity extends AppBarActivity {
         super.onDestroy();
         realm.close();
     }
+
 
     @Override
     protected int getLayoutId() {

@@ -66,7 +66,7 @@ public class GroupLesson_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
             recyclerViewHolder.memeber_name.setText(dataList.get(position).getNickname());
-            recyclerViewHolder.tel_member.setText(dataList.get(position).getPhone());
+            recyclerViewHolder.tel_member.setText(new StringBuffer(dataList.get(position).getPhone()).replace(3,7,"****"));
             if(dataList.get(position).getStatus()==0){
                 recyclerViewHolder.status_not_in.setText(activity.getResources().getString(R.string.status_not_in));
                 recyclerViewHolder.status_not_in.setBackground(activity.getResources().getDrawable(R.drawable.border_red_gradient));

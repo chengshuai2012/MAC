@@ -68,7 +68,7 @@ public class ApiFactory {
      * @return
      */
     public static Observable<ApiResponse> appLogin() {
-        return getApiService().appLogin("pub", "appLogin", "HJKF", "0D874A5A3B0C3AAB71E35EE325693762").map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+        return getApiService().appLogin("pub", "appLogin", "CHINA00001", "0D874A5A3B0C3AAB71E35EE325693762").map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
     /**

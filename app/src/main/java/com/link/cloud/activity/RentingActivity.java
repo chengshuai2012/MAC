@@ -43,6 +43,8 @@ public class RentingActivity extends AppBarActivity {
         return R.layout.activity_renting;
     }
 
+
+
     public void showDate(RentTimeBean rentTimeBean) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.FragmentExtra.BEAN, rentTimeBean);

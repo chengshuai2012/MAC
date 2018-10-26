@@ -30,4 +30,6 @@ public class MemberCardActivity extends AppBarActivity {
     }
 
 
+
+
 }

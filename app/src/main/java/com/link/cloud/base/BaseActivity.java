@@ -10,52 +10,42 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
-import com.link.cloud.listener.NettyListener;
-import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.SimpleStyleDialog;
 import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions.RxPermissions;
-import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.ViewUtils;
-
-import javax.crypto.Mac;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rx.functions.Action1;
 
-import static com.link.cloud.Constants.TCP_PORT;
-import static com.link.cloud.Constants.TCP_URL;
 
 /**
  * Created by OFX002 on 2018/9/20.
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, NettyListener, Venueutils.VenueCallBack {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, Venueutils.VenueCallBack {
 
     private Unbinder bind;
     private SimpleStyleDialog denyDialog;
-    public NettyClientBootstrap nettyClientBootstrap;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         this.setContentView(this.getLayoutId());
         bind = ButterKnife.bind(this);
-        MacApplication.getVenueUtils().initVenue(this,this,false);
+        MacApplication.getVenueUtils().initVenue(this, this, false);
         initViews();
+
     }
 
     protected abstract void initViews();
@@ -74,11 +64,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         bind.unbind();
         try {
             MacApplication.getVenueUtils().unBindService();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -138,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void showActivity(Class<?> cls) {
         Intent intent = new Intent();
 
-        
+
         intent.setClass(this, cls);
         super.startActivity(intent);
         ViewUtils.anima(ViewUtils.RIGHT_IN, this);
@@ -152,10 +143,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         super.startActivity(intent);
         ViewUtils.anima(ViewUtils.RIGHT_IN, this);
     }
+
     public void showActivity(Class<?> cls, String name, String extras) {
         Intent intent = new Intent();
         intent.setClass(this, cls);
-       intent.putExtra(name,extras);
+        intent.putExtra(name, extras);
         super.startActivity(intent);
         ViewUtils.anima(ViewUtils.RIGHT_IN, this);
     }
@@ -209,7 +201,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
 
-
     private void showDeniedDialog(final String denyText, final String... permissions) {
         if (denyDialog == null) {
             denyDialog = new SimpleStyleDialog(this, denyText);
@@ -233,8 +224,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return Utils.replace(getSupportFragmentManager(), R.id.content_frame, fragmentClass);
     }
 
-    public Fragment showFragment(Class<? extends Fragment> fragmentClass,Bundle bundle) {
-        return Utils.replace(getSupportFragmentManager(),fragmentClass, R.id.content_frame, bundle);
+    public Fragment showFragment(Class<? extends Fragment> fragmentClass, Bundle bundle) {
+        return Utils.replace(getSupportFragmentManager(), fragmentClass, R.id.content_frame, bundle);
     }
 
     public Context getContext() {
@@ -256,28 +247,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onNettySuccess() {
-        Logger.e("Heart-Beat-Success");
-    }
-
-    @Override
-    public void onNettyFail(String msg) {
-        Logger.e(msg);
-    }
-
-    @Override
-    public void onNettyLoss(String msg) {
-        Logger.e(msg);
-    }
-
-    @Override
-    public void onMessageReceive(String msg) {
-        Logger.e(msg);
-    }
-
-    @Override
     public void modelMsg(int state, String msg) {
-        Logger.e(state+msg);
+        Logger.e(state + msg);
     }
 
 }

@@ -1,7 +1,10 @@
 package com.link.cloud.activity;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -20,16 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonItemBean;
+import com.link.cloud.api.bean.PayBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.People;
@@ -42,9 +42,8 @@ import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
-import java.util.Hashtable;
-import java.util.UUID;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
@@ -162,7 +161,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     private int minute;
     private int second;
     private long payRest;
-
+    MesReceiver mesReceiver;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
@@ -189,6 +188,10 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         lessonTime.setText(getResources().getString(R.string.time) + lessonItemBean.getCoursePlanBegtime());
         peopleCount.setText(lessonItemBean.getNum() + "人");
         realm = Realm.getDefaultInstance();
+        mesReceiver=new MesReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.MSG);
+        registerReceiver(mesReceiver, intentFilter);
     }
 
 
@@ -381,6 +384,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                                     super.onNext(apiResponse);
                                     View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_ok_dialog, null);
                                     dialogUtils.showVeuneOkDialog(view);
+                                    handler.sendEmptyMessageDelayed(4,2000);
                                 }
 
                                 @Override
@@ -398,6 +402,11 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                         }
                     }
                     handler.sendEmptyMessageDelayed(3, 1000);
+
+                    break;
+                case 4:
+                    dialogUtils.dissMiss();
+                    finish();
                     break;
             }
 
@@ -410,10 +419,37 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         handler.sendEmptyMessage(3);
     }
 
+
+public class MesReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String msg = intent.getStringExtra("msg");
+        String type  =null;
+        try {
+            JSONObject object = new JSONObject(msg);
+            type = object.getString("msgType");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if("BUY_COURSE_NOTIFY".equals(type)){
+            Gson gson  = new Gson();
+            PayBean payBean = gson.fromJson(msg, PayBean.class);
+            String Payuuid = payBean.getData().getUserInfo().getUuid();
+            Logger.e(uuid);   Logger.e(Payuuid);
+            dialogUtils.dissMiss();
+            View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
+            dialogUtils.showVeuneOkDialog(view);
+            if(uuid.equals(Payuuid)){
+                handler.sendEmptyMessageDelayed(4,2000);
+            }
+        }
+    }
+}
     @Override
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
         handler.removeMessages(3);
     }
+
 }

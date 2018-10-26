@@ -2,9 +2,12 @@ package com.link.cloud.utils;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
-import com.link.cloud.listener.NettyListener;
+import com.link.cloud.Constants;
+
+import org.json.JSONObject;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
@@ -37,14 +40,15 @@ public class NettyClientBootstrap {
     private boolean isConnect = false;
     public boolean isRepeate = false;
     public Context context;
-    NettyListener listener;
     String msg;
-    public NettyClientBootstrap(Context context,  NettyListener listener,int port, String host,String msg) {
+    private Intent intent;
+    private Object type;
+
+    private NettyClientBootstrap(Context context,  int port, String host,String msg) {
         this.context = context;
         this.port = port;
         this.msg =msg;
         this.host = host;
-        this.listener=listener;
         //初始化连接
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
@@ -63,7 +67,16 @@ public class NettyClientBootstrap {
             }
         });
     }
+    public static synchronized NettyClientBootstrap getNetty(Context context,int port, String host,String msg){
+            if(nettyClientBootstrap==null){
+                nettyClientBootstrap= new NettyClientBootstrap(context, port, host, msg);
+                return nettyClientBootstrap;
+            }else {
+                return nettyClientBootstrap;
+            }
 
+    }
+    static NettyClientBootstrap nettyClientBootstrap;
     public void startNetty(final String msg) {
         new Thread() {
             @Override
@@ -88,13 +101,13 @@ public class NettyClientBootstrap {
                 socketChannel = (SocketChannel) future.channel();
                 isConnect = true;
                //成功状态监听在此处（包括重连成功状态）
-                listener.onNettySuccess();
+
                 return;
             } else {
-                listener.onNettyLoss("TcpUnConnect------" + "future is unConnect");
+
             }
         } catch (Exception e) {
-            listener.onNettyFail("TcpUnConnect------" + e.toString());
+
         }
         //连接状态在此处处理
         repeateTcp();
@@ -107,7 +120,6 @@ public class NettyClientBootstrap {
                 isConnect = false;
                 //断线监听在此处处理
 
-                listener.onNettyLoss("");
 
             }
             isRepeate = true;
@@ -147,7 +159,19 @@ public class NettyClientBootstrap {
         //这里是接受服务端发送过来的消息
         protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object baseMsg) throws Exception {
             String msgObj = (String) baseMsg;
-            listener.onMessageReceive(msgObj);
+            try {
+                JSONObject object =new JSONObject(msgObj);
+                type = object.get("msgType");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(intent!=null&&!"".equals("HEART_BEAT")){
+                intent = new Intent();
+                intent.setAction(Constants.MSG);
+                intent.putExtra("msg",msgObj);
+                context.sendBroadcast(intent);
+            }
         }
 
 
