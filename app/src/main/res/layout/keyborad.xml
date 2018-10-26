@@ -29,7 +29,7 @@
             android:gravity="center"
             android:layout_marginRight="@dimen/keyboard_margin"
             android:id="@+id/verify_code"
-            android:text="@string/please_input_tel"
+            android:text="@string/please_input_verify"
             android:textSize="@dimen/text_size_30"
             />
         <TextView

@@ -107,6 +107,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 if (!date.isEmpty()) {
                     date.clear();
                     fragmentList.clear();
+                    indicatorViewAdapter.title.clear();
+                    indicatorViewAdapter.fragmentList.clear();
                     indicatorViewAdapter.notifyDataSetChanged();
                 }
                 for (LessonBean lessonBean : response.getData()) {
@@ -125,6 +127,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
                     indicatorViewPager.setAdapter(indicatorViewAdapter);
                 } else {
+                    indicatorViewAdapter.title.addAll(date);
+                    indicatorViewAdapter.fragmentList.addAll(fragmentList);
                     indicatorViewAdapter.notifyDataSetChanged();
                 }
 

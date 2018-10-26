@@ -22,9 +22,9 @@ import java.util.List;
 
 public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorFragmentPagerAdapter {
 
-    List<Fragment> fragmentList = new ArrayList<Fragment>();
+    public List<Fragment> fragmentList = new ArrayList<Fragment>();
     private Context context;
-    private List<String> title=new ArrayList<>();
+    public List<String> title=new ArrayList<>();
 
     public IndicatorViewAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList, List<String> title, Context context) {
         super(fragmentManager);
