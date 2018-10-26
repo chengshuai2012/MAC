@@ -41,6 +41,7 @@ import com.shizhefei.view.indicator.slidebar.SpringBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
+import com.zitech.framework.utils.ToastMaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,6 +107,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 if (!date.isEmpty()) {
                     date.clear();
                     fragmentList.clear();
+                    indicatorViewAdapter.notifyDataSetChanged();
                 }
                 for (LessonBean lessonBean : response.getData()) {
                     date.add("    " + lessonBean.getDate().substring(5) + "    ");
@@ -119,7 +121,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     });
                     fragmentList.add(lessonListFragment);
                 }
-
                 if (indicatorViewAdapter == null) {
                     indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
                     indicatorViewPager.setAdapter(indicatorViewAdapter);
@@ -386,7 +387,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @Override
     protected void onResume() {
         super.onResume();
-        if(group_lesson_fragment.isFocusable()){
+        if (group_lesson_fragment.isFocusable()) {
             animator.start();
         }
     }

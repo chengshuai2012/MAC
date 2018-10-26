@@ -9,10 +9,13 @@ import com.zitech.framework.SP;
 public class User {
 
     private static final String TOKEN = "token";
+    private static final String POSITION = "Position";
 
     private SP sp;
 
     private String token;
+    private int position;
+
 
     public static User get() {
         return MacApplication.getInstance().getUser();
@@ -22,8 +25,19 @@ public class User {
         super();
         sp = new SP("USER_DATA");
         token = sp.getString(TOKEN, "");
+        position = sp.getInt(POSITION, -1);
 
 
+    }
+
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+        sp.putInt(POSITION, position);
     }
 
     public String getToken() {
@@ -40,7 +54,6 @@ public class User {
 
         sp.remove(TOKEN);
         token = "";
-
 
 
     }

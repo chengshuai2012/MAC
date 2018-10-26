@@ -24,13 +24,13 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorFragmentPa
 
     List<Fragment> fragmentList = new ArrayList<Fragment>();
     private Context context;
-    private List<String> title;
+    private List<String> title=new ArrayList<>();
 
     public IndicatorViewAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList, List<String> title, Context context) {
         super(fragmentManager);
         this.context = context;
-        this.fragmentList = fragmentList;
-        this.title = title;
+        this.fragmentList.addAll(fragmentList);
+        this.title.addAll(title);
     }
 
     @Override
@@ -47,6 +47,7 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorFragmentPa
         textView.setText(title.get(position));
         return convertView;
     }
+
     @Override
     public Fragment getFragmentForPage(int position) {
         return fragmentList.get(position);

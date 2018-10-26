@@ -1,6 +1,5 @@
 package com.link.cloud.fragment;
 
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * 作者：qianlu on 2018/10/17 17:17
@@ -61,6 +59,8 @@ public class LessonListFragment extends BaseFragment implements DialogCancelList
     private void initView(View contentView) {
         swipe = (SwipeRefreshLayout) contentView.findViewById(R.id.swipe);
         recycle = (RecyclerView) contentView.findViewById(R.id.recycle);
+
+
         swipe.setColorSchemeColors(getResources().getColor(R.color.red));
         recycle.setLayoutManager(new LinearLayoutManager(getActivity()));
         ChooseLesson_Adapter loadMoreAdapter = new ChooseLesson_Adapter(courses, getActivity());

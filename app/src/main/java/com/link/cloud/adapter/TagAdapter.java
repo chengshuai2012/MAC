@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.link.cloud.R;
+import com.link.cloud.User;
 import com.zitech.framework.utils.ViewUtils;
 
 import java.util.ArrayList;
@@ -24,8 +25,12 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ContentViewHolde
 
     private List<String> data = new ArrayList<>();
     private Context activity;
-    private int isSeceterPosition = 0;
+    private int isSeceterPosition = -1;
+    private boolean isSeceter;
 
+    public void setSeceter(boolean seceter) {
+        isSeceter = seceter;
+    }
 
     public void setIsSeceterPosition(int isSeceterPosition) {
         this.isSeceterPosition = isSeceterPosition;
@@ -59,8 +64,9 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ContentViewHolde
     @Override
     public void onBindViewHolder(@NonNull TagAdapter.ContentViewHolder holder, final int position) {
         final String contentText = data.get(position);
-        holder.contentText.setText(contentText);
-        if (isSeceterPosition == position) {
+        holder.contentText.setText(contentText+activity.getResources().getString(R.string.select_class_time));
+        isSeceterPosition = User.get().getPosition();
+        if (isSeceterPosition == position && isSeceter) {
             holder.rootViewLayout.setBackground(activity.getResources().getDrawable(R.drawable.border_red_gradient_30px));
             holder.contentText.setTextColor(activity.getResources().getColor(R.color.white));
         } else {
@@ -73,6 +79,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ContentViewHolde
             public void onClick(View v) {
                 if (mListner != null) {
                     mListner.OnClickPre(position);
+                    User.get().setPosition(position);
                 }
             }
         });

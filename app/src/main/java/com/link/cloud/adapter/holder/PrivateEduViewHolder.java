@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.link.cloud.R;
+import com.link.cloud.User;
 import com.link.cloud.adapter.TagAdapter;
 import com.link.cloud.api.bean.PriceLevelBean;
 import com.link.cloud.api.bean.PrivateEduBean;
@@ -72,30 +73,20 @@ public class PrivateEduViewHolder extends BaseViewHolder<PrivateEduBean> {
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             tagLayout.setLayoutManager(layoutManager);
             final TagAdapter tagAdapter = new TagAdapter(activity, tagsList);
-            tagAdapter.setIsSeceterPosition(selecterPosition);
+            tagAdapter.setSeceter(isSeceter);
             tagLayout.setAdapter(tagAdapter);
             tagAdapter.setOnItemClickListner(new TagAdapter.onItemClickLister() {
                 @Override
                 public void OnClickPre(int thisPosition) {
-                    tagAdapter.setIsSeceterPosition(thisPosition);
-                    selecterPosition=thisPosition;
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(data.getPriceLevel().get(thisPosition), position);
+                    }
+
                 }
             });
 
         }
 
-        ViewUtils.setOnClickListener(rootViewLayout, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    if (selecterPosition>=0){
-                        onItemClickListener.onItemClick(data.getPriceLevel().get(selecterPosition), position);
-                    }else {
-                        ToastMaster.shortToast(activity.getResources().getString(R.string.select_class_time));
-                    }
-                }
-            }
-        });
         Glide.with(activity).load(data.getImgurl()).into(eduImage);
         calssName.setText(data.getFitnessCourseName());
         coachName.setText(data.getCoachName());
