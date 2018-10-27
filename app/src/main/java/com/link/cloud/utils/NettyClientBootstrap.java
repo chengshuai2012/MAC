@@ -44,7 +44,7 @@ public class NettyClientBootstrap {
     private Intent intent;
     private Object type;
 
-    private NettyClientBootstrap(Context context,  int port, String host,String msg) {
+    public NettyClientBootstrap(Context context,  int port, String host,String msg) {
         this.context = context;
         this.port = port;
         this.msg =msg;
@@ -67,16 +67,6 @@ public class NettyClientBootstrap {
             }
         });
     }
-    public static synchronized NettyClientBootstrap getNetty(Context context,int port, String host,String msg){
-            if(nettyClientBootstrap==null){
-                nettyClientBootstrap= new NettyClientBootstrap(context, port, host, msg);
-                return nettyClientBootstrap;
-            }else {
-                return nettyClientBootstrap;
-            }
-
-    }
-    static NettyClientBootstrap nettyClientBootstrap;
     public void startNetty(final String msg) {
         new Thread() {
             @Override
@@ -101,13 +91,13 @@ public class NettyClientBootstrap {
                 socketChannel = (SocketChannel) future.channel();
                 isConnect = true;
                //成功状态监听在此处（包括重连成功状态）
-
+                Log.e("channelRead0: ", isConnect+"");
                 return;
             } else {
-
+                Log.e("channelRead0" ,"future is unConnect");
             }
         } catch (Exception e) {
-
+            Log.e("channelRead0: ", e.getMessage()+"");
         }
         //连接状态在此处处理
         repeateTcp();
@@ -127,6 +117,7 @@ public class NettyClientBootstrap {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Log.e("channelRead0: ", e.getMessage()+"");
             }
             isRepeate = false;
             start();
@@ -159,6 +150,7 @@ public class NettyClientBootstrap {
         //这里是接受服务端发送过来的消息
         protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object baseMsg) throws Exception {
             String msgObj = (String) baseMsg;
+            Log.e("channelRead0: ", msgObj);
             try {
                 JSONObject object =new JSONObject(msgObj);
                 type = object.get("msgType");
@@ -179,7 +171,7 @@ public class NettyClientBootstrap {
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
             super.channelInactive(ctx);
-
+            Log.e("channelRead0: ", "1111");
             repeateTcp();
         }
 
@@ -187,7 +179,7 @@ public class NettyClientBootstrap {
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             super.exceptionCaught(ctx, cause);
-            Log.e("tcp", "TcpHandler--ErrorConnect--" + cause.toString());
+            Log.e("channelRead0", "TcpHandler--ErrorConnect--" + cause.toString());
             //断线监听在repeateTcp方法内
             repeateTcp();
         }

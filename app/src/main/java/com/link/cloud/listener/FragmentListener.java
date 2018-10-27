@@ -5,5 +5,5 @@ package com.link.cloud.listener;
  * 邮箱：zar.l@qq.com
  */
 public interface FragmentListener {
-    void OnRefreshListener();
+    void OnRefreshListener(int pos);
 }

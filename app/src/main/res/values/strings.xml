@@ -192,6 +192,8 @@
     <string name="have_mun">已有</string>
     <string name="peoples_buy">人购买课程</string>
     <string name="verify_fail">验证失败</string>
+    <string name="now_coach">当前教练:</string>
+    <string name="now_lesson">当前课程:</string>
 
 
 </resources>

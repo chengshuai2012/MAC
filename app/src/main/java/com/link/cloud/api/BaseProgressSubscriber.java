@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.gson.JsonSyntaxException;
 import com.link.cloud.activity.SplashActivity;
 import com.zitech.framework.utils.ToastMaster;
 import com.zitech.framework.utils.Utils;
@@ -42,7 +43,12 @@ public abstract class BaseProgressSubscriber<T> extends com.zitech.framework.dat
                 context.startActivity(intent);
                 android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
         }
-
+//        if(e instanceof JsonSyntaxException){
+//            Intent intent = new Intent(context, SplashActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(intent);
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//        }
     }
 
 

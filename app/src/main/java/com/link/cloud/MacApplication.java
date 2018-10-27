@@ -17,7 +17,6 @@ public class MacApplication extends BaseApplication {
     private User user;
     private Handler mainThreadHandler;
     public static Venueutils venueUtils;
-    private static NettyClientBootstrap nettyClientBootstrap;
 
     public static Venueutils getVenueUtils() {
         synchronized (Venueutils.class) {
@@ -28,9 +27,6 @@ public class MacApplication extends BaseApplication {
         }
     }
 
-    public static NettyClientBootstrap getNettyClientBootstrap() {
-       return nettyClientBootstrap;
-    }
 
     @Override
     public void onCreate() {
@@ -44,7 +40,7 @@ public class MacApplication extends BaseApplication {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(configuration);
-        nettyClientBootstrap = NettyClientBootstrap.getNetty(getApplicationContext(), Constants.TCP_PORT,Constants.TCP_URL,"");
+
 
     }
 

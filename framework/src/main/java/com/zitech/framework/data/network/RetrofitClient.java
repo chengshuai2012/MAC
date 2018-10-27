@@ -120,7 +120,6 @@ public class RetrofitClient {
                     // 指定缓存路径,缓存大小100Mb
                     Cache cache = new Cache(new File(BaseApplication.getInstance().getCacheDir(), "HttpCache"),
                             1024 * 1024 * 100);
-
                     OkHttpClient.Builder builder = new OkHttpClient.Builder().cache(cache);
                     //拓展功能：网络请求的log，compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 //                            .addInterceptor(mRewriteCacheControlInterceptor)

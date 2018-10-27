@@ -206,7 +206,7 @@ public class RegisterActivity extends AppBarActivity {
                     }
 
                 } else {
-                    if (verify.length() < 11) {
+                    if (verify.length() < 4) {
                         verify.append(((TextView) v).getText());
                         verifyCode.setText(verify.toString());
                         verifyCode.setSelection(verify.length());

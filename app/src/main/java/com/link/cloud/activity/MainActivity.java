@@ -4,18 +4,18 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
@@ -28,20 +28,18 @@ import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.dataSourse.GroupLessonUser;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.FingerprintsBean;
+import com.link.cloud.bean.MainFragment;
 import com.link.cloud.bean.People;
-import com.link.cloud.fragment.LessonListFragment;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.NettyClientBootstrap;
-import com.link.cloud.utils.Utils;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
-import com.zitech.framework.utils.ToastMaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +52,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-import static com.link.cloud.Constants.TCP_PORT;
-import static com.link.cloud.Constants.TCP_URL;
 
-
-public class MainActivity extends AppBarActivity implements DialogCancelListener {
+public class MainActivity extends AppBarActivity implements DialogCancelListener, FragmentListener {
 
     @BindView(R.id.member)
     TextView member;
@@ -81,12 +76,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private DialogUtils dialogUtils;
     Realm realm;
     ValueAnimator animator;
-    private List<String> date = new ArrayList<>();
     private ViewPager viewPager;
     private RecyclerIndicatorView scrollIndicatorView;
     private IndicatorViewPager indicatorViewPager;
-    private List<Fragment> fragmentList = new ArrayList<>();
-    private FragmentManager fragmentManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private GroupLesson_Adapter loadMoreAdapter;
@@ -95,9 +87,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private ArrayList<GroupLessonUser.UserInfosBean> groupInUserList = new ArrayList<>();
     RealmResults<FingerprintsBean> userBeans;
     private String courseReleasePkcode;
-    private IndicatorViewAdapter indicatorViewAdapter;
-
-    private void getListDate(final boolean isRefresh) {
+    NettyClientBootstrap nettyClientBootstrap;
+    public ArrayList<MainFragment> fragmentList = new ArrayList<>();
+    private void getListDate( final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
             public void onStart() {
@@ -107,35 +99,22 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
 
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
-                if (isRefresh) {
-                    ((LessonListFragment) indicatorViewAdapter.getCurrentFragment()).swipe.setRefreshing(false);
-                }
-                if (!date.isEmpty()) {
-                    date.clear();
+                if (!fragmentList.isEmpty()) {
+                    Log.e("onNext: ","clear" );
                     fragmentList.clear();
-                    indicatorViewAdapter.title.clear();
-                    indicatorViewAdapter.fragmentList.clear();
-                    indicatorViewAdapter.notifyDataSetChanged();
                 }
+
                 for (LessonBean lessonBean : response.getData()) {
-                    date.add("    " + lessonBean.getDate().substring(5) + "    ");
-                    LessonListFragment lessonListFragment = new LessonListFragment();
-                    lessonListFragment.setCourses(lessonBean.getCourses());
-                    lessonListFragment.setFragmentListener(new FragmentListener() {
-                        @Override
-                        public void OnRefreshListener() {
-                            getListDate(true);
-                        }
-                    });
-                    fragmentList.add(lessonListFragment);
-                }
-                if (indicatorViewAdapter == null) {
-                    indicatorViewAdapter = new IndicatorViewAdapter(fragmentManager, fragmentList, date, MainActivity.this);
-                    indicatorViewPager.setAdapter(indicatorViewAdapter);
-                } else {
-                    indicatorViewAdapter.title.addAll(date);
-                    indicatorViewAdapter.fragmentList.addAll(fragmentList);
-                    indicatorViewAdapter.notifyDataSetChanged();
+                    MainFragment mainFragment = new MainFragment();
+                    mainFragment.setTip("    " + lessonBean.getDate().substring(5) + "    ");
+                    mainFragment.setCourses(lessonBean.getCourses());
+                   fragmentList.add(mainFragment);
+                    indicatorViewPager.setAdapter(new IndicatorViewAdapter(MainActivity.this,MainActivity.this,fragmentList));
+                    if (pos<response.getData().size()){
+                        indicatorViewPager.setCurrentItem(pos,false);
+                    }else {
+                        indicatorViewPager.setCurrentItem(0,false);
+                    }
                 }
 
             }
@@ -143,9 +122,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
-                if (isRefresh) {
-                    ((LessonListFragment) indicatorViewAdapter.getCurrentFragment()).swipe.setRefreshing(false);
-                }
             }
         });
 
@@ -202,6 +178,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
         animator.setDuration(4000);
+        nettyClientBootstrap =new NettyClientBootstrap(this, Constants.TCP_PORT,Constants.TCP_URL,"{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
+        nettyClientBootstrap.start();
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
             @Override
@@ -217,10 +195,10 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         scrollIndicatorView.setOnTransitionListener(new OnTransitionTextListener().setColor(selectColorId, unSelectColorId));
         scrollIndicatorView.setScrollBar(new SpringBar(this, getResources().getColor(R.color.red)));
         indicatorViewPager = new IndicatorViewPager(scrollIndicatorView, viewPager);
-        fragmentManager = getSupportFragmentManager();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        getListDate(false);
+        getListDate(0);
+
     }
 
 
@@ -260,8 +238,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 super.onNext(arrayListApiResponse);
                 groupInList.addAll(arrayListApiResponse.getData());
                 if (arrayListApiResponse.getData().size() > 0) {
-                    coachName.setText(arrayListApiResponse.getData().get(0).getStoreCoachName());
-                    lessonName.setText(arrayListApiResponse.getData().get(0).getFitnessCourseName());
+                    coachName.setText(getResources().getString(R.string.now_coach)+arrayListApiResponse.getData().get(0).getStoreCoachName());
+                    lessonName.setText(getResources().getString(R.string.now_lesson)+arrayListApiResponse.getData().get(0).getFitnessCourseName());
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
                     ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
                         @Override
@@ -333,7 +311,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     };
 
     protected void SendMsgToTcp(String msg) {
-        MacApplication.getNettyClientBootstrap().startNetty(msg);
+        nettyClientBootstrap.startNetty(msg);
+        Log.e( "SendMsgToTcp: ", msg);
     }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
@@ -369,7 +348,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
             case R.id.choose_lesson:
                 animator.end();
-                getListDate(false);
+                getListDate(0);
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
                 lessonIn.setBackground(null);
                 lessonIn.setTextColor(getResources().getColor(R.color.red));
@@ -420,4 +399,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
 
     }
 
+    @Override
+    public void OnRefreshListener(int pos) {
+        getListDate(pos);
+    }
 }
