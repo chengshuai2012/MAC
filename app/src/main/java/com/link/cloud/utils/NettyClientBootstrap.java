@@ -44,10 +44,10 @@ public class NettyClientBootstrap {
     private Intent intent;
     private Object type;
 
-    public NettyClientBootstrap(Context context,  int port, String host,String msg) {
+    public NettyClientBootstrap(Context context, int port, String host, String msg) {
         this.context = context;
         this.port = port;
-        this.msg =msg;
+        this.msg = msg;
         this.host = host;
         //初始化连接
         eventLoopGroup = new NioEventLoopGroup();
@@ -67,6 +67,7 @@ public class NettyClientBootstrap {
             }
         });
     }
+
     public void startNetty(final String msg) {
         new Thread() {
             @Override
@@ -90,14 +91,14 @@ public class NettyClientBootstrap {
             if (future.isSuccess()) {
                 socketChannel = (SocketChannel) future.channel();
                 isConnect = true;
-               //成功状态监听在此处（包括重连成功状态）
-                Log.e("channelRead0: ", isConnect+"");
+                //成功状态监听在此处（包括重连成功状态）
+                Log.e("channelRead0: ", isConnect + "");
                 return;
             } else {
-                Log.e("channelRead0" ,"future is unConnect");
+                Log.e("channelRead0", "future is unConnect");
             }
         } catch (Exception e) {
-            Log.e("channelRead0: ", e.getMessage()+"");
+            Log.e("channelRead0: ", e.getMessage() + "");
         }
         //连接状态在此处处理
         repeateTcp();
@@ -117,7 +118,7 @@ public class NettyClientBootstrap {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                Log.e("channelRead0: ", e.getMessage()+"");
+                Log.e("channelRead0: ", e.getMessage() + "");
             }
             isRepeate = false;
             start();
@@ -152,17 +153,23 @@ public class NettyClientBootstrap {
             String msgObj = (String) baseMsg;
             Log.e("channelRead0: ", msgObj);
             try {
-                JSONObject object =new JSONObject(msgObj);
+                JSONObject object = new JSONObject(msgObj);
                 type = object.get("msgType");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(intent!=null&&!"".equals("HEART_BEAT")){
-                intent = new Intent();
-                intent.setAction(Constants.MSG);
-                intent.putExtra("msg",msgObj);
-                context.sendBroadcast(intent);
+            if (!"HEART_BEAT".equals(type)) {
+                if (intent != null) {
+                    intent.setAction(Constants.MSG);
+                    intent.putExtra("msg", msgObj);
+                    context.sendBroadcast(intent);
+                } else {
+                    intent = new Intent();
+                    intent.setAction(Constants.MSG);
+                    intent.putExtra("msg", msgObj);
+                    context.sendBroadcast(intent);
+                }
             }
         }
 
