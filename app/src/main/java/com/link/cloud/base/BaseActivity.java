@@ -79,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             }
             if(messageListner!=null){
                 if("BUY_COURSE_NOTIFY".equals(type)){
-                        messageListner.onMessageReciever(msg);
+                        messageListner.onMessageReciever(type,msg);
                 }
             }
 

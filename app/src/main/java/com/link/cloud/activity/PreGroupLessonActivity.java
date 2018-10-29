@@ -415,19 +415,29 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     }
 
     @Override
-    public void onMessageReciever(String msg) {
-        Gson gson  = new Gson();
-        PayBean payBean = gson.fromJson(msg, PayBean.class);
-        String Payuuid = payBean.getData().getUserInfo().getUuid();
-        Logger.e(uuid);   Logger.e(Payuuid);
-        dialogUtils.dissMiss();
-        View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
-        dialogUtils.showVeuneOkDialog(view);
-        if(uuid.equals(Payuuid)){
-            handler.sendEmptyMessageDelayed(4,2000);
+    public void onMessageReciever(String type,String msg) {
+        if("BUY_COURSE_NOTIFY".equals(type)){
+            Gson gson  = new Gson();
+            PayBean payBean = gson.fromJson(msg, PayBean.class);
+            String Payuuid = payBean.getData().getUserInfo().getUuid();
+            Logger.e(uuid);   Logger.e(Payuuid);
+            dialogUtils.dissMiss();
+            View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
+            dialogUtils.showVeuneOkDialog(view);
+            if(uuid.equals(Payuuid)){
+                handler.sendEmptyMessageDelayed(4,2000);
+            }
         }
     }
 
+
+    public class MesReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+
+    }
+}
     @Override
     protected void onDestroy() {
         super.onDestroy();

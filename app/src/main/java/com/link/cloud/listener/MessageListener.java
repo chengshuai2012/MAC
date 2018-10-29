@@ -5,5 +5,5 @@ package com.link.cloud.listener;
  */
 
 public interface MessageListener {
-    void onMessageReciever(String msg);
+    void onMessageReciever(String type,String msg);
 }
