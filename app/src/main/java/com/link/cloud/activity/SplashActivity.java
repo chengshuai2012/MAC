@@ -9,7 +9,8 @@ import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
+import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.DeviceInfo;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 
@@ -30,7 +31,6 @@ import io.realm.RealmResults;
 
 public class SplashActivity extends AppBarActivity {
     Realm realm;
-
     @Override
     protected void initViews() {
         hideToolbar();
@@ -41,7 +41,7 @@ public class SplashActivity extends AppBarActivity {
 
     int pageNum = 100;
     int total = 0;
-
+    int local =0;
     private void getTotal() {
         GetUserPages getUserPages = new GetUserPages();
         getUserPages.setContent("HJKF");
@@ -117,20 +117,29 @@ public class SplashActivity extends AppBarActivity {
     }
 
     private void getToken() {
-        ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+        RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
+
+        if(all.size()!=0){
+            DeviceInfo deviceInfo = all.get(0);
+            ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+            @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();/**/
+            }
+
             @Override
             public void onNext(ApiResponse response) {
                 super.onNext(response);
                 User.get().setToken((String) response.getData());
-                RealmResults<People> all = realm.where(People.class).findAll();
-                if(all.size()>0){
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                }else {
-                    getTotal();
-                }
+                RealmResults  allLocal = realm.where(AllUser.class).findAll();
+                local =allLocal.size();
+                getTotal();
+
             }
-        });
+        });}else {
+            skipActivity(SettingActivity.class);
+        }
     }
 
     @Override

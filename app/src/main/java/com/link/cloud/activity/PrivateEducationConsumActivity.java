@@ -19,7 +19,7 @@ import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
+import com.link.cloud.bean.AllUser;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
 import java.util.ArrayList;
@@ -84,8 +84,8 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     private PublicTitleView publicTitle;
     private ArrayList<LessonPred.NotbookBean> mList = new ArrayList();
     ValueAnimator animator;
-    RealmResults<People> peoples;
-    ArrayList<People> nowPeople = new ArrayList<>();
+    RealmResults<AllUser> peoples;
+    ArrayList<AllUser> nowPeople = new ArrayList<>();
     Realm realm;
     private LessonLeftAdapter listAdapter;
     private String memberCoursePkcode;
@@ -102,10 +102,10 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
         customProgress.setProgressFormatter(null);
         mList = new ArrayList<>();
         realm = Realm.getDefaultInstance();
-        final RealmResults<People> peoples = realm.where(People.class).findAll();
-        peoples.addChangeListener(new RealmChangeListener<RealmResults<People>>() {
+        final RealmResults<AllUser> peoples = realm.where(AllUser.class).findAll();
+        peoples.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
             @Override
-            public void onChange(RealmResults<People> people) {
+            public void onChange(RealmResults<AllUser> people) {
                 nowPeople.clear();
                 nowPeople.addAll(realm.copyFromRealm(people));
             }
@@ -129,7 +129,7 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                 }
                 if (state == 3) {
                     uid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
-                    People first = realm.where(People.class).equalTo("uuid", uid).findFirst();
+                    AllUser first = realm.where(AllUser.class).equalTo("uuid", uid).findFirst();
                     int userType=0;
                     Log.e("onAnimationUpdate: ",uid +"");
                     if(first!=null){

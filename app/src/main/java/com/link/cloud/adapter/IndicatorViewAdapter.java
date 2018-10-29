@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorViewPagerA
         this.context = context;
         fragmentListener=listener;
         fragmentList.addAll(data);
+        dialogUtils = DialogUtils.getDialogUtils((MainActivity)context, IndicatorViewAdapter.this);
     }
 
     @Override
@@ -85,7 +87,6 @@ public class IndicatorViewAdapter extends IndicatorViewPager.IndicatorViewPagerA
                     public void onNext(ApiResponse<CoachInfo> coachInfoApiResponse) {
                         super.onNext(coachInfoApiResponse);
                         View view = View.inflate(context,R.layout.coach_dialog,null);
-                        dialogUtils = DialogUtils.getDialogUtils((MainActivity)context, IndicatorViewAdapter.this);
                         dialogUtils.showIntroCoachDialog(view,coachInfoApiResponse.getData());
                     }
 

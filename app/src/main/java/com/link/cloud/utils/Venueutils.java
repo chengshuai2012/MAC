@@ -10,9 +10,8 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.link.cloud.R;
-import com.link.cloud.api.dataSourse.GroupLessonUser;
-import com.link.cloud.bean.FingerprintsBean;
-import com.link.cloud.bean.People;
+import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.GroupLessonUser;
 import com.link.cloud.veune.MdDevice;
 import com.link.cloud.veune.MdUsbService;
 import com.link.cloud.veune.ModelImgMng;
@@ -26,7 +25,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import io.realm.RealmResults;
 import md.com.sdk.MicroFingerVein;
 
 /**
@@ -180,8 +178,8 @@ public class Venueutils {
         }
 
     }
-    List<People> subListPeople = new ArrayList<>();
-    public String identifyNewImg(final List<People> peoples) {
+    List<AllUser> subListPeople = new ArrayList<>();
+    public String identifyNewImg(final List<AllUser> peoples) {
         final int nThreads=peoples.size()/1000+1;
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
         List<Future<String>> futures = new ArrayList();
@@ -197,7 +195,7 @@ public class Venueutils {
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
                     int position =0;
-                    for (People userBean : subListPeople) {
+                    for (AllUser userBean : subListPeople) {
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;
@@ -233,8 +231,8 @@ public class Venueutils {
         executorService.shutdown();
         return null;
     }
-    List<FingerprintsBean> subListUser = new ArrayList<>();
-    public String identifyNewImgUser(final ArrayList<FingerprintsBean> peoples) {
+    List<GroupLessonUser> subListUser = new ArrayList<>();
+    public String identifyNewImgUser(final ArrayList<GroupLessonUser> peoples) {
         final int nThreads=peoples.size()/1000+1;
         ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
         List<Future<String>> futures = new ArrayList();
@@ -251,7 +249,7 @@ public class Venueutils {
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
                     int position =0;
-                    for (FingerprintsBean userBean : subListUser) {
+                    for (GroupLessonUser userBean : subListUser) {
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;

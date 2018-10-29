@@ -1,6 +1,6 @@
 package com.link.cloud.api.dataSourse;
 
-import com.link.cloud.bean.People;
+import com.link.cloud.bean.AllUser;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class UserList {
      */
 
     private int total;
-    private RealmList<People> data;
+    private RealmList<AllUser> data;
 
     public int getTotal() {
         return total;
@@ -28,11 +28,11 @@ public class UserList {
         this.total = total;
     }
 
-    public List<People> getData() {
+    public List<AllUser> getData() {
         return data;
     }
 
-    public void setData(RealmList<People> data) {
+    public void setData(RealmList<AllUser> data) {
         this.data = data;
     }
 

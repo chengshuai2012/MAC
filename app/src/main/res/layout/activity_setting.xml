@@ -48,21 +48,55 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/open_or_close"
+            android:layout_above="@+id/psw_ll"
             android:layout_centerInParent="true"
             android:layout_marginBottom="@dimen/margin_main"
             android:gravity="center_horizontal"
             android:text="@string/device_id"
+            android:id="@+id/device_id"
             android:textColor="@color/setting_text_black"
             android:textSize="@dimen/text_size_60" />
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:gravity="center"
+          android:id="@+id/psw_ll"
+          android:layout_above="@+id/open_or_close"
+          >
 
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/setting_text_black"
+              android:textSize="@dimen/text_size_60"
+              android:text="@string/device_psw"
+              />
+          <EditText
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/setting_text_black"
+              android:textSize="@dimen/text_size_60"
+              android:hint="@string/please_device_psw"
+              android:id="@+id/edit_psw"
+              />
+          <TextView
+              android:layout_width="@dimen/bind_intro_textView_height"
+              android:layout_height="wrap_content"
+              android:textColor="@color/almost_white"
+              android:textSize="@dimen/text_size_60"
+              android:gravity="center"
+              android:id="@+id/save"
+              android:text="@string/confirm"
+              android:background="@drawable/border_red_gradient"
+              />
+      </LinearLayout>
         <LinearLayout
             android:id="@+id/open_or_close"
             android:layout_width="@dimen/setting_text_view_width"
             android:layout_height="100px"
             android:layout_above="@+id/back_system_setting"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/manager_text_bg"
 
             >
 
@@ -82,17 +116,18 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/open_door"
-                    android:textColor="@color/dark_black"
+                    android:background="@drawable/border_red_gradient"
+                    android:textColor="@color/almost_white"
                     android:textSize="@dimen/text_size_28" />
 
                 <TextView
                     android:id="@+id/close"
                     android:layout_width="@dimen/card_imageView_height"
                     android:layout_height="match_parent"
-                    android:background="@drawable/border_red_gradient"
                     android:gravity="center"
                     android:text="@string/close_door"
-                    android:textColor="@color/almost_white"
+                    android:textColor="@color/dark_black"
+                    android:background="@drawable/border_gray_gradient"
                     android:textSize="@dimen/text_size_28" />
             </LinearLayout>
         </LinearLayout>
@@ -132,6 +167,18 @@
             android:gravity="center_horizontal"
             android:paddingTop="10px"
             android:text="@string/back_system_main"
+            android:textColor="@color/setting_text_black"
+            android:textSize="@dimen/text_size_32" />
+        <TextView
+            android:id="@+id/restart_app"
+            android:layout_width="@dimen/setting_text_view_width"
+            android:layout_height="100px"
+            android:layout_below="@+id/back_system_main"
+            android:layout_centerInParent="true"
+            android:background="@drawable/manager_text_bg"
+            android:gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:text="@string/restart"
             android:textColor="@color/setting_text_black"
             android:textSize="@dimen/text_size_32" />
     </RelativeLayout>

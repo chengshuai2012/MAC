@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by 49488 on 2018/10/21.
  */
 
-public class FingerprintsBean extends RealmObject{
+public class GroupLessonUser extends RealmObject{
 
 
         /**

@@ -14,7 +14,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +31,7 @@ import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.api.bean.PayBean;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.People;
+import com.link.cloud.bean.AllUser;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.Utils;
@@ -166,6 +165,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     @Override
     protected void initViews() {
         setTitle(R.drawable.handy_logo);
+        hideToolbar();
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         registerIntroduceTwo.setText(getResources().getString(R.string.choose_login_1));
         registerIntroduceThree.setVisibility(View.GONE);
@@ -373,7 +373,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                     int state = MacApplication.getVenueUtils().getState();
                     Logger.e("onVenuePay"+state);
                     if (state == 3) {
-                        RealmResults<People> all = realm.where(People.class).equalTo("uuid", uuid).findAll();
+                        RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
                         Logger.e(all.size()+"");
                         Logger.e(uuid+"");
                         final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));

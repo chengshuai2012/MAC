@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +42,7 @@ import com.orhanobut.logger.Logger;
 import com.zitech.framework.Session;
 import com.zitech.framework.utils.ViewUtils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +50,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
@@ -73,7 +76,43 @@ import rx.functions.Action1;
  */
 public class Utils extends com.zitech.framework.utils.Utils {
 
-
+    public static String getMac() {
+        String result = "";
+        String Mac = "";
+        result = callCmd("busybox ifconfig", "HWaddr");
+        //如果返回的result == null，则说明网络不可取
+        if (result == null) {
+            return "网络出错，请检查网络";
+        }
+        //对该行数据进行解析
+        //例如：eth0      Link encap:Ethernet  HWaddr 00:16:E8:3E:DF:67
+        if (result.length() > 0 && result.contains("HWaddr") == true) {
+            Mac = result.substring(result.indexOf("HWaddr") + 6, result.length() - 1);
+            Log.i("test", "Mac:" + Mac + " Mac.length: " + Mac.length());
+            result = Mac;
+            Log.i("test", result + " result.length: " + result.length());
+        }
+        return result;
+    }
+    private static String callCmd(String cmd, String filter) {
+        String result = "";
+        String line = "";
+        try {
+            Process proc = Runtime.getRuntime().exec(cmd);
+            InputStreamReader is = new InputStreamReader(proc.getInputStream());
+            BufferedReader br = new BufferedReader(is);
+            //执行命令cmd，只取结果中含有filter的这一行
+            while ((line = br.readLine()) != null && line.contains(filter) == false) {
+                //result += line;
+                Log.i("test", "line: " + line);
+            }
+            result = line;
+            Log.i("test", "result: " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
     private static final int DEFAULT_AVATAR_NOTIFICATION_ICON_SIZE = ViewUtils.dip2px(48);
 
     public static void AddFinishButton(final Activity activity, LinearLayout view, String content) {

@@ -1,12 +1,8 @@
 package com.link.cloud.api.dataSourse;
 
-import com.link.cloud.bean.FingerprintsBean;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmList;
-import io.realm.RealmObject;
 
 /**
  * Created by 49488 on 2018/10/21.
@@ -14,7 +10,7 @@ import io.realm.RealmObject;
 
 public class GroupLessonUser {
     private ArrayList<UserInfosBean> userInfos;
-    private RealmList<FingerprintsBean> fingerprints;
+    private RealmList<com.link.cloud.bean.GroupLessonUser> fingerprints;
 
     public ArrayList<UserInfosBean> getUserInfos() {
         return userInfos;
@@ -24,11 +20,11 @@ public class GroupLessonUser {
         this.userInfos = userInfos;
     }
 
-    public RealmList<FingerprintsBean> getFingerprints() {
+    public RealmList<com.link.cloud.bean.GroupLessonUser> getFingerprints() {
         return fingerprints;
     }
 
-    public void setFingerprints(RealmList<FingerprintsBean> fingerprints) {
+    public void setFingerprints(RealmList<com.link.cloud.bean.GroupLessonUser> fingerprints) {
         this.fingerprints = fingerprints;
     }
 

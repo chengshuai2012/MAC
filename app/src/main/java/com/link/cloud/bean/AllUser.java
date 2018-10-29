@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by 49488 on 2018/10/15.
  */
 
-public class People extends RealmObject{
+public class AllUser extends RealmObject{
 
     /**
      * id : 17

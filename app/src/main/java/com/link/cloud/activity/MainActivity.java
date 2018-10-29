@@ -25,11 +25,11 @@ import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
-import com.link.cloud.api.dataSourse.GroupLessonUser;
+import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.base.AppBarActivity;
-import com.link.cloud.bean.FingerprintsBean;
+import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.GroupLessonUser;
 import com.link.cloud.bean.MainFragment;
-import com.link.cloud.bean.People;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
@@ -83,9 +83,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private RecyclerView recyclerView;
     private GroupLesson_Adapter loadMoreAdapter;
     private ArrayList<GroupLessonInResource> groupInList = new ArrayList<>();
-    private ArrayList<FingerprintsBean> groupUsers = new ArrayList<>();
-    private ArrayList<GroupLessonUser.UserInfosBean> groupInUserList = new ArrayList<>();
-    RealmResults<FingerprintsBean> userBeans;
+    private ArrayList<GroupLessonUser> groupUsers = new ArrayList<>();
+    private ArrayList<com.link.cloud.api.dataSourse.GroupLessonUser.UserInfosBean> groupInUserList = new ArrayList<>();
+    RealmResults<GroupLessonUser> userBeans;
     private String courseReleasePkcode;
     NettyClientBootstrap nettyClientBootstrap;
     public ArrayList<MainFragment> fragmentList = new ArrayList<>();
@@ -136,10 +136,10 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         hideToolbar();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         realm = Realm.getDefaultInstance();
-        userBeans = realm.where(FingerprintsBean.class).findAll();
-        userBeans.addChangeListener(new RealmChangeListener<RealmResults<FingerprintsBean>>() {
+        userBeans = realm.where(GroupLessonUser.class).findAll();
+        userBeans.addChangeListener(new RealmChangeListener<RealmResults<GroupLessonUser>>() {
             @Override
-            public void onChange(RealmResults<FingerprintsBean> fingerprintsBeans) {
+            public void onChange(RealmResults<GroupLessonUser> fingerprintsBeans) {
                 groupUsers.clear();
                 groupUsers.addAll(realm.copyFromRealm(fingerprintsBeans));
             }
@@ -241,7 +241,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     coachName.setText(getResources().getString(R.string.now_coach)+arrayListApiResponse.getData().get(0).getStoreCoachName());
                     lessonName.setText(getResources().getString(R.string.now_lesson)+arrayListApiResponse.getData().get(0).getFitnessCourseName());
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
-                    ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<GroupLessonUser>>(MainActivity.this) {
+                    ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<com.link.cloud.api.dataSourse.GroupLessonUser>>(MainActivity.this) {
                         @Override
                         public void onStart() {
                             super.onStart();
@@ -249,14 +249,20 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         }
 
                         @Override
-                        public void onNext(final ApiResponse<GroupLessonUser> groupLessonUserApiResponse) {
+                        public void onNext(final ApiResponse<com.link.cloud.api.dataSourse.GroupLessonUser> groupLessonUserApiResponse) {
                             super.onNext(groupLessonUserApiResponse);
-
                             groupInUserList.clear();
                             if(groupLessonUserApiResponse.getData()!=null){
                             groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
                             loadMoreAdapter.notifyDataSetChanged();
-                            realm.executeTransaction(new Realm.Transaction() {
+                                final RealmResults<GroupLessonUser> groupLessonUsers = realm.where(GroupLessonUser.class).findAll();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        groupLessonUsers.deleteAllFromRealm();
+                                    }
+                                });
+                                realm.executeTransaction(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
                                     realm.copyToRealm(groupLessonUserApiResponse.getData().getFingerprints());
@@ -294,7 +300,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 case 1:
                     int state = MacApplication.getVenueUtils().getState();
                     if (state == 3) {
-                        RealmResults<People> all = realm.where(People.class).findAll();
+                        RealmResults<AllUser> all = realm.where(AllUser.class).findAll();
                         final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
                         ApiFactory.validateAdmin(uid).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
                             @Override
