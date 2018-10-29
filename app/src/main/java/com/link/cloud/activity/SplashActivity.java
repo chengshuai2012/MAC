@@ -1,6 +1,7 @@
 package com.link.cloud.activity;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.link.cloud.R;
 import com.link.cloud.User;
@@ -50,19 +51,26 @@ public class SplashActivity extends AppBarActivity {
             public void onNext(ApiResponse<UserList> apiResponse) {
                 final UserList userList = apiResponse.getData();
                 total = userList.getTotal();
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.copyToRealm(userList.getData());
-                    }
-                });
+                Log.e("onNext: ", local+">>>"+total);
+                if(local!=total){
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealm(userList.getData());
+                        }
+                    });
+
+                }
 
             }
 
             @Override
             public void onCompleted() {
                 super.onCompleted();
-                getAllData();
+                if(local!=total){
+                    getAllData();
+
+                }
             }
         });
     }
@@ -119,7 +127,7 @@ public class SplashActivity extends AppBarActivity {
 
         if(all.size()!=0){
             DeviceInfo deviceInfo = all.get(0);
-            ApiFactory.appLogin(deviceInfo.getDeviceId(),deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+            ApiFactory.appLogin(deviceInfo.getDeviceId().trim(),deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onStart() {
                 super.onStart();
@@ -135,7 +143,13 @@ public class SplashActivity extends AppBarActivity {
                 getTotal();
 
             }
-        });}else {
+
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    skipActivity(SettingActivity.class);
+                }
+            });}else {
             skipActivity(SettingActivity.class);
         }
     }

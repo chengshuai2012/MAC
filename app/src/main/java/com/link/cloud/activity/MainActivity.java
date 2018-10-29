@@ -250,7 +250,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         public void onNext(final ApiResponse<com.link.cloud.api.dataSourse.GroupLessonUser> groupLessonUserApiResponse) {
                             super.onNext(groupLessonUserApiResponse);
                             groupInUserList.clear();
-                            if(groupLessonUserApiResponse.getData()!=null){
+                            if(groupLessonUserApiResponse.getData().getUserInfos()!=null){
                             groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
                             loadMoreAdapter.notifyDataSetChanged();
                                 final RealmResults<GroupLessonUser> groupLessonUsers = realm.where(GroupLessonUser.class).findAll();

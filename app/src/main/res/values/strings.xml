@@ -90,7 +90,7 @@
     <string name="restart">重启APP</string>
     <string name="open_door">门禁开启</string>
     <string name="close_door">门禁关闭</string>
-    <string name="device_id">设备ID</string>
+    <string name="device_id">设备ID:</string>
     <string name="save_success">保存成功</string>
     <string name="venue_fail">验证失败</string>
     <string name="door_has_open">门禁已开启</string>
@@ -166,6 +166,7 @@
     <string name="rent_location">租用位置：</string>
     <string name="again_finger">请移开手指,再次放置...</string>
     <string name="same_finger">验证错误，请放置同一根手指</string>
+    <string name="wait_amoment">请求中,请稍后...</string>
     <string name="move_finger">请移开手指,再次放置</string>
     <string name="bind_ok">绑定成功</string>
     <string name="handy_member">汗的会员卡</string>

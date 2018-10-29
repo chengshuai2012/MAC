@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -305,7 +306,10 @@ public class RegisterActivity extends AppBarActivity {
 
     @Override
     public void modelMsg(int state, String msg) {
+        Log.e("modelMsg: ", msg);
         if (state == 3) {
+            animator.cancel();
+            bindVenueIntro.setText(getResources().getString(R.string.wait_amoment));
             BindFinger bindFinger = new BindFinger();
             bindFinger.setFingerprint(msg);
             bindFinger.setId(edituserRequest.getId());
@@ -320,7 +324,6 @@ public class RegisterActivity extends AppBarActivity {
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
                     cardNum.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
-                    animator.cancel();
                     handler.sendEmptyMessageDelayed(5,3000);
                 }
             });
