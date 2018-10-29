@@ -35,17 +35,6 @@ public class DemoActivity extends AppBarActivity {
 
     @Override
     protected void initViews() {
-
-
-
-        ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onNext(ApiResponse response) {
-                User.get().setToken((String) response.getData());
-                getCode();
-            }
-        });
-
     }
 
     private void getCode() {

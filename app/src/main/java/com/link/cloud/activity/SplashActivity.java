@@ -119,7 +119,7 @@ public class SplashActivity extends AppBarActivity {
 
         if(all.size()!=0){
             DeviceInfo deviceInfo = all.get(0);
-            ApiFactory.appLogin().subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+            ApiFactory.appLogin(deviceInfo.getDeviceId(),deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
             @Override
             public void onStart() {
                 super.onStart();
