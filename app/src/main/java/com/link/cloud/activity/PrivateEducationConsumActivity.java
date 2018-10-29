@@ -86,7 +86,6 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     ValueAnimator animator;
     RealmResults<AllUser> peoples;
     ArrayList<AllUser> nowPeople = new ArrayList<>();
-    Realm realm;
     private LessonLeftAdapter listAdapter;
     private String memberCoursePkcode;
     private String userUid,coachUid,uid,ResponseCoachid;
@@ -101,7 +100,6 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
         publicTitle.setItemClickListener(this);
         customProgress.setProgressFormatter(null);
         mList = new ArrayList<>();
-        realm = Realm.getDefaultInstance();
         final RealmResults<AllUser> peoples = realm.where(AllUser.class).findAll();
         peoples.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
             @Override
@@ -281,7 +279,6 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
         animator.end();
     }
 

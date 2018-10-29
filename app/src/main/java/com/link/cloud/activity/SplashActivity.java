@@ -30,11 +30,9 @@ import io.realm.RealmResults;
  */
 
 public class SplashActivity extends AppBarActivity {
-    Realm realm;
     @Override
     protected void initViews() {
         hideToolbar();
-        realm = Realm.getDefaultInstance();
         getToken();
 
     }
@@ -145,7 +143,6 @@ public class SplashActivity extends AppBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
 

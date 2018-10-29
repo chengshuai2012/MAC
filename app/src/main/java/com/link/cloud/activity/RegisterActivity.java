@@ -114,7 +114,6 @@ public class RegisterActivity extends AppBarActivity {
     TextView bindFinishInfo;
     @BindView(R.id.bind_middle_three)
     RelativeLayout bindMiddleThree;
-    Realm realm;
     private ValueAnimator animator;
     boolean isSendVerify = false;
     private String tel_num;
@@ -126,7 +125,6 @@ public class RegisterActivity extends AppBarActivity {
         customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
-        realm = Realm.getDefaultInstance();
         setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
         setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
         verifyCode.setShowSoftInputOnFocus(false);
@@ -290,7 +288,6 @@ public class RegisterActivity extends AppBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     @Override

@@ -3,8 +3,10 @@ package com.link.cloud.base;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,8 +17,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.gson.Gson;
+import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
+import com.link.cloud.activity.PreGroupLessonActivity;
+import com.link.cloud.api.bean.PayBean;
+import com.link.cloud.listener.MessageListener;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.SimpleStyleDialog;
@@ -24,8 +31,12 @@ import com.orhanobut.logger.Logger;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zitech.framework.utils.ViewUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.realm.Realm;
 import rx.functions.Action1;
 
 
@@ -37,17 +48,43 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     private Unbinder bind;
     private SimpleStyleDialog denyDialog;
+    public Realm realm;
+    MessageListener messageListner;
+    MesReceiver mesReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         this.setContentView(this.getLayoutId());
+        realm= Realm.getDefaultInstance();
         bind = ButterKnife.bind(this);
+        mesReceiver=new MesReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.MSG);
+        registerReceiver(mesReceiver, intentFilter);
         MacApplication.getVenueUtils().initVenue(this, this, false);
         initViews();
 
     }
+    public class MesReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String msg = intent.getStringExtra("msg");
+            String type  =null;
+            try {
+                JSONObject object = new JSONObject(msg);
+                type = object.getString("msgType");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if(messageListner!=null){
+                if("BUY_COURSE_NOTIFY".equals(type)){
+                        messageListner.onMessageReciever(msg);
+                }
+            }
 
+        }
+    }
     protected abstract void initViews();
 
     protected abstract int getLayoutId();
@@ -58,10 +95,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    protected void setMessageListner(MessageListener messageListner){
+        this.messageListner = messageListner;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         bind.unbind();
+        realm.close();
+        unregisterReceiver(mesReceiver);
         try {
             MacApplication.getVenueUtils().unBindService();
         } catch (Exception e) {

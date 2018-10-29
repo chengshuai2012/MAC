@@ -33,6 +33,7 @@ import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.listener.MessageListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.PublicTitleView;
@@ -53,7 +54,7 @@ import io.realm.RealmResults;
  * Created by OFX002 on 2018/9/26.
  */
 
-public class PreGroupLessonActivity extends AppBarActivity implements DialogCancelListener {
+public class PreGroupLessonActivity extends AppBarActivity implements DialogCancelListener, MessageListener {
 
     @BindView(R.id.binding)
     TextView binding;
@@ -155,12 +156,10 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     private DialogUtils dialogUtils;
     private String courseReleasePkcode;
     private LessonItemBean lessonItemBean;
-    Realm realm;
     String uuid;
     private int minute;
     private int second;
     private long payRest;
-    MesReceiver mesReceiver;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
@@ -187,11 +186,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         address.setText(getResources().getString(R.string.address) + lessonItemBean.getAddress());
         lessonTime.setText(getResources().getString(R.string.time) + lessonItemBean.getCoursePlanBegtime());
         peopleCount.setText(lessonItemBean.getNum() + "人");
-        realm = Realm.getDefaultInstance();
-        mesReceiver=new MesReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.MSG);
-        registerReceiver(mesReceiver, intentFilter);
+        setMessageListner(this);
     }
 
 
@@ -419,36 +414,23 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         handler.sendEmptyMessage(3);
     }
 
-
-public class MesReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
-        String msg = intent.getStringExtra("msg");
-        String type  =null;
-        try {
-            JSONObject object = new JSONObject(msg);
-            type = object.getString("msgType");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if("BUY_COURSE_NOTIFY".equals(type)){
-            Gson gson  = new Gson();
-            PayBean payBean = gson.fromJson(msg, PayBean.class);
-            String Payuuid = payBean.getData().getUserInfo().getUuid();
-            Logger.e(uuid);   Logger.e(Payuuid);
-            dialogUtils.dissMiss();
-            View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
-            dialogUtils.showVeuneOkDialog(view);
-            if(uuid.equals(Payuuid)){
-                handler.sendEmptyMessageDelayed(4,2000);
-            }
+    public void onMessageReciever(String msg) {
+        Gson gson  = new Gson();
+        PayBean payBean = gson.fromJson(msg, PayBean.class);
+        String Payuuid = payBean.getData().getUserInfo().getUuid();
+        Logger.e(uuid);   Logger.e(Payuuid);
+        dialogUtils.dissMiss();
+        View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
+        dialogUtils.showVeuneOkDialog(view);
+        if(uuid.equals(Payuuid)){
+            handler.sendEmptyMessageDelayed(4,2000);
         }
     }
-}
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
         handler.removeMessages(3);
     }
 

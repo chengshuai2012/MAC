@@ -46,13 +46,11 @@ public class SettingActivity extends AppBarActivity {
     TextView save;
     @BindView(R.id.edit_psw)
     TextView edit_psw;
-    Realm realm;
     private String mac;
 
     @Override
     protected void initViews() {
         hideToolbar();
-        realm = Realm.getDefaultInstance();
         mac = Utils.getMac();
         deviceId.setText(getResources().getString(R.string.device_id) + mac);
     }

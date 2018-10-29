@@ -74,7 +74,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @BindView(R.id.coach_name)
     TextView coachName;
     private DialogUtils dialogUtils;
-    Realm realm;
     ValueAnimator animator;
     private ViewPager viewPager;
     private RecyclerIndicatorView scrollIndicatorView;
@@ -135,7 +134,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     protected void initViews() {
         hideToolbar();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
-        realm = Realm.getDefaultInstance();
         userBeans = realm.where(GroupLessonUser.class).findAll();
         userBeans.addChangeListener(new RealmChangeListener<RealmResults<GroupLessonUser>>() {
             @Override
@@ -379,7 +377,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
         handler.removeCallbacksAndMessages(null);
     }
 
