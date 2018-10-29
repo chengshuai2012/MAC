@@ -164,7 +164,6 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     @Override
     protected void initViews() {
         setTitle(R.drawable.handy_logo);
-        hideToolbar();
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         registerIntroduceTwo.setText(getResources().getString(R.string.choose_login_1));
         registerIntroduceThree.setVisibility(View.GONE);

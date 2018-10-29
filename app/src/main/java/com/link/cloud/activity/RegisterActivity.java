@@ -1,7 +1,10 @@
 package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -287,6 +290,7 @@ public class RegisterActivity extends AppBarActivity {
 
     @Override
     protected void onDestroy() {
+        handler.removeMessages(5);
         super.onDestroy();
     }
 
@@ -317,6 +321,7 @@ public class RegisterActivity extends AppBarActivity {
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
                     cardNum.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
                     animator.cancel();
+                    handler.sendEmptyMessageDelayed(5,3000);
                 }
             });
 
@@ -328,5 +333,12 @@ public class RegisterActivity extends AppBarActivity {
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
         }
     }
-
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            finish();
+        }
+    };
 }
