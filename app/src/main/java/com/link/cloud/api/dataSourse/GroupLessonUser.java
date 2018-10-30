@@ -29,19 +29,22 @@ public class GroupLessonUser {
     }
 
     public static class UserInfosBean {
+
         /**
-         * id : 17
+         * id : 29
          * merchantId : 1
-         * uid : i2wk31hg
-         * uuid : 406afce8a19b453bb77f6312a14b5a8b
-         * phone : 13726261348
+         * uid : 6csld1v8
+         * uuid : ccbe4f454ffc4e64a7644c8c9409edf9
+         * phone : 18574107629
          * sex : 1
          * headImg :
-         * fingerprint :
          * userType : 1
          * status : 1
-         * createTime : 2018-10-20 18:21:03
-         * nickname :
+         * createTime : 2018-10-30 14:51:03
+         * nickname : 晟敏
+         * isadmin : 0
+         * admission : 0
+         * bookid : oznliemq
          */
 
         private int id;
@@ -51,11 +54,13 @@ public class GroupLessonUser {
         private String phone;
         private int sex;
         private String headImg;
-        private String fingerprint;
         private int userType;
         private int status;
         private String createTime;
         private String nickname;
+        private int isadmin;
+        private int admission;
+        private String bookid;
 
         public int getId() {
             return id;
@@ -113,14 +118,6 @@ public class GroupLessonUser {
             this.headImg = headImg;
         }
 
-        public String getFingerprint() {
-            return fingerprint;
-        }
-
-        public void setFingerprint(String fingerprint) {
-            this.fingerprint = fingerprint;
-        }
-
         public int getUserType() {
             return userType;
         }
@@ -151,6 +148,30 @@ public class GroupLessonUser {
 
         public void setNickname(String nickname) {
             this.nickname = nickname;
+        }
+
+        public int getIsadmin() {
+            return isadmin;
+        }
+
+        public void setIsadmin(int isadmin) {
+            this.isadmin = isadmin;
+        }
+
+        public int getAdmission() {
+            return admission;
+        }
+
+        public void setAdmission(int admission) {
+            this.admission = admission;
+        }
+
+        public String getBookid() {
+            return bookid;
+        }
+
+        public void setBookid(String bookid) {
+            this.bookid = bookid;
         }
     }
 

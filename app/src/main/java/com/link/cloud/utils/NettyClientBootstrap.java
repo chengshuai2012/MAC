@@ -163,12 +163,14 @@ public class NettyClientBootstrap {
                 if (intent != null) {
                     intent.setAction(Constants.MSG);
                     intent.putExtra("msg", msgObj);
+                    Log.e("channelRead0: ", "111");
                     context.sendBroadcast(intent);
                 } else {
                     intent = new Intent();
                     intent.setAction(Constants.MSG);
                     intent.putExtra("msg", msgObj);
                     context.sendBroadcast(intent);
+                    Log.e("channelRead0: ", "222");
                 }
             }
         }

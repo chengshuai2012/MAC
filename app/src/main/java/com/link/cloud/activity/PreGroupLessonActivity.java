@@ -14,12 +14,14 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.link.cloud.Constants;
@@ -29,8 +31,10 @@ import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.api.bean.PayBean;
+import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.MessageListener;
@@ -39,6 +43,7 @@ import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.PublicTitleView;
 import com.orhanobut.logger.Logger;
 import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
@@ -54,7 +59,7 @@ import io.realm.RealmResults;
  * Created by OFX002 on 2018/9/26.
  */
 
-public class PreGroupLessonActivity extends AppBarActivity implements DialogCancelListener, MessageListener {
+public class PreGroupLessonActivity extends AppBarActivity implements DialogCancelListener {
 
     @BindView(R.id.binding)
     TextView binding;
@@ -160,6 +165,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     private int minute;
     private int second;
     private long payRest;
+    MesReceiver mesReceiver;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
@@ -185,9 +191,39 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         address.setText(getResources().getString(R.string.address) + lessonItemBean.getAddress());
         lessonTime.setText(getResources().getString(R.string.time) + lessonItemBean.getCoursePlanBegtime());
         peopleCount.setText(lessonItemBean.getNum() + "人");
-        setMessageListner(this);
+        mesReceiver=new MesReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.MSG);
+        registerReceiver(mesReceiver, intentFilter);
     }
+    public class MesReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String msg = intent.getStringExtra("msg");
+            String type  =null;
+            JSONObject object=null;
+            try {
+                object = new JSONObject(msg);
+                type = object.getString("msgType");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if("BUY_COURSE_NOTIFY".equals(type)){
+                Gson gson  = new Gson();
+                PayBean payBean = gson.fromJson(msg, PayBean.class);
+                String Payuuid = payBean.getData().getUserInfo().getUuid();
+                Logger.e(uuid);
+                Logger.e(Payuuid);
+                dialogUtils.dissMiss();
+                View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
+                dialogUtils.showVeuneOkDialog(view);
+                if(uuid.equals(Payuuid)){
+                    handler.sendEmptyMessageDelayed(4,2000);
+                }
+            }
+        }
 
+    }
 
     public void setHintSize(EditText editText, int size, String hint) {
         String hintStr = hint;
@@ -412,34 +448,10 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         Logger.e("onVenuePay");
         handler.sendEmptyMessage(3);
     }
-
-    @Override
-    public void onMessageReciever(String type,String msg) {
-        if("BUY_COURSE_NOTIFY".equals(type)){
-            Gson gson  = new Gson();
-            PayBean payBean = gson.fromJson(msg, PayBean.class);
-            String Payuuid = payBean.getData().getUserInfo().getUuid();
-            Logger.e(uuid);   Logger.e(Payuuid);
-            dialogUtils.dissMiss();
-            View view = View.inflate(PreGroupLessonActivity.this,R.layout.pay_ok_dialog,null);
-            dialogUtils.showVeuneOkDialog(view);
-            if(uuid.equals(Payuuid)){
-                handler.sendEmptyMessageDelayed(4,2000);
-            }
-        }
-    }
-
-
-    public class MesReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-
-    }
-}
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mesReceiver);
         handler.removeMessages(3);
     }
 

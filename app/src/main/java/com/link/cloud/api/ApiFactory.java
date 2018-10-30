@@ -3,6 +3,7 @@ package com.link.cloud.api;
 import com.link.cloud.User;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
@@ -244,6 +245,16 @@ public class ApiFactory {
      */
     public static Observable<ApiResponse> payByRest(String courseReleasePkcode,String uuid) {
         return getApiService().payByRest("app", "balanceBuyCourse", courseReleasePkcode, uuid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+
+/**
+     * 余额支付
+     *
+     * @return
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     */
+    public static Observable<ApiResponse<SingleUser>> getSingle(String uuid) {
+        return getApiService().getSingle("app", "user", uuid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

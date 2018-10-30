@@ -90,6 +90,7 @@ public class DialogUtils implements View.OnClickListener {
         cancel.setOnClickListener(this);
         psw_login.setOnClickListener(this);
         close.setOnClickListener(this);
+        dialog.setCancelable(false);
         params.leftMargin = 30;
         window.setContentView(view, params);
     }
@@ -344,7 +345,7 @@ public class DialogUtils implements View.OnClickListener {
         Coach_Advantager advantager = new Coach_Advantager(context,coachInfo.getStoreCoachIntroduce().getCertificateList());
         coach_verify_detail.setAdapter(advantager);
         setListViewHeightCoach(advantage_lesson_detail, adapter, context, coachInfo);
-        setListViewHeightCoach(coach_verify_detail, advantager, context, coachInfo);
+        setListViewHeightCoachADV(coach_verify_detail, advantager, context, coachInfo);
         advantage_lesson_detail.setAdapter(adapter);
         isInit = false;
         isShowShortText = true;
@@ -445,6 +446,32 @@ public class DialogUtils implements View.OnClickListener {
             View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
             TextView tv = listItem.findViewById(R.id.message);
             tv.setText(coachInfo.getStoreCoachIntroduce().getGoodCourse().get(i).getGoods());
+            int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
+            int tvHeight = tv.getLineHeight();
+            int width = 700;
+            int newTVHeight;
+            listItem.measure(0, 0);
+            if (textWidth > width) {
+                if (textWidth % width > 0) {
+                    newTVHeight = tvHeight * ((textWidth / width) + 1);
+                } else {
+                    newTVHeight = tvHeight * ((textWidth / width));
+                }
+            } else {
+                newTVHeight = tvHeight;
+            }
+            totalHeight += listItem.getMeasuredHeight() + newTVHeight - tvHeight;
+        }
+        ViewGroup.LayoutParams params = user_reviews_listview.getLayoutParams();
+        params.height = totalHeight + (user_reviews_listview.getDividerHeight() * (mListviewAdapter.getCount() - 1));
+        user_reviews_listview.setLayoutParams(params);
+    }
+    private void setListViewHeightCoachADV(ListView user_reviews_listview, BaseAdapter mListviewAdapter, Activity activity, CoachInfo coachInfo) {
+        int totalHeight = 0;
+        for (int i = 0, len = mListviewAdapter.getCount(); i < len; i++) {
+            View listItem = mListviewAdapter.getView(i, null, user_reviews_listview);
+            TextView tv = listItem.findViewById(R.id.message);
+            tv.setText(coachInfo.getStoreCoachIntroduce().getCertificateList().get(i).getText());
             int textWidth = (int) Math.ceil(tv.getPaint().measureText(tv.getText().toString()));
             int tvHeight = tv.getLineHeight();
             int width = 700;
@@ -577,7 +604,8 @@ public class DialogUtils implements View.OnClickListener {
 
                 break;
             case R.id.confirm:
-                String fisrt = Utils.getMD5("123123").toUpperCase();
+
+                String fisrt = Utils.getMD5( builder.toString()).toUpperCase();
                 String second = Utils.getMD5(fisrt).toUpperCase();
                 ApiFactory.validatePassword(second).subscribe(new ProgressSubscriber<ApiResponse>(context) {
                     @Override

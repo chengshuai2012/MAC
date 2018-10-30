@@ -31,6 +31,10 @@ import io.realm.RealmResults;
  */
 
 public class SplashActivity extends AppBarActivity {
+
+    private RealmResults allLocal;
+    private DeviceInfo deviceInfo;
+
     @Override
     protected void initViews() {
         hideToolbar();
@@ -40,7 +44,8 @@ public class SplashActivity extends AppBarActivity {
 
     int pageNum = 100;
     int total = 0;
-    int local =0;
+    int local = 0;
+
     private void getTotal() {
         GetUserPages getUserPages = new GetUserPages();
         getUserPages.setContent("HJKF");
@@ -48,18 +53,28 @@ public class SplashActivity extends AppBarActivity {
         getUserPages.setPageSize(pageNum);
         ApiFactory.getUsers(getUserPages).subscribe(new BaseProgressSubscriber<ApiResponse<UserList>>(this) {
             @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();
+            }
+
+            @Override
             public void onNext(ApiResponse<UserList> apiResponse) {
                 final UserList userList = apiResponse.getData();
                 total = userList.getTotal();
-                Log.e("onNext: ", local+">>>"+total);
-                if(local!=total){
+                Log.e("onNext: ", local + ">>>" + total);
+                if (local != total) {
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
+                            allLocal.deleteAllFromRealm();
                             realm.copyToRealm(userList.getData());
                         }
                     });
 
+                }else {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
                 }
 
             }
@@ -67,7 +82,7 @@ public class SplashActivity extends AppBarActivity {
             @Override
             public void onCompleted() {
                 super.onCompleted();
-                if(local!=total){
+                if (local != total) {
                     getAllData();
 
                 }
@@ -86,10 +101,11 @@ public class SplashActivity extends AppBarActivity {
                     @Override
                     public Boolean call() throws Exception {
                         GetUserPages getUserPages = new GetUserPages();
-                        getUserPages.setContent("CHINA00001");
+                        getUserPages.setContent(deviceInfo.getDeviceId());
                         getUserPages.setPageNo(finalI);
                         getUserPages.setPageSize(pageNum);
                         ApiFactory.getUsers(getUserPages).subscribe(new NoProgressSubscriber<ApiResponse<UserList>>(SplashActivity.this) {
+
                             @Override
                             public void onNext(ApiResponse<UserList> apiResponse) {
                                 final UserList userList = apiResponse.getData();
@@ -125,37 +141,39 @@ public class SplashActivity extends AppBarActivity {
     private void getToken() {
         RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
 
-        if(all.size()!=0){
-            DeviceInfo deviceInfo = all.get(0);
-            ApiFactory.appLogin(deviceInfo.getDeviceId().trim(),deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
-            @Override
-            public void onStart() {
-                super.onStart();
-                dismissProgressDialog();/**/
-            }
+        if (all.size() != 0) {
+            deviceInfo = all.get(0);
+            ApiFactory.appLogin(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    dismissProgressDialog();/**/
+                }
 
-            @Override
-            public void onNext(ApiResponse response) {
-                super.onNext(response);
-                User.get().setToken((String) response.getData());
-                RealmResults  allLocal = realm.where(AllUser.class).findAll();
-                local =allLocal.size();
-                getTotal();
+                @Override
+                public void onNext(ApiResponse response) {
+                    super.onNext(response);
+                    User.get().setToken((String) response.getData());
+                    allLocal = realm.where(AllUser.class).findAll();
+                    local = allLocal.size();
+                    getTotal();
 
-            }
+                }
 
                 @Override
                 public void onError(Throwable e) {
                     super.onError(e);
                     skipActivity(SettingActivity.class);
                 }
-            });}else {
+            });
+        } else {
             skipActivity(SettingActivity.class);
         }
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
     }
 

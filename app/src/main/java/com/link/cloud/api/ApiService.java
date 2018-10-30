@@ -2,6 +2,7 @@ package com.link.cloud.api;
 
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
@@ -259,5 +260,14 @@ public interface ApiService {
      */
     @POST(ApiConstants.BUYBYREST)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse> payByRest(@Path("app") String app, @Path("balanceBuyCourse") String balanceBuyCourse,@Path("courseReleasePkcode")  String courseReleasePkcode, @Path("uuid") String uuid,@Header("access-token") String token);
+    Observable<ApiResponse> payByRest(@Path("app") String app, @Path("balanceBuyCourse") String balanceBuyCourse,@Path("courseReleasePkcode")  String courseReleasePkcode, @Path("uuid") String uuid,@Header("access-token") String token);    /**
+     * 获取单个用户
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @GET(ApiConstants.GETSINGLEUSER)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<SingleUser>> getSingle(@Path("app") String app, @Path("user") String user, @Path("uuid") String uuid, @Header("access-token") String token);
 }

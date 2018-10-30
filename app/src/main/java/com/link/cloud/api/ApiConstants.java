@@ -67,6 +67,9 @@ public class ApiConstants {
     //余额支付
     public static final String BUYBYREST = "{app}/{balanceBuyCourse}/{uuid}/{courseReleasePkcode}";
 
+  //获取单独用户
+    public static final String GETSINGLEUSER = "{app}/{user}/{uuid}";
+
 
 
 

@@ -30,6 +30,7 @@ import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.GroupLessonUser;
 import com.link.cloud.bean.MainFragment;
+import com.link.cloud.gpiotest.Gpio;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
@@ -87,6 +88,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     RealmResults<GroupLessonUser> userBeans;
     private String courseReleasePkcode;
     NettyClientBootstrap nettyClientBootstrap;
+    String gpiotext ="1067";
     public ArrayList<MainFragment> fragmentList = new ArrayList<>();
     private void getListDate( final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
@@ -146,6 +148,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                if(!isLessonin){
+                    return;
+                }
                 int state = MacApplication.getVenueUtils().getState();
                 if (state == 3) {
                     final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
@@ -155,7 +160,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             public void onNext(ApiResponse apiResponse) {
                                 super.onNext(apiResponse);
                                 onVeuenMsg(uid, "");
-                                loadMoreAdapter.notifyDataSetChanged();
+                                getGroupData();
                             }
 
                             @Override
@@ -196,7 +201,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getListDate(0);
-
+        RegisteReciver();
+        Gpio.gpioInt(gpiotext);
+        Gpio.set(gpiotext, 48);
     }
 
 
@@ -278,13 +285,25 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         if (TextUtils.isEmpty(uid)) {
             View view = View.inflate(this, R.layout.verify_fail, null);
             dialogUtils.showVeuneFailDialog(view, msg);
+
         } else {
             View view = View.inflate(this, R.layout.verify_success, null);
             dialogUtils.showVeuneInOkDialog(view);
+            openDoor();
         }
         handler.sendEmptyMessageDelayed(0, 3000);
     }
-
+    private void openDoor(){
+        try {
+            Gpio.gpioInt(gpiotext);
+            Thread.sleep(400);
+            Gpio.set(gpiotext, 48);
+//            TTSUtils.getInstance().speak("门已开");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Gpio.set(gpiotext, 49);
+    }
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -314,6 +333,13 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         }
     };
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        animator.end();
+    }
+
+    boolean isLessonin =false;
     protected void SendMsgToTcp(String msg) {
         nettyClientBootstrap.startNetty(msg);
         Log.e( "SendMsgToTcp: ", msg);
@@ -332,6 +358,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.text_gray));
                 break;
             case R.id.manager:
+                animator.end();
+                handler.removeMessages(0);
                 handler.sendEmptyMessageDelayed(1, 1000);
                 View view = View.inflate(MainActivity.this, R.layout.veune_dialog, null);
                 dialogUtils.showManagerDialog(view);
@@ -341,6 +369,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
+                isLessonin=true;
                 animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
@@ -351,6 +380,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 initGroup();
                 break;
             case R.id.choose_lesson:
+                isLessonin=false;
                 animator.end();
                 getListDate(0);
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
@@ -378,6 +408,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        unRegisterReceiver();
     }
 
     @Override
@@ -387,12 +418,14 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         member.setTextColor(getResources().getColor(R.color.almost_white));
         manager.setTextColor(getResources().getColor(R.color.text_gray));
         handler.removeMessages(1);
+        animator.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (group_lesson_fragment.isFocusable()) {
+        if (group_lesson_fragment.getVisibility()==View.VISIBLE) {
+            Log.e( "onResume: ", group_lesson_fragment.isShown()+"<<<<<");
             animator.start();
         }
     }
