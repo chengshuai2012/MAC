@@ -4,47 +4,48 @@
     android:layout_height="@dimen/keyboard_height"
     android:orientation="vertical">
 
-<EditText
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/keyboard_edit_height"
-    android:background="@drawable/border_lesson"
-    android:layout_marginBottom="@dimen/keyboard_margin"
-    android:id="@+id/input_tel"
-    android:gravity="center"
-    android:text="@string/please_input_tel"
-    android:textSize="@dimen/text_size_36"
-    />
+    <EditText
+        android:id="@+id/input_tel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/keyboard_edit_height"
+        android:layout_marginBottom="@dimen/keyboard_margin"
+        android:background="@drawable/border_lesson"
+        android:gravity="center"
+        android:hint="@string/please_input_tel"
+        android:textSize="@dimen/text_size_36" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/keyboard_edit_height"
-        android:orientation="horizontal"
         android:layout_marginBottom="@dimen/keyboard_margin"
         android:gravity="center"
-        >
+        android:orientation="horizontal">
+
         <EditText
+            android:id="@+id/verify_code"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="@dimen/keyboard_edit_height"
+            android:layout_marginRight="@dimen/keyboard_margin"
+            android:layout_weight="2"
             android:background="@drawable/border_lesson"
             android:gravity="center"
-            android:layout_marginRight="@dimen/keyboard_margin"
-            android:id="@+id/verify_code"
             android:text="@string/please_input_verify"
-            android:textSize="@dimen/text_size_30"
-            />
+            android:textSize="@dimen/text_size_30" />
+
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="@dimen/keyboard_edit_height"
-            android:background="@drawable/border_red_gradient"
-            android:text="@string/send"
-            android:textSize="@dimen/margin_main"
-            android:textColor="@color/almost_white"
             android:id="@+id/send"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/keyboard_edit_height"
+            android:layout_weight="1"
+            android:background="@drawable/border_red_gradient"
             android:gravity="center"
+            android:text="@string/send"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/margin_main"
 
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
