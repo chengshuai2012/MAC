@@ -71,7 +71,7 @@ public class ChooseLesson_Adapter extends RecyclerView.Adapter<RecyclerView.View
             LessonItemBean lessonItemBean = dataList.get(position);
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
             recyclerViewHolder.lesson_pre_check.setTag(position);
-            Glide.with(mContext).load(lessonItemBean.getStoreCoachTopimg()).into(recyclerViewHolder.coach_image);
+            Glide.with(mContext).load(lessonItemBean.getStoreCoachHeadimg()).into(recyclerViewHolder.coach_image);
             recyclerViewHolder.lessonName.setText(lessonItemBean.getFitnessCourseName());
             recyclerViewHolder.lessonTime.setText(lessonItemBean.getCoursePlanBegtime()+"-"+lessonItemBean.getCoursePlanEndtime());
             recyclerViewHolder.lessonPrice.setText("￥:"+lessonItemBean.getCourseReleaseMoney());
