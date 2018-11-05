@@ -1,5 +1,6 @@
 package com.link.cloud.api;
 
+import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.SingleUser;
@@ -45,7 +46,7 @@ public interface ApiService {
      */
     @POST(ApiConstants.APPLOGIN)
     @Headers("Content-Type:" + RetrofitClient.FORM)
-    Observable<ApiResponse> appLogin(@Path("pub") String pub, @Path("appLogin") String appLogin, @Path("deviceCode") String deviceCode, @Path("password") String password);
+    Observable<ApiResponse<DeviceBean>> appLogin(@Path("pub") String pub, @Path("appLogin") String appLogin, @Path("deviceCode") String deviceCode, @Path("password") String password);
 
 
     /**

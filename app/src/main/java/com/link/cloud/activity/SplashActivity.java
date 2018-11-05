@@ -7,6 +7,7 @@ import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
+import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
@@ -143,7 +144,7 @@ public class SplashActivity extends AppBarActivity {
 
         if (all.size() != 0) {
             deviceInfo = all.get(0);
-            ApiFactory.appLogin(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
+            ApiFactory.appLogin(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse<DeviceBean>>(this) {
                 @Override
                 public void onStart() {
                     super.onStart();
@@ -151,9 +152,9 @@ public class SplashActivity extends AppBarActivity {
                 }
 
                 @Override
-                public void onNext(ApiResponse response) {
+                public void onNext(ApiResponse<DeviceBean> response) {
                     super.onNext(response);
-                    User.get().setToken((String) response.getData());
+                    User.get().setToken(response.getData().getToken());
                     allLocal = realm.where(AllUser.class).findAll();
                     local = allLocal.size();
                     getTotal();

@@ -166,8 +166,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             @Override
                             public void onNext(ApiResponse apiResponse) {
                                 super.onNext(apiResponse);
-                                onVeuenMsg(uid, "");
                                 handler.removeMessages(0);
+                                onVeuenMsg(uid, "");
                                 getGroupData();
                             }
 

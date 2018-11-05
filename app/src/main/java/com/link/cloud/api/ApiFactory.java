@@ -1,6 +1,7 @@
 package com.link.cloud.api;
 
 import com.link.cloud.User;
+import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
 import com.link.cloud.api.bean.SingleUser;
@@ -68,7 +69,7 @@ public class ApiFactory {
      *
      * @return
      */
-    public static Observable<ApiResponse> appLogin(String userName,String password) {
+    public static Observable<ApiResponse<DeviceBean>> appLogin(String userName, String password) {
         return getApiService().appLogin("pub", "appLogin", userName, password).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.link.cloud.MacApplication;
@@ -156,6 +157,8 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                                 lessonConsumOne.setVisibility(View.GONE);
                                 lessonConsumThree.setVisibility(View.GONE);
                             }
+                        }else {
+                            Toast.makeText(PrivateEducationConsumActivity.this,"验证失败",Toast.LENGTH_LONG).show();
                         }
                     }
 
