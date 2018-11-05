@@ -228,7 +228,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     public void setHintSize(EditText editText, int size, String hint) {
         String hintStr = hint;
         SpannableString ss = new SpannableString(hintStr);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
         editText.setHintTextColor(getResources().getColor(R.color.dark_black));
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         editText.setHint(new SpannedString(ss));
