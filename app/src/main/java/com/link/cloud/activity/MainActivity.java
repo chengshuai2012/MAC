@@ -155,6 +155,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 if (state == 3) {
                     final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
                     if (uid != null) {
+                        animator.end();
                         ApiFactory.admissionCourse(uid, courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                             @Override
                             public void onNext(ApiResponse apiResponse) {
@@ -257,6 +258,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         public void onNext(final ApiResponse<com.link.cloud.api.dataSourse.GroupLessonUser> groupLessonUserApiResponse) {
                             super.onNext(groupLessonUserApiResponse);
                             groupInUserList.clear();
+                            animator.start();
                             if(groupLessonUserApiResponse.getData().getUserInfos()!=null){
                             groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
                             loadMoreAdapter.notifyDataSetChanged();
@@ -392,12 +394,15 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
 
             case R.id.buy:
+                isLessonin=false;
                 showActivity(FunctionalSelectionActivity.class);
                 break;
             case R.id.register:
+                isLessonin=false;
                 showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
+                isLessonin=false;
                 showActivity(PrivateEducationConsumActivity.class);
                 break;
         }
@@ -427,6 +432,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         if (group_lesson_fragment.getVisibility()==View.VISIBLE) {
             Log.e( "onResume: ", group_lesson_fragment.isShown()+"<<<<<");
             animator.start();
+            isLessonin=true;
         }
     }
 
