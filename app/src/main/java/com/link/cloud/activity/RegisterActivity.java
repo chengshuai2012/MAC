@@ -2,6 +2,7 @@ package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -205,45 +206,69 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_9:
                 if (inputTel.isFocused()) {
                     if (editable.length() < 11) {
-                        int index = inputTel.getSelectionStart();
-                        editable.insert(index, ((TextView) v).getText());
-                        inputTel.setText(editable.toString());
-                        inputTel.setSelection(index + 1);
+                        try {
+                            int index = inputTel.getSelectionStart();
+                            editable.insert(index, ((TextView) v).getText());
+                            inputTel.setText(editable.toString());
+                            inputTel.setSelection(index + 1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     if (verify.length() < 4) {
-                        verify.append(((TextView) v).getText());
-                        verifyCode.setText(verify.toString());
-                        verifyCode.setSelection(verify.length());
+                        try {
+                            verify.append(((TextView) v).getText());
+                            verifyCode.setText(verify.toString());
+                            verifyCode.setSelection(verify.length());
+                        }  catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
             case R.id.bind_keypad_ok:
                 if (inputTel.isFocused()) {
-                    editable.delete(0, editable.length());
-                    inputTel.setText(editable.toString());
-                    inputTel.setSelection(editable.length());
-                    setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+                    try {
+                        editable.delete(0, editable.length());
+                        inputTel.setText(editable.toString());
+                        inputTel.setSelection(editable.length());
+                        setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    verify.delete(0, verify.length());
-                    verifyCode.setText(verify.toString());
-                    verifyCode.setSelection(verify.length());
-                    setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
+                    try {
+                        verify.delete(0, verify.length());
+                        verifyCode.setText(verify.toString());
+                        verifyCode.setSelection(verify.length());
+                        setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case R.id.bind_keypad_delect:
                 if (inputTel.isFocused()) {
                     if (editable.length() > 1) {
-                        int index = inputTel.getSelectionStart();
-                        editable.delete(index - 1, index);
-                        inputTel.setText(editable.toString());
-                        inputTel.setSelection(index - 1);
+                        try {
+                            int index = inputTel.getSelectionStart();
+                            editable.delete(index - 1, index);
+                            inputTel.setText(editable.toString());
+                            inputTel.setSelection(index - 1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     if (verify.length() >= 1) {
-                        verify.deleteCharAt(verify.length() - 1);
-                        verifyCode.setText(verify.toString());
-                        verifyCode.setSelection(verify.length());
+                        try {
+                            verify.deleteCharAt(verify.length() - 1);
+                            verifyCode.setText(verify.toString());
+                            verifyCode.setSelection(verify.length());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
