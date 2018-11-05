@@ -3,7 +3,6 @@ package com.link.cloud;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.MyLoadViewFactory;
 import com.shizhefei.mvc.MVCHelper;

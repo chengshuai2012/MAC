@@ -53,9 +53,12 @@ public class PrivateEducationActivity extends AppBarActivity {
         bundle.putSerializable(Constants.FragmentExtra.PRICELEVELBEAN, priceLevelBean);
         publicTitle.nextPosition();
         BottomBuyDialog dialog = new BottomBuyDialog(this);
+
+
         dialog.setOnCancelButtonClickListener(new BottomBuyDialog.OnCancelButtonClickListener() {
             @Override
             public void onClick(Dialog dialog) {
+                publicTitle.lastPosition();
                 dialog.dismiss();
             }
         });

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
@@ -122,6 +123,8 @@ public class RegisterActivity extends AppBarActivity {
     boolean isSendVerify = false;
     private String tel_num;
     private EdituserRequest edituserRequest;
+    private Editable editable;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
@@ -133,6 +136,7 @@ public class RegisterActivity extends AppBarActivity {
         setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
         verifyCode.setShowSoftInputOnFocus(false);
         inputTel.setShowSoftInputOnFocus(false);
+        editable = inputTel.getText();
     }
 
     public void setHintSize(EditText editText, int size, String hint) {
@@ -174,7 +178,6 @@ public class RegisterActivity extends AppBarActivity {
         animator.start();
     }
 
-    StringBuilder builder = new StringBuilder();
     StringBuilder verify = new StringBuilder();
 
     @Override
@@ -201,12 +204,12 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
                 if (inputTel.isFocused()) {
-                    if (builder.length() < 11) {
-                        builder.append(((TextView) v).getText());
-                        inputTel.setText(builder.toString());
-                        inputTel.setSelection(builder.length());
+                    if (editable.length() < 11) {
+                        int index = inputTel.getSelectionStart();
+                        editable.insert(index, ((TextView) v).getText());
+                        inputTel.setText(editable.toString());
+                        inputTel.setSelection(index + 1);
                     }
-
                 } else {
                     if (verify.length() < 4) {
                         verify.append(((TextView) v).getText());
@@ -217,9 +220,9 @@ public class RegisterActivity extends AppBarActivity {
                 break;
             case R.id.bind_keypad_ok:
                 if (inputTel.isFocused()) {
-                    builder.delete(0, builder.length());
-                    inputTel.setText(builder.toString());
-                    inputTel.setSelection(builder.length());
+                    editable.delete(0, editable.length());
+                    inputTel.setText(editable.toString());
+                    inputTel.setSelection(editable.length());
                     setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
                 } else {
                     verify.delete(0, verify.length());
@@ -230,10 +233,11 @@ public class RegisterActivity extends AppBarActivity {
                 break;
             case R.id.bind_keypad_delect:
                 if (inputTel.isFocused()) {
-                    if (builder.length() >= 1) {
-                        builder.deleteCharAt(builder.length() - 1);
-                        inputTel.setText(builder.toString());
-                        inputTel.setSelection(builder.length());
+                    if (editable.length() > 1) {
+                        int index = inputTel.getSelectionStart();
+                        editable.delete(index - 1, index);
+                        inputTel.setText(editable.toString());
+                        inputTel.setSelection(index - 1);
                     }
                 } else {
                     if (verify.length() >= 1) {
@@ -244,9 +248,9 @@ public class RegisterActivity extends AppBarActivity {
                 }
                 break;
             case R.id.confirm_bind:
-                if(isSendVerify){
+                if (isSendVerify) {
                     String code = verifyCode.getText().toString();
-                    ApiFactory.binduser(tel_num,code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
+                    ApiFactory.binduser(tel_num, code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {
                             bindMiddleOne.setVisibility(View.INVISIBLE);
@@ -259,7 +263,7 @@ public class RegisterActivity extends AppBarActivity {
                         }
                     });
 
-                }else {
+                } else {
                     ToastMaster.shortToast(getResources().getString(R.string.verify_first));
                 }
 
@@ -277,7 +281,7 @@ public class RegisterActivity extends AppBarActivity {
                     ApiFactory.sendVCode(tel_num).subscribe(new BaseProgressSubscriber<ApiResponse>(this) {
                         @Override
                         public void onNext(ApiResponse apiResponse) {
-                            isSendVerify=true;
+                            isSendVerify = true;
                             ToastMaster.shortToast(getResources().getString(R.string.verify_has_send));
                         }
                     });
@@ -298,10 +302,8 @@ public class RegisterActivity extends AppBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isSendVerify=false;
+        isSendVerify = false;
     }
-
-
 
 
     @Override
@@ -323,8 +325,8 @@ public class RegisterActivity extends AppBarActivity {
                     bindMiddleThree.setVisibility(View.VISIBLE);
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-                    cardNum.setText(getResources().getString(R.string.now_card)+edituserRequest.getPhone());
-                    handler.sendEmptyMessageDelayed(5,3000);
+                    cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
+                    handler.sendEmptyMessageDelayed(5, 3000);
                 }
             });
 
@@ -336,8 +338,9 @@ public class RegisterActivity extends AppBarActivity {
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
         }
     }
+
     @SuppressLint("HandlerLeak")
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
