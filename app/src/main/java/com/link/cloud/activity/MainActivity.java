@@ -158,15 +158,23 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         animator.end();
                         ApiFactory.admissionCourse(uid, courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                             @Override
+                            public void onStart() {
+                                super.onStart();
+                                dismissProgressDialog();
+                            }
+
+                            @Override
                             public void onNext(ApiResponse apiResponse) {
                                 super.onNext(apiResponse);
                                 onVeuenMsg(uid, "");
+                                handler.removeMessages(0);
                                 getGroupData();
                             }
 
                             @Override
                             public void onError(Throwable e) {
                                 super.onError(e);
+                                handler.removeMessages(0);
                                 onVeuenMsg(null, e.getMessage());
                             }
                         });
