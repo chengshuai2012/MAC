@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
@@ -309,6 +310,10 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             case R.id.confirm_bind:
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
+                    if(TextUtils.isEmpty(code)){
+                        ToastMaster.shortToast(getResources().getString(R.string.verify_input));
+                        return;
+                    }
                     ApiFactory.binduser(tel_num, code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {

@@ -85,7 +85,6 @@ public class SplashActivity extends AppBarActivity {
                 super.onCompleted();
                 if (local != total) {
                     getAllData();
-
                 }
             }
         });

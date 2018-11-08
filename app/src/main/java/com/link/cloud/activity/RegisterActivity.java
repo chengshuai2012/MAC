@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
@@ -275,6 +276,10 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.confirm_bind:
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
+                    if(TextUtils.isEmpty(code)){
+                        ToastMaster.shortToast(getResources().getString(R.string.verify_input));
+                        return;
+                    }
                     ApiFactory.binduser(tel_num, code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {

@@ -173,6 +173,7 @@
     <string name="error_tel">请输入正确的手机号</string>
     <string name="verify_has_send">验证码已发送</string>
     <string name="verify_first">请先获取验证码</string>
+    <string name="verify_input">请输入验证码</string>
     <string name="now_card">当前手机号：</string>
     <string name="coach">教练</string>
     <string name="device_psw">设备密码</string>
