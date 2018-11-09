@@ -153,7 +153,7 @@ public class DialogUtils implements View.OnClickListener {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 500);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 460);
         ImageView close_pay_veune = view.findViewById(R.id.close_pay_veune);
         TextView cancel_buy_group_lesson = view.findViewById(R.id.cancel_buy_group_lesson);
         TextView psw_login = view.findViewById(R.id.psw_pay);
@@ -273,7 +273,7 @@ public class DialogUtils implements View.OnClickListener {
         Window window = dialog.getWindow();
         lesson_price.setText(money);
         window.setBackgroundDrawableResource(android.R.color.transparent);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 467);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 420);
         params.leftMargin = 30;
         window.setContentView(view, params);
     }
@@ -627,6 +627,7 @@ public class DialogUtils implements View.OnClickListener {
                 break;
             case R.id.pay_has_bind:
                 dialog.dismiss();
+                listener.onVenuePay();
                 break;
             case R.id.has_bind:
                 listener.dialogCancel();
@@ -639,5 +640,8 @@ public class DialogUtils implements View.OnClickListener {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
+    }
+    public boolean isShowing() {
+      return dialog.isShowing();
     }
 }

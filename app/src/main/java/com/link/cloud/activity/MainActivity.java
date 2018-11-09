@@ -327,15 +327,23 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 case 1:
                     int state = MacApplication.getVenueUtils().getState();
                     if (state == 3) {
-                        RealmResults<AllUser> all = realm.where(AllUser.class).findAll();
+                        RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("isadmin",1).findAll();
                         final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
-                        ApiFactory.validateAdmin(uid).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
-                            @Override
-                            public void onNext(ApiResponse apiResponse) {
-                                super.onNext(apiResponse);
-                            }
-                        });
-                    }
+                        if(uid!=null){
+                            showActivity(SettingActivity.class);
+                            dialogUtils.dissMiss();
+                            member.setBackground(getResources().getDrawable(R.drawable.border_red));
+                            manager.setBackground(null);
+                            member.setTextColor(getResources().getColor(R.color.almost_white));
+                            manager.setTextColor(getResources().getColor(R.color.text_gray));
+                        }else {
+//                        ApiFactory.validateAdmin(uid).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
+//                            @Override
+//                            public void onNext(ApiResponse apiResponse) {
+//                                super.onNext(apiResponse);
+//                            }
+//                        });}}
+                    }}
                     handler.sendEmptyMessageDelayed(1, 1000);
                     break;
             }

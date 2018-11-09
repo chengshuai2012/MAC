@@ -395,7 +395,6 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     @Override
     public void dialogCancel() {
         finish();
-        Logger.e("dialogCancel: " );
     }
 
     @SuppressLint("HandlerLeak")
@@ -403,10 +402,10 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            handler.removeMessages(3);
             switch (msg.what) {
                 case 3:
                     int state = MacApplication.getVenueUtils().getState();
-                    Logger.e("onVenuePay"+state);
                     if (state == 3) {
                         RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
                         Logger.e(all.size()+"");
@@ -450,8 +449,9 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
 
     @Override
     public void onVenuePay() {
-        Logger.e("onVenuePay");
         handler.sendEmptyMessage(3);
+        View pay_veune_dialog = View.inflate(this, R.layout.pay_veune_dialog, null);
+        dialogUtils.showVeunePayDialog(pay_veune_dialog);
     }
     @Override
     protected void onDestroy() {
