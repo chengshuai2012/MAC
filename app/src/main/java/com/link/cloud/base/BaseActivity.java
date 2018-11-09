@@ -29,6 +29,7 @@ import com.link.cloud.api.bean.PayBean;
 import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.listener.MessageListener;
+import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.SimpleStyleDialog;
@@ -328,7 +329,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void modelMsg(int state, String msg) {
-        Logger.e(state + msg);
+
     }
 
 }

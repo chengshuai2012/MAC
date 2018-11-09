@@ -98,11 +98,11 @@ public class Venueutils {
         String oneResult = ("quality return=" + quaRtn) + ",result=" + quaScore[0] + ",score=" + quaScore[1] + ",fLeakRatio=" + quaScore[2] + ",fPress=" + quaScore[3];
         int quality = (int) quaScore[0];
         if (quality != 0) {
-            callBack.modelMsg(0,context.getString(R.string.move_finger));
+
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
         if (feature == null) {
-            callBack.modelMsg(0,context.getString(R.string.move_finger));
+
         } else {
             modOkProgress++;
             if (modOkProgress == 1) {//first model

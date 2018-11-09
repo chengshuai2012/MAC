@@ -89,6 +89,7 @@ public class SettingActivity extends AppBarActivity {
                             DeviceInfo deviceBean = new DeviceInfo();
                             deviceBean.setDeviceId(mac);
                             deviceBean.setPsw(second);
+                            deviceBean.setDeviceType(android.os.Build.MODEL);
                             realm.copyToRealm(deviceBean);
                         }
                     });

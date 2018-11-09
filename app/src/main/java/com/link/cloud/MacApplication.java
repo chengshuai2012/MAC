@@ -2,7 +2,11 @@ package com.link.cloud;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import com.iflytek.cloud.Setting;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.link.cloud.utils.Venueutils;
 import com.link.cloud.widget.MyLoadViewFactory;
 import com.shizhefei.mvc.MVCHelper;
@@ -39,10 +43,14 @@ public class MacApplication extends BaseApplication {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(configuration);
-
+        intSpeak();
 
     }
+    private void intSpeak(){
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5b3d9df5");//=号后面写自己应用的APPID
+        Setting.setShowLog(false);
 
+    }
     public void post(Runnable r) {
         mainThreadHandler.post(r);
     }

@@ -29,6 +29,7 @@ import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.utils.ToastMaster;
@@ -165,7 +166,7 @@ public class RegisterActivity extends AppBarActivity {
                         animator.setCurrentPlayTime(0);
                     }
                     if (state == 4) {
-                        bindVenueIntro.setText(getResources().getString(R.string.move_finger));
+
                     }
                     if (state != 4 && state != 3) {
                         bindVenueIntro.setText(getResources().getString(R.string.right_finger));
@@ -338,7 +339,8 @@ public class RegisterActivity extends AppBarActivity {
 
     @Override
     public void modelMsg(int state, String msg) {
-        Log.e("modelMsg: ", msg);
+        Log.e( "modelMsg: ", state+">>>>>>>>>");
+        TTSUtils.getInstance().speak(msg);
         if (state == 3) {
             animator.cancel();
             bindVenueIntro.setText(getResources().getString(R.string.wait_amoment));
@@ -356,6 +358,7 @@ public class RegisterActivity extends AppBarActivity {
                     registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
                     cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
+                    TTSUtils.getInstance().speak(getString(R.string.bind_ok));
                     handler.sendEmptyMessageDelayed(5, 3000);
                 }
             });

@@ -405,38 +405,39 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             handler.removeMessages(3);
             switch (msg.what) {
                 case 3:
-                    int state = MacApplication.getVenueUtils().getState();
-                    if (state == 3) {
-                        RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
-                        Logger.e(all.size()+"");
-                        Logger.e(uuid+"");
-                        final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
-                        if (uuid.equals(uid)) {
-                            ApiFactory.payByRest(courseReleasePkcode,uid).subscribe(new ProgressSubscriber<ApiResponse>(PreGroupLessonActivity.this) {
-                                @Override
-                                public void onNext(ApiResponse apiResponse) {
-                                    super.onNext(apiResponse);
-                                    View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_ok_dialog, null);
-                                    dialogUtils.showVeuneOkDialog(view);
-                                    handler.sendEmptyMessageDelayed(4,2000);
-                                }
+                    if(dialogUtils.isShowing()) {
+                        int state = MacApplication.getVenueUtils().getState();
+                        if (state == 3) {
+                            RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
+                            Logger.e(all.size() + "");
+                            Logger.e(uuid + "");
+                            final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
+                            if (uuid.equals(uid)) {
+                                ApiFactory.payByRest(courseReleasePkcode, uid).subscribe(new ProgressSubscriber<ApiResponse>(PreGroupLessonActivity.this) {
+                                    @Override
+                                    public void onNext(ApiResponse apiResponse) {
+                                        super.onNext(apiResponse);
+                                        View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_ok_dialog, null);
+                                        dialogUtils.showVeuneOkDialog(view);
+                                        handler.sendEmptyMessageDelayed(4, 2000);
+                                    }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    super.onError(e);
-                                    View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
-                                    dialogUtils.showVeunePayFailDialog(view,getResources().getString(R.string.please_confirm_bind));
-                                }
-                            });
-                        } else {
-                            View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
-                            dialogUtils.showVeunePayFailDialog(view,getResources().getString(R.string.please_confirm_bind));
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
+                                        dialogUtils.showVeunePayFailDialog(view, getResources().getString(R.string.please_confirm_bind));
+                                    }
+                                });
+                            } else {
+                                View view = View.inflate(PreGroupLessonActivity.this, R.layout.pay_fail, null);
+                                dialogUtils.showVeunePayFailDialog(view, getResources().getString(R.string.please_confirm_bind));
 //                            View view = View.inflate(PreGroupLessonActivity.this, R.layout.verify_fail, null);
 //                            dialogUtils.showVeuneFailDialog(view, getString(R.string.verify_fail));
+                            }
                         }
+                        handler.sendEmptyMessageDelayed(3, 1000);
                     }
-                    handler.sendEmptyMessageDelayed(3, 1000);
-
                     break;
                 case 4:
                     dialogUtils.dissMiss();

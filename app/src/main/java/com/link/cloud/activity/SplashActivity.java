@@ -13,6 +13,7 @@ import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
+import com.link.cloud.utils.TTSUtils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 
@@ -40,7 +41,7 @@ public class SplashActivity extends AppBarActivity {
     protected void initViews() {
         hideToolbar();
         getToken();
-
+        TTSUtils.getInstance().speak("");
     }
 
     int pageNum = 100;

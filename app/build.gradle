@@ -50,4 +50,5 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
     compile 'com.google.zxing:core:3.2.1'
     implementation files('libs/dom4j-1.6.1.jar')
+    implementation files('libs/Msc.jar')
 }

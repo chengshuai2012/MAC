@@ -28,6 +28,7 @@ import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.bean.GroupLessonUser;
 import com.link.cloud.bean.MainFragment;
 import com.link.cloud.gpiotest.Gpio;
@@ -35,6 +36,7 @@ import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.NettyClientBootstrap;
+import com.link.cloud.utils.TTSUtils;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
@@ -88,9 +90,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     RealmResults<GroupLessonUser> userBeans;
     private String courseReleasePkcode;
     NettyClientBootstrap nettyClientBootstrap;
-    String gpiotext ="1067";
+    String gpiotext = "1067";
     public ArrayList<MainFragment> fragmentList = new ArrayList<>();
-    private void getListDate( final int pos) {
+    private String deviceType;
+    private RealmResults<AllUser> allCoachOrWorks;
+    private ArrayList<AllUser> allCoachOrWorksList = new ArrayList<>();
+    private void getListDate(final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
             public void onStart() {
@@ -101,7 +106,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
                 if (!fragmentList.isEmpty()) {
-                    Log.e("onNext: ","clear" );
+                    Log.e("onNext: ", "clear");
                     fragmentList.clear();
                 }
 
@@ -109,12 +114,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     MainFragment mainFragment = new MainFragment();
                     mainFragment.setTip("    " + lessonBean.getDate().substring(5) + "    ");
                     mainFragment.setCourses(lessonBean.getCourses());
-                   fragmentList.add(mainFragment);
-                    indicatorViewPager.setAdapter(new IndicatorViewAdapter(MainActivity.this,MainActivity.this,fragmentList));
-                    if (pos<response.getData().size()){
-                        indicatorViewPager.setCurrentItem(pos,false);
-                    }else {
-                        indicatorViewPager.setCurrentItem(0,false);
+                    fragmentList.add(mainFragment);
+                    indicatorViewPager.setAdapter(new IndicatorViewAdapter(MainActivity.this, MainActivity.this, fragmentList));
+                    if (pos < response.getData().size()) {
+                        indicatorViewPager.setCurrentItem(pos, false);
+                    } else {
+                        indicatorViewPager.setCurrentItem(0, false);
                     }
                 }
 
@@ -137,6 +142,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         hideToolbar();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         userBeans = realm.where(GroupLessonUser.class).findAll();
+        DeviceInfo deviceInfo = realm.where(DeviceInfo.class).findFirst();
+        deviceType = deviceInfo.getDeviceType();
         userBeans.addChangeListener(new RealmChangeListener<RealmResults<GroupLessonUser>>() {
             @Override
             public void onChange(RealmResults<GroupLessonUser> fingerprintsBeans) {
@@ -144,11 +151,19 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 groupUsers.addAll(realm.copyFromRealm(fingerprintsBeans));
             }
         });
+        allCoachOrWorks = realm.where(AllUser.class).equalTo("userType", 2).or().equalTo("userType", 3).findAll();
+        allCoachOrWorks.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
+            @Override
+            public void onChange(RealmResults<AllUser> allUsers) {
+                allCoachOrWorksList.clear();
+                allCoachOrWorksList.addAll(realm.copyFromRealm(allUsers));
+            }
+        });
         animator = ValueAnimator.ofInt(0, 80);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                if(!isLessonin){
+                if (!isLessonin) {
                     return;
                 }
                 int state = MacApplication.getVenueUtils().getState();
@@ -179,8 +194,13 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             }
                         });
                     } else {
-                        View view = View.inflate(MainActivity.this, R.layout.verify_fail, null);
-                        dialogUtils.showVeuneFailDialog(view, getResources().getString(R.string.please_confirm_bind));
+                        final String workOrCoach = MacApplication.getVenueUtils().identifyNewImg(allCoachOrWorksList);
+                        if(workOrCoach!=null){
+                            openDoor();
+                        }else {
+                            View view = View.inflate(MainActivity.this, R.layout.verify_fail, null);
+                            dialogUtils.showVeuneFailDialog(view, getResources().getString(R.string.please_confirm_bind));
+                        }
                     }
 
                 }
@@ -190,7 +210,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
         animator.setDuration(4000);
-        nettyClientBootstrap =new NettyClientBootstrap(this, Constants.TCP_PORT,Constants.TCP_URL,"{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
+        nettyClientBootstrap = new NettyClientBootstrap(this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
         nettyClientBootstrap.start();
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
@@ -212,7 +232,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         getListDate(0);
         RegisteReciver();
         Gpio.gpioInt(gpiotext);
-        Gpio.set(gpiotext, 48);
+        if ("rk3399-mid".equals(deviceType)) {
+            Gpio.set(gpiotext, 48);
+        } else if ("rk3288".equals(deviceType)) {
+            Gpio.set(gpiotext, 0);
+
+        }
     }
 
 
@@ -252,8 +277,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 super.onNext(arrayListApiResponse);
                 groupInList.addAll(arrayListApiResponse.getData());
                 if (arrayListApiResponse.getData().size() > 0) {
-                    coachName.setText(getResources().getString(R.string.now_coach)+arrayListApiResponse.getData().get(0).getStoreCoachName());
-                    lessonName.setText(getResources().getString(R.string.now_lesson)+arrayListApiResponse.getData().get(0).getFitnessCourseName());
+                    coachName.setText(getResources().getString(R.string.now_coach) + arrayListApiResponse.getData().get(0).getStoreCoachName());
+                    lessonName.setText(getResources().getString(R.string.now_lesson) + arrayListApiResponse.getData().get(0).getFitnessCourseName());
                     courseReleasePkcode = arrayListApiResponse.getData().get(0).getCourseReleasePkcode();
                     ApiFactory.getGroupUsers(courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse<com.link.cloud.api.dataSourse.GroupLessonUser>>(MainActivity.this) {
                         @Override
@@ -267,9 +292,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                             super.onNext(groupLessonUserApiResponse);
                             groupInUserList.clear();
                             animator.start();
-                            if(groupLessonUserApiResponse.getData().getUserInfos()!=null){
-                            groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
-                            loadMoreAdapter.notifyDataSetChanged();
+                            if (groupLessonUserApiResponse.getData().getUserInfos() != null) {
+                                groupInUserList.addAll(groupLessonUserApiResponse.getData().getUserInfos());
+                                loadMoreAdapter.notifyDataSetChanged();
                                 final RealmResults<GroupLessonUser> groupLessonUsers = realm.where(GroupLessonUser.class).findAll();
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
@@ -278,12 +303,13 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                                     }
                                 });
                                 realm.executeTransaction(new Realm.Transaction() {
-                                @Override
-                                public void execute(Realm realm) {
-                                    realm.copyToRealm(groupLessonUserApiResponse.getData().getFingerprints());
-                                }
-                            });
-                        }}
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        realm.copyToRealm(groupLessonUserApiResponse.getData().getFingerprints());
+                                    }
+                                });
+                            }
+                        }
                     });
                 }
 
@@ -303,17 +329,32 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         }
         handler.sendEmptyMessageDelayed(0, 3000);
     }
-    private void openDoor(){
-        try {
-            Gpio.gpioInt(gpiotext);
-            Thread.sleep(400);
-            Gpio.set(gpiotext, 48);
+
+    private void openDoor() {
+        if ("rk3399-mid".equals(deviceType)) {
+
+            try {
+                Gpio.gpioInt(gpiotext);
+                Thread.sleep(400);
+                Gpio.set(gpiotext, 48);
 //            TTSUtils.getInstance().speak("门已开");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Gpio.set(gpiotext, 49);
+        } else if ("rk3288".equals(deviceType)) {
+            try {
+                Gpio.gpioInt(gpiotext);
+                Thread.sleep(400);
+                Gpio.set(gpiotext, 0);
+//            TTSUtils.getInstance().speak("门已开");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Gpio.set(gpiotext, 1);
         }
-        Gpio.set(gpiotext, 49);
     }
+
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -325,26 +366,30 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                     animator.start();
                     break;
                 case 1:
-                    int state = MacApplication.getVenueUtils().getState();
-                    if (state == 3) {
-                        RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("isadmin",1).findAll();
-                        final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
-                        if(uid!=null){
-                            showActivity(SettingActivity.class);
-                            dialogUtils.dissMiss();
-                            member.setBackground(getResources().getDrawable(R.drawable.border_red));
-                            manager.setBackground(null);
-                            member.setTextColor(getResources().getColor(R.color.almost_white));
-                            manager.setTextColor(getResources().getColor(R.color.text_gray));
-                        }else {
+                    if (dialogUtils.isShowing()) {
+                        int state = MacApplication.getVenueUtils().getState();
+                        if (state == 3) {
+                            RealmResults<AllUser> all = realm.where(AllUser.class).equalTo("isadmin", 1).findAll();
+                            final String uid = MacApplication.getVenueUtils().identifyNewImg(realm.copyFromRealm(all));
+                            if (uid != null) {
+                                showActivity(SettingActivity.class);
+                                dialogUtils.dissMiss();
+                                member.setBackground(getResources().getDrawable(R.drawable.border_red));
+                                manager.setBackground(null);
+                                member.setTextColor(getResources().getColor(R.color.almost_white));
+                                manager.setTextColor(getResources().getColor(R.color.text_gray));
+                            } else {
 //                        ApiFactory.validateAdmin(uid).subscribe(new ProgressSubscriber<ApiResponse>(MainActivity.this) {
 //                            @Override
 //                            public void onNext(ApiResponse apiResponse) {
 //                                super.onNext(apiResponse);
 //                            }
 //                        });}}
-                    }}
-                    handler.sendEmptyMessageDelayed(1, 1000);
+                                TTSUtils.getInstance().speak(getString(R.string.no_manager));
+                            }
+                        }
+                        handler.sendEmptyMessageDelayed(1, 1000);
+                    }
                     break;
             }
 
@@ -357,10 +402,11 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         animator.end();
     }
 
-    boolean isLessonin =false;
+    boolean isLessonin = false;
+
     protected void SendMsgToTcp(String msg) {
         nettyClientBootstrap.startNetty(msg);
-        Log.e( "SendMsgToTcp: ", msg);
+        Log.e("SendMsgToTcp: ", msg);
     }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
@@ -387,7 +433,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
-                isLessonin=true;
+                isLessonin = true;
                 animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
                 chooseLesson.setBackground(null);
@@ -398,7 +444,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 initGroup();
                 break;
             case R.id.choose_lesson:
-                isLessonin=false;
+                isLessonin = false;
                 animator.end();
                 getListDate(0);
                 chooseLesson.setBackground(getResources().getDrawable(R.drawable.border_red_half_left));
@@ -410,15 +456,15 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 break;
 
             case R.id.buy:
-                isLessonin=false;
+                isLessonin = false;
                 showActivity(FunctionalSelectionActivity.class);
                 break;
             case R.id.register:
-                isLessonin=false;
+                isLessonin = false;
                 showActivity(RegisterActivity.class);
                 break;
             case R.id.lesson_consume:
-                isLessonin=false;
+                isLessonin = false;
                 showActivity(PrivateEducationConsumActivity.class);
                 break;
         }
@@ -445,10 +491,10 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @Override
     protected void onResume() {
         super.onResume();
-        if (group_lesson_fragment.getVisibility()==View.VISIBLE) {
-            Log.e( "onResume: ", group_lesson_fragment.isShown()+"<<<<<");
+        if (group_lesson_fragment.getVisibility() == View.VISIBLE) {
+            Log.e("onResume: ", group_lesson_fragment.isShown() + "<<<<<");
             animator.start();
-            isLessonin=true;
+            isLessonin = true;
         }
     }
 
