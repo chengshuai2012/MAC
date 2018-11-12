@@ -2,8 +2,6 @@ package com.zitech.framework.data.network;
 
 
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.zitech.framework.BaseApplication;
 import com.zitech.framework.utils.NetworkUtil;
 
@@ -17,7 +15,6 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.orhanobut.logger.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -31,13 +28,10 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

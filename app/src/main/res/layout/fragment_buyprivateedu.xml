@@ -208,7 +208,7 @@
                         android:layout_height="@dimen/w72"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/w14"
-                        android:src="@drawable/ic_handy_pay" />
+                        android:src="@drawable/handy_pay" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"

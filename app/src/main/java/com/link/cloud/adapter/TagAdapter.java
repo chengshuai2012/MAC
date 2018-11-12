@@ -72,7 +72,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ContentViewHolde
         } else {
             holder.rootViewLayout.setBackground(activity.getResources().getDrawable(R.drawable.private_edu_member_bg));
             holder.contentText.setTextColor(activity.getResources().getColor(R.color.red));
-
         }
         ViewUtils.setOnClickListener(holder.rootViewLayout, new View.OnClickListener() {
             @Override

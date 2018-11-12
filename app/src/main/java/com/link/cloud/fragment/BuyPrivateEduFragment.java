@@ -103,7 +103,7 @@ public class BuyPrivateEduFragment extends BaseFragment implements DialogCancelL
             }
         });
         countDownView.setTag("test1");
-        long time1 = (long) 10 * 60 * 1000;
+        long time1 = (long) 4 * 60 * 1000;
         countDownView.start(time1);
         ViewUtils.setOnClickListener(lastButton, this);
         ViewUtils.setOnClickListener(wechatPayButton, this);
@@ -127,6 +127,7 @@ public class BuyPrivateEduFragment extends BaseFragment implements DialogCancelL
                 getCode(rentTimeBean.getCourseReleasePkcode(), String.valueOf(rentTimeBean.getPriceLevel().indexOf(priceLevelBean)), getString(R.string.work_intro));
                 break;
             case R.id.handyPayLayout:
+                ((PrivateEducationActivity) getActivity()).showPay(priceLevelBean.getTotalPrice());
                 break;
         }
     }

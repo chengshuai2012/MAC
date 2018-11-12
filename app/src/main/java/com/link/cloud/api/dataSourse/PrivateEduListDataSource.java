@@ -54,6 +54,7 @@ public class PrivateEduListDataSource implements IAsyncDataSource<List<PrivateEd
             protected void accept(ApiResponse<List<PrivateEduBean>> listApiResponse) {
                 hasMore = false;
                 sender.sendData(listApiResponse.getData());
+                User.get().setPosition(-1);
             }
         });
 

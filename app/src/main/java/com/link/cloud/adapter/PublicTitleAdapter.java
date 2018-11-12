@@ -40,6 +40,10 @@ public class PublicTitleAdapter extends RecyclerView.Adapter<PublicTitleAdapter.
         notifyDataSetChanged();
     }
 
+    public void movePosition(int position){
+        mLocation=position;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

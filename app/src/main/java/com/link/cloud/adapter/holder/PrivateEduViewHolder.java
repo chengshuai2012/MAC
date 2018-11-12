@@ -66,6 +66,7 @@ public class PrivateEduViewHolder extends BaseViewHolder<PrivateEduBean> {
 
 
         if (data.getPriceLevel()!=null){
+            tagLayout.setVisibility(View.VISIBLE);
             for (PriceLevelBean priceLevelBean : data.getPriceLevel()) {
                 tagsList.add(priceLevelBean.getCourseTotal());
             }
@@ -84,7 +85,8 @@ public class PrivateEduViewHolder extends BaseViewHolder<PrivateEduBean> {
 
                 }
             });
-
+        }else{
+            tagLayout.setVisibility(View.GONE);
         }
 
         Glide.with(activity).load(data.getImgurl()).into(eduImage);
