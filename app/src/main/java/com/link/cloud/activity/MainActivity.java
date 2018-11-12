@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Power;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -106,7 +107,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             @Override
             public void onNext(ApiResponse<List<LessonBean>> response) {
                 if (!fragmentList.isEmpty()) {
-                    Log.e("onNext: ", "clear");
                     fragmentList.clear();
                 }
 
@@ -159,6 +159,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 allCoachOrWorksList.addAll(realm.copyFromRealm(allUsers));
             }
         });
+        allCoachOrWorksList.addAll(realm.copyFromRealm(allCoachOrWorks));
         animator = ValueAnimator.ofInt(0, 80);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -197,7 +198,9 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         final String workOrCoach = MacApplication.getVenueUtils().identifyNewImg(allCoachOrWorksList);
                         if(workOrCoach!=null){
                             openDoor();
+                            handler.sendEmptyMessageDelayed(0,3000);
                         }else {
+                            handler.sendEmptyMessageDelayed(0,3000);
                             View view = View.inflate(MainActivity.this, R.layout.verify_fail, null);
                             dialogUtils.showVeuneFailDialog(view, getResources().getString(R.string.please_confirm_bind));
                         }
@@ -235,8 +238,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         if ("rk3399-mid".equals(deviceType)) {
             Gpio.set(gpiotext, 48);
         } else if ("rk3288".equals(deviceType)) {
-            Gpio.set(gpiotext, 0);
-
+            Power.set_zysj_gpio_value(4,0);
+            //Power.set_zysj_gpio_value(4,1);
         }
     }
 
@@ -321,7 +324,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         if (TextUtils.isEmpty(uid)) {
             View view = View.inflate(this, R.layout.verify_fail, null);
             dialogUtils.showVeuneFailDialog(view, msg);
-
         } else {
             View view = View.inflate(this, R.layout.verify_success, null);
             dialogUtils.showVeuneInOkDialog(view);
@@ -332,26 +334,24 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
 
     private void openDoor() {
         if ("rk3399-mid".equals(deviceType)) {
-
             try {
                 Gpio.gpioInt(gpiotext);
                 Thread.sleep(400);
                 Gpio.set(gpiotext, 48);
-//            TTSUtils.getInstance().speak("门已开");
+            TTSUtils.getInstance().speak("门已开");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Gpio.set(gpiotext, 49);
         } else if ("rk3288".equals(deviceType)) {
             try {
-                Gpio.gpioInt(gpiotext);
+                Power.set_zysj_gpio_value(4,0);
                 Thread.sleep(400);
-                Gpio.set(gpiotext, 0);
-//            TTSUtils.getInstance().speak("门已开");
+           TTSUtils.getInstance().speak("门已开");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Gpio.set(gpiotext, 1);
+            Power.set_zysj_gpio_value(4,1);
         }
     }
 
@@ -362,6 +362,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
+                    Log.e("handleMessage: ", msg.what+"");
                     dialogUtils.dissMiss();
                     animator.start();
                     break;

@@ -13,6 +13,7 @@
         android:paddingLeft="@dimen/dialog_padding"
         android:paddingBottom="@dimen/margin_main_middle"
         android:paddingTop="@dimen/margin_main_middle"
+        android:id="@+id/scrollview"
         >
 
         <RelativeLayout

@@ -330,6 +330,7 @@ public class DialogUtils implements View.OnClickListener {
         dialog.show();
         FrameLayout fl_desc = (FrameLayout) view.findViewById(R.id.fl_desc);
         tv_desc_short = (TextView) view.findViewById(R.id.tv_desc_short);
+        ScrollView scrollview = (ScrollView) view.findViewById(R.id.scrollview);
         tv_desc_long = (TextView) view.findViewById(R.id.tv_desc_long);
         ivMoreLine = (ImageView) view.findViewById(R.id.iv_more_line);
         ImageView btn_delete = (ImageView) view.findViewById(R.id.btn_delete);
@@ -371,6 +372,7 @@ public class DialogUtils implements View.OnClickListener {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(850, 1750);
         window.setContentView(view, params);
         btn_delete.setOnClickListener(this);
+        scrollview.scrollTo(0,0);
     }
 
     public void showIntroLessonDialog(View view, CoachInfo coachInfo) {
