@@ -25,7 +25,26 @@ public class AllUser extends RealmObject{
     private int merchantId;
     private int userType;
     private String createTime;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getIsIn() {
+        return isIn;
+    }
+
+    public void setIsIn(int isIn) {
+        this.isIn = isIn;
+    }
+
     private int isadmin;
+    private String phone;
+    private int isIn;
 
     public int getId() {
         return id;

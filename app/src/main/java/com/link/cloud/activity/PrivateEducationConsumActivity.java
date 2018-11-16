@@ -87,6 +87,8 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
     ValueAnimator animator;
     RealmResults<AllUser> peoples;
     ArrayList<AllUser> nowPeople = new ArrayList<>();
+    RealmResults<AllUser> Allpeoples;
+    ArrayList<AllUser> allPeople = new ArrayList<>();
     private LessonLeftAdapter listAdapter;
     private String memberCoursePkcode;
     private String userUid,coachUid,uid,ResponseCoachid;
@@ -101,8 +103,16 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
         publicTitle.setItemClickListener(this);
         customProgress.setProgressFormatter(null);
         mList = new ArrayList<>();
-        final RealmResults<AllUser> peoples = realm.where(AllUser.class).findAll();
+        peoples = realm.where(AllUser.class).equalTo("isIn",1).findAll();
         peoples.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
+            @Override
+            public void onChange(RealmResults<AllUser> people) {
+                nowPeople.clear();
+                nowPeople.addAll(realm.copyFromRealm(people));
+            }
+        });
+        Allpeoples = realm.where(AllUser.class).findAll();
+        Allpeoples.addChangeListener(new RealmChangeListener<RealmResults<AllUser>>() {
             @Override
             public void onChange(RealmResults<AllUser> people) {
                 nowPeople.clear();
@@ -111,6 +121,7 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
         });
         bindWay.setText(R.string.member_confirm);
         nowPeople.addAll(realm.copyFromRealm(peoples));
+        allPeople.addAll(realm.copyFromRealm(Allpeoples));
 //        setData();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -128,6 +139,9 @@ public class PrivateEducationConsumActivity extends AppBarActivity implements Pu
                 }
                 if (state == 3) {
                     uid = MacApplication.getVenueUtils().identifyNewImg(nowPeople);
+                    if(uid==null){
+                        uid =  MacApplication.getVenueUtils().identifyNewImg(allPeople);
+                    }
                     AllUser first = realm.where(AllUser.class).equalTo("uuid", uid).findFirst();
                     int userType=0;
                     Log.e("onAnimationUpdate: ",uid +"");

@@ -625,6 +625,7 @@ public class DialogUtils implements View.OnClickListener {
                 break;
             case R.id.no_bind:
             case R.id.pay_no_bind:
+                dialog.dismiss();
                 ((BaseActivity) context).showActivity(RegisterActivity.class);
                 break;
             case R.id.pay_has_bind:

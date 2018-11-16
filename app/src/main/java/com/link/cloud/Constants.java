@@ -8,6 +8,7 @@ public class Constants {
 
     public static final String TCP_URL = "120.79.244.162";
     public static final String MSG = "MSG_RECIEVE";
+    public static final String LESSON = "LESSON_CHANGE";
     public static final int TCP_PORT = 12125;
 
     public interface ActivityExtra {

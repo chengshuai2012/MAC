@@ -41,7 +41,7 @@ public class NettyClientBootstrap {
     public boolean isRepeate = false;
     public Context context;
     String msg;
-    private Intent intent;
+    private Intent intent,intent2;
     private Object type;
 
     public NettyClientBootstrap(Context context, int port, String host, String msg) {
@@ -170,6 +170,20 @@ public class NettyClientBootstrap {
                     intent.setAction(Constants.MSG);
                     intent.putExtra("msg", msgObj);
                     context.sendBroadcast(intent);
+                    Log.e("channelRead0: ", "222");
+                }
+            }
+            if ("REFRESH_COURSE_LIST".equals(type)||"REFRESH_COURSE_USER".equals(type)||"ENTRANCE_GUARD".equals(type)) {
+                if (intent2 != null) {
+                    intent2.setAction(Constants.LESSON);
+                    intent2.putExtra("msg", msgObj);
+                    Log.e("channelRead0: ", "111");
+                    context.sendBroadcast(intent2);
+                } else {
+                    intent2 = new Intent();
+                    intent2.setAction(Constants.LESSON);
+                    intent2.putExtra("msg", msgObj);
+                    context.sendBroadcast(intent2);
                     Log.e("channelRead0: ", "222");
                 }
             }

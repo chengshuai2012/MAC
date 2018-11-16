@@ -28,7 +28,6 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
 
-
         }
 
 

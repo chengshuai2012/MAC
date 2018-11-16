@@ -2,6 +2,10 @@ package com.link.cloud.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Power;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
@@ -25,9 +30,11 @@ import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonBean;
+import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.bean.GroupLessonUser;
@@ -43,7 +50,11 @@ import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +107,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private String deviceType;
     private RealmResults<AllUser> allCoachOrWorks;
     private ArrayList<AllUser> allCoachOrWorksList = new ArrayList<>();
+    private LessonRecieve lesson;
+    int postion ;
     private void getListDate(final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
@@ -241,8 +254,50 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             Power.set_zysj_gpio_value(4,0);
             //Power.set_zysj_gpio_value(4,1);
         }
+        lesson = new LessonRecieve();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LESSON);
+        registerReceiver(lesson, intentFilter);
     }
+    public class LessonRecieve extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String msg = intent.getStringExtra("msg");
+            String type  =null;
+            JSONObject object=null;
+            Log.e( "onReceive: ",msg );
+            Toast.makeText(MainActivity.this,msg,Toast.LENGTH_LONG).show();
+            try {
+                object = new JSONObject(msg);
+                type = object.getString("msgType");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if("REFRESH_COURSE_LIST".equals(type)){
+             getListDate(postion);
+            }else if("REFRESH_COURSE_USER".equals(type)){
+                getGroupData();
+            }else if("ENTRANCE_GUARD".equals(type)){
+                try {
+                    String uuid = object.getString("uuid");
+                    final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
+                    for(int x=0;x<personIn.size();x++){
+                        final int finalX = x;
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                AllUser person = personIn.get(finalX);
+                                person.setIsIn(1);
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
+    }
 
     private void initGroup() {
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.red));
@@ -401,6 +456,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     protected void onPause() {
         super.onPause();
         animator.end();
+        isLessonin=false;
     }
 
     boolean isLessonin = false;
@@ -507,5 +563,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @Override
     public void OnRefreshListener(int pos) {
         getListDate(pos);
+        this.postion =pos;
     }
 }

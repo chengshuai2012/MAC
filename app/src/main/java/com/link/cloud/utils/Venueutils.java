@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.link.cloud.R;
 import com.link.cloud.bean.AllUser;
