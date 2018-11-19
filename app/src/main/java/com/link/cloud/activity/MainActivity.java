@@ -278,7 +278,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 getGroupData();
             }else if("ENTRANCE_GUARD".equals(type)){
                 try {
-                    String uuid = object.getString("uuid");
+                    JSONObject data = object.getJSONObject("data");
+                    String uuid = data.getString("uuid");
                     final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
                     for(int x=0;x<personIn.size();x++){
                         final int finalX = x;

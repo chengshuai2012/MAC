@@ -141,7 +141,17 @@ public class SplashActivity extends AppBarActivity {
 
     private void getToken() {
         RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
-
+        final RealmResults<AllUser> peopleIn = realm.where(AllUser.class).equalTo("isIn",1).findAll();
+        for(int x=0;x<peopleIn.size();x++){
+            final int finalX = x;
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    AllUser person = peopleIn.get(finalX);
+                    person.setIsIn(0);
+                }
+            });
+        }
         if (all.size() != 0) {
             deviceInfo = all.get(0);
             ApiFactory.appLogin(deviceInfo.getDeviceId().trim(), deviceInfo.getPsw()).subscribe(new BaseProgressSubscriber<ApiResponse<DeviceBean>>(this) {
