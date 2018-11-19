@@ -226,13 +226,12 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             }
         });
         animator.setDuration(4000);
-        nettyClientBootstrap = new NettyClientBootstrap(this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
-        nettyClientBootstrap.start();
         ExecutorService service = Executors.newFixedThreadPool(1);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                SendMsgToTcp("{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
+                nettyClientBootstrap = new NettyClientBootstrap(MainActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
+                nettyClientBootstrap.start();
             }
         };
         service.execute(runnable);
