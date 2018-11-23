@@ -7,13 +7,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_top_view_height"
-        android:background="@color/red">
+        android:background="@drawable/handy_logo">
 
-        <ImageView
-            android:layout_width="@dimen/main_image_width"
-            android:layout_height="@dimen/main_image_height"
-            android:layout_centerInParent="true"
-            android:src="@drawable/handy_logo" />
 
         <LinearLayout
             android:layout_width="@dimen/text_width_main"
@@ -43,7 +38,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/setting_bg"
+        >
 
         <TextView
             android:layout_width="match_parent"

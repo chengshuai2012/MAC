@@ -26,10 +26,10 @@
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/fingerImage"
             android:layout_width="@dimen/w400"
-            android:layout_height="@dimen/w400"
-            android:src="@drawable/finger"
-            android:background="@drawable/finger"
-            />
+            android:layout_height="@dimen/w400"/>
+            <!--android:src="@drawable/finger"-->
+            <!--android:background="@drawable/finger"-->
+        />
 
 
 

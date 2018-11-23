@@ -31,10 +31,7 @@ import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.DialogCancelListener;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
-import com.zitech.framework.utils.ToastMaster;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 

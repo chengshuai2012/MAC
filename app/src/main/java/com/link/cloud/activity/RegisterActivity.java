@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
@@ -34,10 +35,14 @@ import com.link.cloud.utils.Utils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.utils.ToastMaster;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import okhttp3.RequestBody;
 
 /**
  * Created by OFX002 on 2018/9/21.
@@ -57,9 +62,9 @@ public class RegisterActivity extends AppBarActivity {
     @BindView(R.id.bind_way)
     TextView bindWay;
     @BindView(R.id.input_tel)
-    EditText inputTel;
+    TextView inputTel;
     @BindView(R.id.verify_code)
-    EditText verifyCode;
+    TextView verifyCode;
     @BindView(R.id.send)
     TextView send;
     @BindView(R.id.bind_keypad_1)
@@ -110,6 +115,8 @@ public class RegisterActivity extends AppBarActivity {
     CircleImageView venueImage;
     @BindView(R.id.bind_venue_intro)
     TextView bindVenueIntro;
+    @BindView(R.id.card_type)
+    TextView cardType;
     @BindView(R.id.bind_venue_intro_below)
     TextView bindVenueIntroBelow;
     @BindView(R.id.bind_middle_two)
@@ -126,30 +133,92 @@ public class RegisterActivity extends AppBarActivity {
     boolean isSendVerify = false;
     private String tel_num;
     private EdituserRequest edituserRequest;
-    private Editable editable;
-
-
+    @BindView(R.id.code_number)
+    EditText code_mumber;
+    boolean isTel=true;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         hideToolbar();
-        setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
-        setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
-        verifyCode.setShowSoftInputOnFocus(false);
-        inputTel.setShowSoftInputOnFocus(false);
-        editable = inputTel.getText();
+        initData();
     }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void initData() {
+        code_mumber.setFocusable(true);
+        code_mumber.setCursorVisible(true);
+        code_mumber.setFocusableInTouchMode(true);
+        code_mumber.requestFocus();
+        code_mumber.setShowSoftInputOnFocus(false);
+        /**
+         * EditText编辑框内容发生变化时的监听回调
+         */
+        code_mumber.addTextChangedListener(new EditTextChangeListener());
+    }
+    public class EditTextChangeListener implements TextWatcher {
+        long lastTime;
+        /**
+         * 编辑框的内容发生改变之前的回调方法
+         */
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容正在发生改变时的回调方法 >>用户正在输入
+         * 我们可以在这里实时地 通过搜索匹配用户的输入
+         */
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容改变以后,用户没有继续输入时 的回调方法
+         */
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String str=code_mumber.getText().toString();
+            if (str.contains("\n")) {
+                if(System.currentTimeMillis()-lastTime<1500){
+                    code_mumber.setText("");
+                    return;
+                }
+                lastTime=System.currentTimeMillis();
+                JSONObject object =null;
+                try {
+                    object= new JSONObject(code_mumber.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (object==null){
+                    return;
+                }
+                RequestBody requestBody=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),object.toString());
+                ApiFactory.BindByQrcode(requestBody).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(RegisterActivity.this) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
 
-    public void setHintSize(EditText editText, int size, String hint) {
-        String hintStr = hint;
-        SpannableString ss = new SpannableString(hintStr);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
-        editText.setHintTextColor(getResources().getColor(R.color.dark_black));
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        editText.setHint(new SpannedString(ss));
+                    @Override
+                    public void onNext(ApiResponse<EdituserRequest> edituserRequestApiResponse) {
+                        super.onNext(edituserRequestApiResponse);
+                        bindMiddleOne.setVisibility(View.INVISIBLE);
+                        bindMiddleTwo.setVisibility(View.VISIBLE);
+                        registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
+                        registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+                        bindWay.setText(getResources().getString(R.string.bind_veune));
+                        simulateProgress();
+                        edituserRequest = edituserRequestApiResponse.getData();
+                    }
 
+                    @Override
+                    public void onCompleted() {
+                        super.onCompleted();
+                    }
+                });
+                code_mumber.setText("");
+            }
+        }
     }
 
     private void simulateProgress() {
@@ -182,6 +251,7 @@ public class RegisterActivity extends AppBarActivity {
     }
 
     StringBuilder verify = new StringBuilder();
+    StringBuilder tel = new StringBuilder();
 
     @Override
     protected int getLayoutId() {
@@ -206,13 +276,11 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.bind_keypad_7:
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
-                if (inputTel.isFocused()) {
-                    if (editable.length() < 11) {
+                if (isTel) {
+                    if (tel.length() < 11) {
                         try {
-                            int index = inputTel.getSelectionStart();
-                            editable.insert(index, ((TextView) v).getText());
-                            inputTel.setText(editable.toString());
-                            inputTel.setSelection(index + 1);
+                            tel.append(((TextView) v).getText());
+                            inputTel.setText(tel.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -222,7 +290,6 @@ public class RegisterActivity extends AppBarActivity {
                         try {
                             verify.append(((TextView) v).getText());
                             verifyCode.setText(verify.toString());
-                            verifyCode.setSelection(verify.length());
                         }  catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -230,12 +297,11 @@ public class RegisterActivity extends AppBarActivity {
                 }
                 break;
             case R.id.bind_keypad_ok:
-                if (inputTel.isFocused()) {
+                if (isTel) {
                     try {
-                        editable.delete(0, editable.length());
-                        inputTel.setText(editable.toString());
-                        inputTel.setSelection(editable.length());
-                        setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+                        tel.delete(0, tel.length());
+                        inputTel.setText(tel.toString());
+                        inputTel.setText(getResources().getString(R.string.please_input_tel));
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
                     }
@@ -243,21 +309,23 @@ public class RegisterActivity extends AppBarActivity {
                     try {
                         verify.delete(0, verify.length());
                         verifyCode.setText(verify.toString());
-                        verifyCode.setSelection(verify.length());
-                        setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
+                        verifyCode.setText(getResources().getString(R.string.please_input_verify));
                     } catch (Resources.NotFoundException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
             case R.id.bind_keypad_delect:
-                if (inputTel.isFocused()) {
-                    if (editable.length() > 1) {
+                if (isTel) {
+                    if (tel.length() >=1) {
                         try {
-                            int index = inputTel.getSelectionStart();
-                            editable.delete(index - 1, index);
-                            inputTel.setText(editable.toString());
-                            inputTel.setSelection(index - 1);
+                            tel.deleteCharAt(tel.length() - 1);
+                            if(tel.length()>=1){
+
+                                inputTel.setText(tel.toString());
+                            }else {
+                                inputTel.setText(getResources().getString(R.string.please_input_tel));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -266,8 +334,12 @@ public class RegisterActivity extends AppBarActivity {
                     if (verify.length() >= 1) {
                         try {
                             verify.deleteCharAt(verify.length() - 1);
-                            verifyCode.setText(verify.toString());
-                            verifyCode.setSelection(verify.length());
+                            if(verify.length()>=1){
+
+                                verifyCode.setText(verify.toString());
+                            }else {
+                                verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -321,6 +393,12 @@ public class RegisterActivity extends AppBarActivity {
                 }
 
                 break;
+            case  R.id.input_tel:
+                isTel=true;
+                break;
+                case  R.id.verify_code:
+                isTel =false;
+                break;
         }
     }
 
@@ -359,6 +437,14 @@ public class RegisterActivity extends AppBarActivity {
                     registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
                     cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
                     TTSUtils.getInstance().speak(getString(R.string.bind_ok));
+                    int userType = edituserRequest.getUserType();
+                    if(userType==1){
+                        cardType.setText(getString(R.string.member_card));
+                    }else if(userType==2){
+                        cardType.setText(getString(R.string.coach_card));
+                    }else if(userType==3){
+                        cardType.setText(getString(R.string.worker_card));
+                    }
                     handler.sendEmptyMessageDelayed(5, 3000);
                 }
             });

@@ -70,6 +70,12 @@ public class ApiConstants {
   //获取单独用户
     public static final String GETSINGLEUSER = "{app}/{user}/{uuid}";
 
+  //二维码团课入场
+    public static final String COURSEINBYQRCOE = "{app}/{courseAdmissionByQrCode}";
+
+    //二维码绑定
+    public static final String BINDBYQRCOE = "{app}/{bindUserByQrCode}";
+
 
 
 

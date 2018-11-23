@@ -5,15 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +58,7 @@ import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.RequestBody;
 
 /**
  * Created by OFX002 on 2018/9/26.
@@ -93,9 +97,9 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     @BindView(R.id.tel_intro)
     TextView telIntro;
     @BindView(R.id.input_tel)
-    EditText inputTel;
+    TextView inputTel;
     @BindView(R.id.verify_code)
-    EditText verifyCode;
+    TextView verifyCode;
     @BindView(R.id.send)
     TextView send;
     @BindView(R.id.bind_keypad_1)
@@ -158,10 +162,13 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     TextView pre;
     @BindView(R.id.pay_restTime)
     CountdownView payRestTime;
+    @BindView(R.id.code_number)
+    EditText code_mumber;
     private PublicTitleView publicTitle;
     private DialogUtils dialogUtils;
     private String courseReleasePkcode;
     private LessonItemBean lessonItemBean;
+    boolean isTel=true;
     String uuid;
     private int minute;
     private int second;
@@ -181,10 +188,6 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         lessonItemBean = gson.fromJson(lessonItemBeanJson, LessonItemBean.class);
         courseReleasePkcode = lessonItemBean.getCourseReleasePkcode();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
-        setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
-        setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
-        verifyCode.setShowSoftInputOnFocus(false);
-        inputTel.setShowSoftInputOnFocus(false);
         wechatPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
         zhifubaoPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
         handyPrice.setText(lessonItemBean.getCourseReleaseMoney() + "元");
@@ -196,6 +199,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.MSG);
         registerReceiver(mesReceiver, intentFilter);
+        initData();
     }
     public class MesReceiver extends BroadcastReceiver {
         @Override
@@ -226,15 +230,6 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
 
     }
 
-    public void setHintSize(EditText editText, int size, String hint) {
-        String hintStr = hint;
-        SpannableString ss = new SpannableString(hintStr);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, false);
-        editText.setHintTextColor(getResources().getColor(R.color.dark_black));
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        editText.setHint(new SpannedString(ss));
-
-    }
 
     @Override
     protected int getLayoutId() {
@@ -242,13 +237,13 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
     }
 
     StringBuilder verify = new StringBuilder();
-    StringBuilder builder = new StringBuilder();
+    StringBuilder tel = new StringBuilder();
     boolean isSendVerify = false;
     String tel_num;
     EdituserRequest edituserRequest;
 
     @OnClick({R.id.bind_keypad_0, R.id.bind_keypad_1, R.id.bind_keypad_2, R.id.bind_keypad_3, R.id.bind_keypad_4, R.id.bind_keypad_5, R.id.bind_keypad_6, R.id.bind_keypad_7, R.id.bind_keypad_8,
-            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.back, R.id.pre, R.id.pay_zhifubao, R.id.pay_wechat, R.id.handy_pay, R.id.send})
+            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.back, R.id.pre, R.id.pay_zhifubao, R.id.pay_wechat, R.id.handy_pay, R.id.send,R.id.input_tel,R.id.verify_code})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -264,46 +259,73 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
             case R.id.bind_keypad_7:
             case R.id.bind_keypad_8:
             case R.id.bind_keypad_9:
-                if (inputTel.isFocused()) {
-                    if (builder.length() <11) {
-                        builder.append(((TextView) v).getText());
-                        inputTel.setText(builder.toString());
-                        inputTel.setSelection(builder.length());
+                if (isTel) {
+                    if (tel.length() < 11) {
+                        try {
+                            tel.append(((TextView) v).getText());
+                            inputTel.setText(tel.toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-
                 } else {
                     if (verify.length() < 4) {
-                        verify.append(((TextView) v).getText());
-                        verifyCode.setText(verify.toString());
-                        verifyCode.setSelection(verify.length());
+                        try {
+                            verify.append(((TextView) v).getText());
+                            verifyCode.setText(verify.toString());
+                        }  catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
             case R.id.bind_keypad_ok:
-                if (inputTel.isFocused()) {
-                    builder.delete(0, builder.length());
-                    inputTel.setText(builder.toString());
-                    inputTel.setSelection(builder.length());
-                    setHintSize(inputTel, 36, getResources().getString(R.string.please_input_tel));
+                if (isTel) {
+                    try {
+                        tel.delete(0, tel.length());
+                        inputTel.setText(tel.toString());
+                        inputTel.setText(getResources().getString(R.string.please_input_tel));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    verify.delete(0, verify.length());
-                    verifyCode.setText(verify.toString());
-                    verifyCode.setSelection(verify.length());
-                    setHintSize(verifyCode, 30, getResources().getString(R.string.please_input_verify));
+                    try {
+                        verify.delete(0, verify.length());
+                        verifyCode.setText(verify.toString());
+                        verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case R.id.bind_keypad_delect:
-                if (inputTel.isFocused()) {
-                    if (builder.length() >= 1) {
-                        builder.deleteCharAt(builder.length() - 1);
-                        inputTel.setText(builder.toString());
-                        inputTel.setSelection(builder.length());
+                if (isTel) {
+                    if (tel.length() >=1) {
+                        try {
+                            tel.deleteCharAt(tel.length() - 1);
+                            if(tel.length()>=1){
+
+                                inputTel.setText(tel.toString());
+                            }else {
+                                inputTel.setText(getResources().getString(R.string.please_input_tel));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     if (verify.length() >= 1) {
-                        verify.deleteCharAt(verify.length() - 1);
-                        verifyCode.setText(verify.toString());
-                        verifyCode.setSelection(verify.length());
+                        try {
+                            verify.deleteCharAt(verify.length() - 1);
+                            if(verify.length()>=1){
+
+                                verifyCode.setText(verify.toString());
+                            }else {
+                                verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 break;
@@ -388,7 +410,97 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                 }
 
                 break;
+            case  R.id.input_tel:
+                isTel=true;
+                break;
+            case  R.id.verify_code:
+                isTel =false;
+                break;
 
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void initData() {
+        code_mumber.setFocusable(true);
+        code_mumber.setCursorVisible(true);
+        code_mumber.setFocusableInTouchMode(true);
+        code_mumber.requestFocus();
+        code_mumber.setShowSoftInputOnFocus(false);
+        /**
+         * EditText编辑框内容发生变化时的监听回调
+         */
+        code_mumber.addTextChangedListener(new EditTextChangeListener());
+    }
+    public class EditTextChangeListener implements TextWatcher {
+        long lastTime;
+        /**
+         * 编辑框的内容发生改变之前的回调方法
+         */
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容正在发生改变时的回调方法 >>用户正在输入
+         * 我们可以在这里实时地 通过搜索匹配用户的输入
+         */
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容改变以后,用户没有继续输入时 的回调方法
+         */
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String str=code_mumber.getText().toString();
+            if (str.contains("\n")) {
+                if(System.currentTimeMillis()-lastTime<1500){
+                    code_mumber.setText("");
+                    return;
+                }
+                lastTime=System.currentTimeMillis();
+                JSONObject object =null;
+                try {
+                    object= new JSONObject(code_mumber.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (object==null){
+                    return;
+                }
+                RequestBody requestBody=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),object.toString());
+                ApiFactory.BindByQrcode(requestBody).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(PreGroupLessonActivity.this) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(ApiResponse<EdituserRequest> edituserRequestApiResponse) {
+                        super.onNext(edituserRequestApiResponse);
+                        loginMiddleOne.setVisibility(View.INVISIBLE);
+                        loginMiddleTwo.setVisibility(View.VISIBLE);
+                        registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+                        registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+                        loginWay.setText(getResources().getString(R.string.choose_pay));
+                        uuid = edituserRequestApiResponse.getData().getUuid();
+                        edituserRequest = edituserRequestApiResponse.getData();
+                        long time = (long) 4 * 60 * 1000;
+                        payRestTime.start(time);
+                        payRestTime.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                finish();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        super.onCompleted();
+                    }
+                });
+                code_mumber.setText("");
+            }
         }
     }
 

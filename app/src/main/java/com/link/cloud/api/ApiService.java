@@ -22,6 +22,7 @@ import com.zitech.framework.data.network.response.ApiResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -261,7 +262,25 @@ public interface ApiService {
      */
     @POST(ApiConstants.BUYBYREST)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse> payByRest(@Path("app") String app, @Path("balanceBuyCourse") String balanceBuyCourse,@Path("courseReleasePkcode")  String courseReleasePkcode, @Path("uuid") String uuid,@Header("access-token") String token);    /**
+    Observable<ApiResponse> payByRest(@Path("app") String app, @Path("balanceBuyCourse") String balanceBuyCourse,@Path("courseReleasePkcode")  String courseReleasePkcode, @Path("uuid") String uuid,@Header("access-token") String token);    /**  /**
+     * 余额支付
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @POST(ApiConstants.COURSEINBYQRCOE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> CourseInByQrcode(@Path("app") String app,@Path("courseAdmissionByQrCode") String courseAdmissionByQrCode, @Body RequestBody body, @Header("access-token") String token);    /**  /**
+     * 余额支付
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @POST(ApiConstants.BINDBYQRCOE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<EdituserRequest>> BindByQrcode(@Path("app") String app,@Path("bindUserByQrCode") String bindUserByQrCode, @Body RequestBody body, @Header("access-token") String token);    /**
      * 获取单个用户
      *
      * @param

@@ -6,16 +6,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Power;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -66,6 +71,7 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import okhttp3.RequestBody;
 
 
 public class MainActivity extends AppBarActivity implements DialogCancelListener, FragmentListener {
@@ -88,6 +94,8 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     TextView lessonName;
     @BindView(R.id.coach_name)
     TextView coachName;
+    @BindView(R.id.code_number)
+    EditText code_mumber;
     private DialogUtils dialogUtils;
     ValueAnimator animator;
     private ViewPager viewPager;
@@ -145,12 +153,93 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         });
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void initData() {
+        code_mumber.setFocusable(true);
+        code_mumber.setCursorVisible(true);
+        code_mumber.setFocusableInTouchMode(true);
+        code_mumber.requestFocus();
+        code_mumber.setShowSoftInputOnFocus(false);
+        /**
+         * EditText编辑框内容发生变化时的监听回调
+         */
+        code_mumber.addTextChangedListener(new EditTextChangeListener());
+    }
+    public class EditTextChangeListener implements TextWatcher {
+        long lastTime;
+        /**
+         * 编辑框的内容发生改变之前的回调方法
+         */
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容正在发生改变时的回调方法 >>用户正在输入
+         * 我们可以在这里实时地 通过搜索匹配用户的输入
+         */
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        /**
+         * 编辑框的内容改变以后,用户没有继续输入时 的回调方法
+         */
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            String str=code_mumber.getText().toString();
+            if (str.contains("\n")) {
+                if(!isLessonin){
+                    code_mumber.setText("");
+                    return;
+                }
+                if(System.currentTimeMillis()-lastTime<1500){
+                    code_mumber.setText("");
+                    return;
+                }
+                lastTime=System.currentTimeMillis();
+                Log.e( "afterTextChanged: ", str);
+                //  entranceContronller.openDoorQr(code_mumber.getText().toString());
+                JSONObject object =null;
+                try {
+                    object= new JSONObject(code_mumber.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (object==null){
+                    return;
+                }
+                RequestBody requestBody=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),object.toString());
+                ApiFactory.CourseInByQrcode(requestBody).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        onVeuenMsg(null,e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
+                        handler.removeMessages(0);
+                        onVeuenMsg(apiResponse.getCode(), apiResponse.getMessage());
+                        getGroupData();
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        super.onCompleted();
+                    }
+                });
+                code_mumber.setText("");
+            }
+        }
+    }
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         hideToolbar();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
@@ -257,6 +346,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LESSON);
         registerReceiver(lesson, intentFilter);
+        initData();
     }
     public class LessonRecieve extends BroadcastReceiver {
         @Override

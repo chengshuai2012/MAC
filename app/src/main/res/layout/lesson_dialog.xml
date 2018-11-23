@@ -199,16 +199,16 @@
             <!--/>-->
 
 
-            <ImageView
+            <!--<ImageView-->
 
-                android:id="@+id/handy_loge"
-                android:layout_width="@dimen/consume_lesson_height"
-                android:layout_height="@dimen/dialog_80_height"
-                android:layout_below="@id/tips_lv"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/handy_red"
-                android:layout_marginBottom="@dimen/margin_main_middle"
-                />
+                <!--android:id="@+id/handy_loge"-->
+                <!--android:layout_width="@dimen/consume_lesson_height"-->
+                <!--android:layout_height="@dimen/dialog_80_height"-->
+                <!--android:layout_below="@id/tips_lv"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:src="@drawable/handy_red"-->
+                <!--android:layout_marginBottom="@dimen/margin_main_middle"-->
+                <!--/>-->
 
             <TextView
                 android:id="@+id/how_to_use_chinese"

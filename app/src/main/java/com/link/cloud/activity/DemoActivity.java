@@ -59,7 +59,7 @@ public class DemoActivity extends AppBarActivity {
 //        rootView = (LinearLayout) findViewById(R.id.rootView);
         publicTitle= (PublicTitleView) findViewById(R.id.publicTitle);
         fingerImage= (GifImageView) findViewById(R.id.fingerImage);
-        fingerImage.setImageResource(R.drawable.finger);
+        //fingerImage.setImageResource(R.drawable.finger);
 //        Glide.w ith(this).load(R.drawable.finger).asGif().into(fingerImage);
         publicTitle.setTags("haha","asdjfhasd","asdfads");
 

@@ -110,6 +110,7 @@
     <string name="right_finger">请正确放置手指</string>
     <string name="bind_right">绑定成功请开启你的健身之旅</string>
     <string name="now_card_num">当前手机号：159****5969</string>
+    <string name="now_card_right">购买该卡可享受相应权力(查看使用规则)</string>
     <string name="confirm_member_info">请确认会员信息</string>
     <string name="more">更多</string>
     <string name="last_text">上一步</string>
@@ -204,5 +205,8 @@
 
     <string name="cheack_fail">验证失败</string>
     <string name="please_move_finger">请移开手指</string>
+    <string name="member_card">会员卡</string>
+    <string name="coach_card">教练卡</string>
+    <string name="worker_card">工作人员</string>
 
 </resources>

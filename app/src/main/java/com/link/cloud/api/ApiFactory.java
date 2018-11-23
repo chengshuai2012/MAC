@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import rx.Observable;
 
 /**
@@ -256,6 +257,24 @@ public class ApiFactory {
      */
     public static Observable<ApiResponse<SingleUser>> getSingle(String uuid) {
         return getApiService().getSingle("app", "user", uuid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+/**
+     * 二维码团课进场
+     *
+     * @return
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     */
+    public static Observable<ApiResponse> CourseInByQrcode(RequestBody  qrcode) {
+        return getApiService().CourseInByQrcode("app", "courseAdmissionByQrCode", qrcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+/**
+     * 余额支付
+     *
+     * @return
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     */
+    public static Observable<ApiResponse<EdituserRequest>> BindByQrcode(RequestBody  qrcode) {
+        return getApiService().BindByQrcode("app", "bindUserByQrCode", qrcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

@@ -4,7 +4,7 @@
     android:layout_height="@dimen/keyboard_height"
     android:orientation="vertical">
 
-    <EditText
+    <TextView
         android:id="@+id/input_tel"
         android:layout_width="match_parent"
         android:layout_height="@dimen/keyboard_edit_height"
@@ -12,7 +12,7 @@
         android:background="@drawable/border_lesson"
         android:gravity="center"
         android:inputType="number"
-        android:hint="@string/please_input_tel"
+        android:text="@string/please_input_tel"
         android:textSize="@dimen/text_size_36" />
 
     <LinearLayout
@@ -22,7 +22,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <EditText
+        <TextView
             android:id="@+id/verify_code"
             android:layout_width="0dp"
             android:layout_height="@dimen/keyboard_edit_height"
