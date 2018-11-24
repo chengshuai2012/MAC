@@ -49,6 +49,13 @@ public class Coach_Advantager extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         View inflate = View.inflate(mContext, R.layout.certify_item, null);
         TextView message = inflate.findViewById(R.id.message);
+        TextView count = inflate.findViewById(R.id.count);
+        if(position<10){
+
+            count.setText("0"+position);
+        }else {
+            count.setText(position+"");
+        }
         message.setText(data.get(position).getText());
         return inflate;
     }

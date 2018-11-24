@@ -1,6 +1,7 @@
 package com.link.cloud.api;
 
 import com.link.cloud.User;
+import com.link.cloud.api.bean.APPVersionBean;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
@@ -27,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -275,6 +279,13 @@ public class ApiFactory {
      */
     public static Observable<ApiResponse<EdituserRequest>> BindByQrcode(RequestBody  qrcode) {
         return getApiService().BindByQrcode("app", "bindUserByQrCode", qrcode, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * APP版本
+     */
+
+    public static Observable<ApiResponse<APPVersionBean>> getAppVersion() {
+        return getApiService().getAppVersion("app", "appVersion", 1, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

@@ -8,10 +8,15 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         >
-        <ImageView
+        <TextView
             android:layout_width="@dimen/lesson_dialog_small_image_size"
             android:layout_height="@dimen/lesson_dialog_small_image_size"
-            android:src="@drawable/certify"
+            android:textColor="@color/dark_black"
+            android:textSize="@dimen/text_size_36"
+            android:text="01"
+            android:id="@+id/count"
+            android:background="@drawable/round_gray"
+            android:layout_marginRight="@dimen/margin_main_middle"
             />
         <TextView
             android:layout_width="match_parent"
@@ -20,6 +25,7 @@
             android:textSize="@dimen/text_size_30"
             android:id="@+id/message"
             android:singleLine="true"
+            android:text="@string/now_card"
             />
     </LinearLayout>
 

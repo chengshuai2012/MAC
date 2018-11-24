@@ -38,6 +38,7 @@ public abstract class BaseProgressSubscriber<T> extends com.zitech.framework.dat
         ToastMaster.shortToast(Utils.parseError(e));
         dismissProgressDialog();
         if(e.getMessage().equals("用户登录信息失效")){
+
                 Intent intent = new Intent(context, SplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

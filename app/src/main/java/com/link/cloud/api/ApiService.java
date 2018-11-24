@@ -1,5 +1,6 @@
 package com.link.cloud.api;
 
+import com.link.cloud.api.bean.APPVersionBean;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
@@ -23,12 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Streaming;
 import rx.Observable;
 
 /**
@@ -290,4 +293,20 @@ public interface ApiService {
     @GET(ApiConstants.GETSINGLEUSER)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<SingleUser>> getSingle(@Path("app") String app, @Path("user") String user, @Path("uuid") String uuid, @Header("access-token") String token);
+
+    /**
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @GET(ApiConstants.APPVERSION)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<APPVersionBean>> getAppVersion(@Path("app") String app, @Path("appVersion") String appVersion, @Path("appType") int appType, @Header("access-token") String token);
+    /**
+     * 获取最新App
+     */
+    @Streaming
+    @Headers("Content-Type:application/force-download")
+    @GET(ApiConstants.DOWNLOAD)
+    Observable<ResponseBody> getApp(@Path("app") String app, @Path("downloadApp") String downloadApp, @Path("appType") int appType, @Header("access-token") String token);
 }

@@ -214,11 +214,12 @@
                 android:id="@+id/how_to_use_chinese"
                 android:layout_width="@dimen/lesson_dialog_use_width"
                 android:layout_height="@dimen/lesson_dialog_use_height"
-                android:layout_below="@+id/handy_loge"
+                android:layout_below="@+id/tips_lv"
                 android:layout_centerHorizontal="true"
                 android:background="@color/red"
                 android:gravity="center"
                 android:text="@string/how_to_use"
+                android:visibility="gone"
                 android:textColor="@color/almost_white"
                 android:textSize="@dimen/text_size_32" />
 
@@ -229,6 +230,7 @@
                 android:layout_below="@+id/how_to_use_chinese"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="how to use"
                 android:textColor="@color/text_gray"
                 android:textSize="@dimen/text_size_30" />

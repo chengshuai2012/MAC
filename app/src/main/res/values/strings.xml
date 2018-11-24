@@ -208,5 +208,5 @@
     <string name="member_card">会员卡</string>
     <string name="coach_card">教练卡</string>
     <string name="worker_card">工作人员</string>
-
+    <string name="sd_permession">请打开设备内存卡读写权限</string>
 </resources>

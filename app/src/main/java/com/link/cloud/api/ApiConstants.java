@@ -77,11 +77,12 @@ public class ApiConstants {
     public static final String BINDBYQRCOE = "{app}/{bindUserByQrCode}";
 
 
+    //获取APP版本
+    public static final String APPVERSION = "{app}/{appVersion}/{appType}";
 
 
-
-
-
+    //下载App
+    public static final String DOWNLOAD = "{app}/{downloadApp}/{appType}";
 
 
 

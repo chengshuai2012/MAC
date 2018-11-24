@@ -1,12 +1,15 @@
 package com.link.cloud.activity;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.util.Log;
 
+import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
+import com.link.cloud.api.bean.APPVersionBean;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
@@ -14,9 +17,15 @@ import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.utils.TTSUtils;
+import com.link.cloud.utils.Utils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -27,6 +36,14 @@ import java.util.concurrent.Future;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.ResponseBody;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+import static com.link.cloud.utils.Utils.writeFile;
 
 /**
  * Created by 49488 on 2018/10/20.
@@ -50,7 +67,7 @@ public class SplashActivity extends AppBarActivity {
 
     private void getTotal() {
         GetUserPages getUserPages = new GetUserPages();
-        getUserPages.setContent("HJKF");
+        getUserPages.setContent(deviceInfo.getDeviceId());
         getUserPages.setPageNo(1);
         getUserPages.setPageSize(pageNum);
         ApiFactory.getUsers(getUserPages).subscribe(new BaseProgressSubscriber<ApiResponse<UserList>>(this) {
@@ -138,8 +155,60 @@ public class SplashActivity extends AppBarActivity {
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
     }
+    private void getAppVersion(){
+        ApiFactory.getAppVersion().subscribe(new BaseProgressSubscriber<ApiResponse<APPVersionBean>>(this) {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
 
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onNext(ApiResponse<APPVersionBean> appVersionBeanApiResponse) {
+                super.onNext(appVersionBeanApiResponse);
+                int version = Utils.getVersion(MacApplication.getInstance());
+                if(version<Integer.parseInt(appVersionBeanApiResponse.getData().getVersion())){
+                    final String filePath = Environment.getExternalStorageDirectory()+"/lingxi.apk";
+                    ApiFactory.getApiService().getApp("app","downloadApp",1,User.get().getToken()).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io())
+                            .map(new Func1<ResponseBody, InputStream>() {
+                                @Override
+                                public InputStream call(ResponseBody responseBody) {
+                                    return responseBody.byteStream();
+                                }
+                            }).observeOn(Schedulers.computation()).
+                            doOnNext(new Action1<InputStream>() {
+                        @Override
+                        public void call(InputStream inputStream) {
+                            writeFile(inputStream, filePath);
+                        }
+                    })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<InputStream>() {
+                                @Override
+                                public void onCompleted() {
+                                    Log.e("onCompleted: ","" );
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("onError: ","" );
+                                }
+
+                                @Override
+                                public void onNext(InputStream inputStream) {
+                                    Log.e("InputStream: ","" );
+                                }
+                            });
+                }
+            }
+        });
+    }
     private void getToken() {
+
         RealmResults<DeviceInfo> all = realm.where(DeviceInfo.class).findAll();
         final RealmResults<AllUser> peopleIn = realm.where(AllUser.class).equalTo("isIn",1).findAll();
         for(int x=0;x<peopleIn.size();x++){
@@ -168,7 +237,7 @@ public class SplashActivity extends AppBarActivity {
                     allLocal = realm.where(AllUser.class).findAll();
                     local = allLocal.size();
                     getTotal();
-
+                    getAppVersion();
                 }
 
                 @Override
@@ -193,4 +262,7 @@ public class SplashActivity extends AppBarActivity {
     protected int getLayoutId() {
         return R.layout.activity_splash;
     }
+
+
+
 }

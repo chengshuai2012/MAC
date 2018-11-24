@@ -44,6 +44,7 @@ import com.zitech.framework.utils.ViewUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -75,7 +76,73 @@ import rx.functions.Action1;
  * Created by ludaiqian on 16/7/7.
  */
 public class Utils extends com.zitech.framework.utils.Utils {
+    public static int getVersion(Context context)// 获取版本号
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    /**
+     * 将输入流写入文件
+     *
+     * @param inputString
+     * @param filePath
+     */
+    public static void writeFile(InputStream inputString, String filePath) {
 
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+
+            byte[] b = new byte[1024];
+
+            int len;
+            while ((len = inputString.read(b)) != -1) {
+                fos.write(b,0,len);
+            }
+            inputString.close();
+            fos.close();
+            Log.e("writeFile: ","success" );
+            installAPK("/sdcard/lingxi.apk");
+        } catch (FileNotFoundException e) {
+            Log.e("writeFile: ",e.getMessage() );
+        } catch (IOException e) {
+            Log.e("writeFile: ",e.getMessage() );
+        }
+
+    }
+    public static void installAPK(String path)
+    {
+        String instruct = "pm install -r " + path;
+        exec(instruct);
+        Log.e( "installAPK: ","" );
+    }
+
+    public  static void exec(String instruct) {
+        try {
+            Process process = null;
+            DataOutputStream os = null;
+            process = Runtime.getRuntime().exec("/system/xbin/su");
+            os = new DataOutputStream(process.getOutputStream());
+            os.writeBytes(instruct);
+            os.flush();
+            os.close();
+            Log.e("exec: ","");
+        } catch (Exception ex) {
+            Log.e("exec: ",ex.getMessage() );
+            ex.printStackTrace();
+        }
+    }
     public static String getMac() {
         String result = "";
         String Mac = "";
