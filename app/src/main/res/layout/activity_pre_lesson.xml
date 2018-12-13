@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <include layout="@layout/activity_top_view"
+        >
 
+    </include>
     <include layout="@layout/introduce" />
 
     <RelativeLayout
@@ -328,7 +331,6 @@
                         android:orientation="vertical">
 
                         <android.support.v7.widget.CardView
-                            android:visibility="gone"
                             android:layout_width="@dimen/circleProgressBar_width"
                             android:layout_height="@dimen/main_image_height"
                             android:layout_marginLeft="@dimen/dialog_padding"

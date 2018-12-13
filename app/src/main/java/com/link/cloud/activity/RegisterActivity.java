@@ -3,52 +3,78 @@ package com.link.cloud.activity;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.hardware.Camera;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.baidu.aip.entity.ARGBImg;
+import com.baidu.aip.manager.FaceDetector;
+import com.baidu.aip.manager.FaceSDKManager;
+import com.baidu.aip.utils.FeatureUtils;
 import com.dinuscxj.progressbar.CircleProgressBar;
+import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
+import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.UserFace;
+import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
+import com.link.cloud.widget.CameraFrameData;
+import com.link.cloud.widget.CameraGLSurfaceView;
+import com.link.cloud.widget.CameraSurfaceView;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.utils.ToastMaster;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
  * Created by OFX002 on 2018/9/21.
  */
 
-public class RegisterActivity extends AppBarActivity {
+public class RegisterActivity extends BaseActivity implements View.OnTouchListener, CameraSurfaceView.OnCameraListener {
     @BindView(R.id.register_introduce_one)
     TextView registerIntroduceOne;
     @BindView(R.id.register_introduce_two)
@@ -129,21 +155,45 @@ public class RegisterActivity extends AppBarActivity {
     TextView bindFinishInfo;
     @BindView(R.id.bind_middle_three)
     RelativeLayout bindMiddleThree;
+    @BindView(R.id.bind_veune_container)
+    RelativeLayout bindVeuneContainer;
+    @BindView(R.id.custom_progress_face)
+    CircleProgressBar customProgressFace;
+    @BindView(R.id.surfaceView)
+    CameraSurfaceView surfaceView;
+    @BindView(R.id.sv_camera_surfaceview)
+    CameraGLSurfaceView svCameraSurfaceview;
+    @BindView(R.id.bind_face_container)
+    RelativeLayout bindFaceContainer;
+    @BindView(R.id.bind_face_intro)
+    TextView bindFaceIntro;
+    @BindView(R.id.bind_face_intro_below)
+    TextView bindFaceIntroBelow;
     private ValueAnimator animator;
     boolean isSendVerify = false;
     private String tel_num;
     private EdituserRequest edituserRequest;
     @BindView(R.id.code_number)
     EditText code_mumber;
-    boolean isTel=true;
+    boolean isTel = true;
+    int bindType = 1;
+    private Camera mCamera;
+    private String TAG ="RegisterActivity";
+    private int mWidth;
+    private int mHeight;
+    private int mFormat;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         customProgress.setProgressFormatter(null);
         customProgress.setMax(100);
+        customProgressFace.setProgressFormatter(null);
+        customProgressFace.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
-        hideToolbar();
         initData();
+        setCameraView();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initData() {
         code_mumber.setFocusable(true);
@@ -156,14 +206,89 @@ public class RegisterActivity extends AppBarActivity {
          */
         code_mumber.addTextChangedListener(new EditTextChangeListener());
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
+    @Override
+    public Camera setupCamera() {
+        // TODO Auto-generated method stub
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        try {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(mWidth, mHeight);
+            parameters.setPreviewFormat(mFormat);
+            mCamera.setDisplayOrientation(90);
+            for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+                Log.d(TAG, "SIZE:" + size.width + "x" + size.height);
+            }
+            for (Integer format : parameters.getSupportedPreviewFormats()) {
+                Log.d(TAG, "FORMAT:" + format);
+            }
+
+            List<int[]> fps = parameters.getSupportedPreviewFpsRange();
+            for (int[] count : fps) {
+                Log.d(TAG, "T:");
+                for (int data : count) {
+                    Log.d(TAG, "V=" + data);
+                }
+            }
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mCamera != null) {
+            mWidth = mCamera.getParameters().getPreviewSize().width;
+            mHeight = mCamera.getParameters().getPreviewSize().height;
+        }
+        return mCamera;
+    }
+
+    @Override
+    public void setupChanged(int format, int width, int height) {
+
+    }
+
+    @Override
+    public boolean startPreviewImmediately() {
+        return true;
+    }
+
+    @Override
+    public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
+        clone = data.clone();
+        return null;
+    }
+
+    @Override
+    public void onAfterRender(CameraFrameData data) {
+
+    }
+
+    @Override
+    public void onBeforeRender(CameraFrameData data) {
+
+    }
+
+
     public class EditTextChangeListener implements TextWatcher {
         long lastTime;
+
         /**
          * 编辑框的内容发生改变之前的回调方法
          */
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
+
         /**
          * 编辑框的内容正在发生改变时的回调方法 >>用户正在输入
          * 我们可以在这里实时地 通过搜索匹配用户的输入
@@ -171,28 +296,29 @@ public class RegisterActivity extends AppBarActivity {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
+
         /**
          * 编辑框的内容改变以后,用户没有继续输入时 的回调方法
          */
         @Override
         public void afterTextChanged(Editable editable) {
-            String str=code_mumber.getText().toString();
+            String str = code_mumber.getText().toString();
             if (str.contains("\n")) {
-                if(System.currentTimeMillis()-lastTime<1500){
+                if (System.currentTimeMillis() - lastTime < 1500) {
                     code_mumber.setText("");
                     return;
                 }
-                lastTime=System.currentTimeMillis();
-                JSONObject object =null;
+                lastTime = System.currentTimeMillis();
+                JSONObject object = null;
                 try {
-                    object= new JSONObject(code_mumber.getText().toString());
+                    object = new JSONObject(code_mumber.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (object==null){
+                if (object == null) {
                     return;
                 }
-                RequestBody requestBody=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),object.toString());
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
                 ApiFactory.BindByQrcode(requestBody).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(RegisterActivity.this) {
                     @Override
                     public void onError(Throwable e) {
@@ -202,13 +328,8 @@ public class RegisterActivity extends AppBarActivity {
                     @Override
                     public void onNext(ApiResponse<EdituserRequest> edituserRequestApiResponse) {
                         super.onNext(edituserRequestApiResponse);
-                        bindMiddleOne.setVisibility(View.INVISIBLE);
-                        bindMiddleTwo.setVisibility(View.VISIBLE);
-                        registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
-                        registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
-                        bindWay.setText(getResources().getString(R.string.bind_veune));
-                        simulateProgress();
                         edituserRequest = edituserRequestApiResponse.getData();
+                        setBindNext();
                     }
 
                     @Override
@@ -234,9 +355,6 @@ public class RegisterActivity extends AppBarActivity {
                         MacApplication.getVenueUtils().workModel();
                         animator.setCurrentPlayTime(0);
                     }
-                    if (state == 4) {
-
-                    }
                     if (state != 4 && state != 3) {
                         bindVenueIntro.setText(getResources().getString(R.string.right_finger));
                     }
@@ -250,6 +368,55 @@ public class RegisterActivity extends AppBarActivity {
         animator.start();
     }
 
+    private void simulateProgressFace() {
+        animator = ValueAnimator.ofInt(0, 100);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int progress = (int) animation.getAnimatedValue();
+                if (customProgressFace != null) {
+                    customProgressFace.setProgress(progress);
+                    if (progress == 99) {
+                        finish();
+                    }
+                }
+            }
+        });
+        animator.setDuration(40000);
+        animator.start();
+    }
+    private void register(final String filePath) {
+
+        Executors.newSingleThreadExecutor().submit(new Runnable() {
+
+            @Override
+            public void run() {
+                ARGBImg argbImg = FeatureUtils.getARGBImgFromPath(filePath);
+                byte[] bytes = new byte[2048];
+                int ret = 0;
+                Log.e(TAG, "run: "+ret);
+                ret = FaceSDKManager.getInstance().getFaceFeature().faceFeature(argbImg, bytes, 50);
+                Log.e(TAG, "run: "+ret);
+                if (ret == FaceDetector.NO_FACE_DETECTED) {
+                    Log.e("aaaa","人脸太小（必须打于最小检测人脸minFaceSize），或者人脸角度太大，人脸不是朝上");
+                } else if (ret != -1) {
+                    final UserFace userFace = new UserFace();
+                    userFace.setFeature(HexUtil.bytesToHexString(bytes));
+                    userFace.setUserId(edituserRequest.getUuid());
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.copyToRealm(userFace);
+                        }
+                    });
+                    realm.close();
+                } else {
+                    Log.e("aaaa","抽取特征失败");
+                }
+            }
+        });
+    }
     StringBuilder verify = new StringBuilder();
     StringBuilder tel = new StringBuilder();
 
@@ -260,7 +427,7 @@ public class RegisterActivity extends AppBarActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick({R.id.bind_keypad_0, R.id.bind_keypad_1, R.id.bind_keypad_2, R.id.bind_keypad_3, R.id.bind_keypad_4, R.id.bind_keypad_5, R.id.bind_keypad_6, R.id.bind_keypad_7, R.id.bind_keypad_8,
-            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send})
+            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send, R.id.bind_face, R.id.bind_veune,R.id.bind_face_intro_below})
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -286,11 +453,11 @@ public class RegisterActivity extends AppBarActivity {
                         }
                     }
                 } else {
-                    if (verify.length() < 4) {
+                    if (verify.length() < 6) {
                         try {
                             verify.append(((TextView) v).getText());
                             verifyCode.setText(verify.toString());
-                        }  catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -317,13 +484,13 @@ public class RegisterActivity extends AppBarActivity {
                 break;
             case R.id.bind_keypad_delect:
                 if (isTel) {
-                    if (tel.length() >=1) {
+                    if (tel.length() >= 1) {
                         try {
                             tel.deleteCharAt(tel.length() - 1);
-                            if(tel.length()>=1){
+                            if (tel.length() >= 1) {
 
                                 inputTel.setText(tel.toString());
-                            }else {
+                            } else {
                                 inputTel.setText(getResources().getString(R.string.please_input_tel));
                             }
                         } catch (Exception e) {
@@ -334,10 +501,10 @@ public class RegisterActivity extends AppBarActivity {
                     if (verify.length() >= 1) {
                         try {
                             verify.deleteCharAt(verify.length() - 1);
-                            if(verify.length()>=1){
+                            if (verify.length() >= 1) {
 
                                 verifyCode.setText(verify.toString());
-                            }else {
+                            } else {
                                 verifyCode.setText(getResources().getString(R.string.please_input_verify));
                             }
                         } catch (Exception e) {
@@ -349,20 +516,15 @@ public class RegisterActivity extends AppBarActivity {
             case R.id.confirm_bind:
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
-                    if(TextUtils.isEmpty(code)){
+                    if (TextUtils.isEmpty(code)) {
                         ToastMaster.shortToast(getResources().getString(R.string.verify_input));
                         return;
                     }
                     ApiFactory.binduser(tel_num, code).subscribe(new BaseProgressSubscriber<ApiResponse<EdituserRequest>>(this) {
                         @Override
                         public void onNext(ApiResponse<EdituserRequest> apiResponse) {
-                            bindMiddleOne.setVisibility(View.INVISIBLE);
-                            bindMiddleTwo.setVisibility(View.VISIBLE);
-                            registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
-                            registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
-                            bindWay.setText(getResources().getString(R.string.bind_veune));
-                            simulateProgress();
                             edituserRequest = apiResponse.getData();
+                            setBindNext();
                         }
                     });
 
@@ -391,23 +553,98 @@ public class RegisterActivity extends AppBarActivity {
                 } else {
                     ToastMaster.shortToast(getResources().getString(R.string.error_tel));
                 }
+                break;
+            case R.id.input_tel:
+                isTel = true;
+                break;
+            case R.id.verify_code:
+                isTel = false;
+                break;
+            case R.id.bind_face:
+                bindType = 2;
+                if(edituserRequest!=null){
+                    setBindNext();
+                }
+                registerIntroduceThree.setText("2."+getResources().getString(R.string.bind_face));
+                bindFace.setBackgroundResource(R.drawable.border_red_half_right);
+                bindFace.setTextColor(getResources().getColor(R.color.white));
+                bindVeune.setBackground(null);
+                bindVeune.setTextColor(getResources().getColor(R.color.red));
 
                 break;
-            case  R.id.input_tel:
-                isTel=true;
+            case R.id.bind_veune:
+                bindType = 1;
+                registerIntroduceThree.setText("2."+getResources().getString(R.string.bind_veune));
+                if(edituserRequest!=null){
+                    setBindNext();
+                }
+                bindVeune.setBackgroundResource(R.drawable.border_red_half_left);
+                bindVeune.setTextColor(getResources().getColor(R.color.white));
+                bindFace.setBackground(null);
+                bindFace.setTextColor(getResources().getColor(R.color.red));
+
                 break;
-                case  R.id.verify_code:
-                isTel =false;
+            case R.id.bind_face_intro_below:
+                    ExtByteArrayOutputStream ops = new ExtByteArrayOutputStream();
+                    YuvImage yuv = new YuvImage(clone, ImageFormat.NV21, 640, 480, null);
+                    yuv.compressToJpeg(new Rect(0, 0, 640, 480), 85, ops);
+                    final Bitmap bitmap = BitmapFactory.decodeByteArray(ops.getByteArray(), 0, ops.getByteArray().length);
+                    try {
+                        File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+                        if(file.exists()){
+                            file.delete();
+                        }
+                        FileOutputStream fileOutputStream=new FileOutputStream(file.getAbsolutePath());
+                        bitmap.compress(Bitmap.CompressFormat.JPEG,85,fileOutputStream);
+                        register(file.getAbsolutePath());
+                        // saveData(bitmap);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toast.makeText(RegisterActivity.this,e.getMessage(),Toast.LENGTH_SHORT);
+                    }
                 break;
+
         }
     }
+    private byte[] clone;
+    private void  setBindNext(){
+        bindMiddleOne.setVisibility(View.INVISIBLE);
+        bindMiddleTwo.setVisibility(View.VISIBLE);
+        registerIntroduceThree.setTextColor(getResources().getColor(R.color.red));
+        registerIntroduceTwo.setTextColor(getResources().getColor(R.color.text_register));
+        Log.e(TAG, "setBindNext: "+bindType);
+        if (bindType == 1) {
+            bindVeuneContainer.setVisibility(View.VISIBLE);
+            bindFaceContainer.setVisibility(View.INVISIBLE);
+            simulateProgress();
+            bindWay.setText("2."+getResources().getString(R.string.bind_veune));
+        } else {
+            bindVeuneContainer.setVisibility(View.INVISIBLE);
+            bindFaceContainer.setVisibility(View.VISIBLE);
+            bindWay.setText("2."+getResources().getString(R.string.bind_face));
+            simulateProgressFace();
+        }
 
+    }
     @Override
     protected void onDestroy() {
         handler.removeMessages(5);
+        if(mCamera!=null){
+            mCamera.release();
+        }
         super.onDestroy();
     }
-
+private void setCameraView(){
+    int mCameraRotate = 0;
+    boolean mCameraMirror = false;
+    mWidth = 640;
+    mHeight = 480;
+    mFormat = ImageFormat.NV21;
+    svCameraSurfaceview .setOnTouchListener(this);
+    surfaceView.setOnCameraListener(this);
+    surfaceView.setupGLSurafceView(svCameraSurfaceview, true, mCameraMirror, mCameraRotate);
+    surfaceView.debug_print_fps(false, false);
+}
     @Override
     protected void onResume() {
         super.onResume();
@@ -417,7 +654,7 @@ public class RegisterActivity extends AppBarActivity {
 
     @Override
     public void modelMsg(int state, String msg) {
-        Log.e( "modelMsg: ", state+">>>>>>>>>");
+        Log.e("modelMsg: ", state + ">>>>>>>>>");
         TTSUtils.getInstance().speak(msg);
         if (state == 3) {
             animator.cancel();
@@ -438,11 +675,11 @@ public class RegisterActivity extends AppBarActivity {
                     cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
                     TTSUtils.getInstance().speak(getString(R.string.bind_ok));
                     int userType = edituserRequest.getUserType();
-                    if(userType==1){
+                    if (userType == 1) {
                         cardType.setText(getString(R.string.member_card));
-                    }else if(userType==2){
+                    } else if (userType == 2) {
                         cardType.setText(getString(R.string.coach_card));
-                    }else if(userType==3){
+                    } else if (userType == 3) {
                         cardType.setText(getString(R.string.worker_card));
                     }
                     handler.sendEmptyMessageDelayed(5, 3000);

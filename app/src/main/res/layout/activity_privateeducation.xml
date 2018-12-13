@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/almost_white"
     android:orientation="vertical">
+    <include layout="@layout/activity_top_view"
+        >
 
+    </include>
     <com.link.cloud.widget.PublicTitleView
         android:id="@+id/publicTitle"
         android:layout_width="match_parent"

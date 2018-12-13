@@ -88,6 +88,7 @@ public class Venueutils {
             img = mdDeviceBinder.tryGrabImg(0);
             if (img == null) {
                 Logger.e("get img failed,please try again");
+                TTSUtils.getInstance().speak(context.getString(R.string.again_finger));
             }
         }
         return state;
@@ -182,7 +183,7 @@ public class Venueutils {
     List<AllUser> subListPeople = new ArrayList<>();
     public String identifyNewImg(final List<AllUser> peoples) {
         final int nThreads=peoples.size()/1000+1;
-        ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
         List<Future<String>> futures = new ArrayList();
         for (int i = 0; i < nThreads; i++) {
                 if(i==nThreads-1){
@@ -235,7 +236,7 @@ public class Venueutils {
     List<GroupLessonUser> subListUser = new ArrayList<>();
     public String identifyNewImgUser(final ArrayList<GroupLessonUser> peoples) {
         final int nThreads=peoples.size()/1000+1;
-        ExecutorService executorService = Executors.newFixedThreadPool(nThreads);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
         List<Future<String>> futures = new ArrayList();
         for (int i = 0; i < nThreads; i++) {
             if(i==nThreads-1){

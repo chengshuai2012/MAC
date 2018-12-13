@@ -13,18 +13,13 @@ import com.link.cloud.api.bean.APPVersionBean;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.dataSourse.UserList;
 import com.link.cloud.api.request.GetUserPages;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +44,14 @@ import static com.link.cloud.utils.Utils.writeFile;
  * Created by 49488 on 2018/10/20.
  */
 
-public class SplashActivity extends AppBarActivity {
+public class SplashActivity extends BaseActivity {
 
     private RealmResults allLocal;
     private DeviceInfo deviceInfo;
 
     @Override
     protected void initViews() {
-        hideToolbar();
+
         getToken();
         TTSUtils.getInstance().speak("");
     }

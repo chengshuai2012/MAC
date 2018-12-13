@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.link.cloud.R;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.utils.Utils;
 
@@ -26,7 +26,7 @@ import io.realm.RealmResults;
  * Created by OFX002 on 2018/9/28.
  */
 
-public class SettingActivity extends AppBarActivity {
+public class SettingActivity extends BaseActivity {
     @BindView(R.id.member)
     TextView member;
     @BindView(R.id.manager)
@@ -55,12 +55,13 @@ public class SettingActivity extends AppBarActivity {
 
     @Override
     protected void initViews() {
-        hideToolbar();
         mac = Utils.getMac();
         deviceId.setText(getResources().getString(R.string.device_id) + mac);
         checkReadPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,REQUEST_SD_PERMISSION);
+        checkReadPermission(Manifest.permission.CAMERA,REQUEST_CAMERA_PERMISSION);
     }
     public static final int REQUEST_SD_PERMISSION = 10111; //
+    public static final int REQUEST_CAMERA_PERMISSION = 10112; //
 
 
 

@@ -472,7 +472,7 @@ public class Utils {
     }
 
     public static String parseError(Throwable e) {
-        if (!NetworkUtil.isNetworkAvailable()) {
+        if (NetworkUtil.isNetworkAvailable()) {
             if (e instanceof ApiException) {
                 return e.getMessage();
             } else {

@@ -38,19 +38,18 @@ public abstract class BaseProgressSubscriber<T> extends com.zitech.framework.dat
         ToastMaster.shortToast(Utils.parseError(e));
         dismissProgressDialog();
         if(e.getMessage().equals("用户登录信息失效")){
-
                 Intent intent = new Intent(context, SplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 android.os.Process.killProcess(android.os.Process.myPid());  //结束进程之前可以把你程序的注销或者退出代码放在这段代码之前
         }
-        //t
-//        if(e instanceof JsonSyntaxException){
-//            Intent intent = new Intent(context, SplashActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(intent);
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//        }
+
+        if(e instanceof JsonSyntaxException){
+            Intent intent = new Intent(context, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
     }
 
 

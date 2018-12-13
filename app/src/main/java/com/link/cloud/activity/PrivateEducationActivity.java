@@ -11,7 +11,7 @@ import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.bean.PriceLevelBean;
 import com.link.cloud.api.bean.PrivateEduBean;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.fragment.BuyPrivateEduFragment;
 import com.link.cloud.fragment.PrivateEduListFragment;
@@ -35,7 +35,7 @@ import io.realm.RealmResults;
  * description：
  */
 @SuppressLint("Registered")
-public class PrivateEducationActivity extends AppBarActivity implements DialogCancelListener {
+public class PrivateEducationActivity extends BaseActivity implements DialogCancelListener {
 
     private PublicTitleView publicTitle;
     private RxTimerUtil rxTimerUtil;
@@ -77,16 +77,10 @@ public class PrivateEducationActivity extends AppBarActivity implements DialogCa
                     if (null != uid && !TextUtils.isEmpty(uid)) {
 
                     } else {
-                        ToastMaster.shortToast(getResources().getString(R.string.cheack_fail));
+                        ToastMaster.shortToast(getResources().getString(R.string.cheack_fail)+getResources().getString(R.string.again_finger));
                     }
-                }
-                if (state == 4) {
-                    ToastMaster.shortToast(getResources().getString(R.string.please_move_finger));
-                }
-                if (state != 4 && state != 3) {
-                }
-            }
-        });
+                }}
+        }     );
     }
 
 

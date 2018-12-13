@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <include layout="@layout/activity_top_view"
+        >
 
+    </include>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="@dimen/pre_lesson_day_height"

@@ -6,7 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.ImageFormat;
+import android.hardware.Camera;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Power;
@@ -19,6 +22,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +30,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.aip.ImageFrame;
+import com.baidu.aip.entity.IdentifyRet;
+import com.baidu.aip.face.ArgbPool;
+import com.baidu.aip.manager.FaceDetector;
+import com.baidu.aip.manager.FaceEnvironment;
+import com.baidu.aip.manager.FaceSDKManager;
+import com.baidu.idl.facesdk.FaceInfo;
+import com.baidu.idl.facesdk.FaceRecognize;
+import com.baidu.idl.facesdk.FaceSDK;
+import com.baidu.idl.facesdk.FaceTracker;
 import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
@@ -35,46 +49,49 @@ import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonBean;
-import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
-import com.link.cloud.api.request.LessonPred;
-import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.bean.GroupLessonUser;
 import com.link.cloud.bean.MainFragment;
+import com.link.cloud.bean.UserFace;
 import com.link.cloud.gpiotest.Gpio;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.listener.FragmentListener;
 import com.link.cloud.utils.DialogUtils;
+import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.TTSUtils;
+import com.link.cloud.widget.CameraFrameData;
+import com.link.cloud.widget.CameraGLSurfaceView;
+import com.link.cloud.widget.CameraSurfaceView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
-import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 
-public class MainActivity extends AppBarActivity implements DialogCancelListener, FragmentListener {
+public class MainActivity extends BaseActivity implements DialogCancelListener, FragmentListener, View.OnTouchListener, CameraSurfaceView.OnCameraListener {
 
     @BindView(R.id.member)
     TextView member;
@@ -96,6 +113,30 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     TextView coachName;
     @BindView(R.id.code_number)
     EditText code_mumber;
+    @BindView(R.id.surfaceView)
+    CameraSurfaceView surfaceView;
+    @BindView(R.id.sv_camera_surfaceview)
+    CameraGLSurfaceView svCameraSurfaceview;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.titleIndicator)
+    RecyclerIndicatorView titleIndicator;
+    @BindView(R.id.viewPageView)
+    ViewPager viewPageView;
+    @BindView(R.id.fg_container)
+    RelativeLayout fgContainer;
+    @BindView(R.id.register)
+    LinearLayout register;
+    @BindView(R.id.lesson_consume)
+    LinearLayout lessonConsume;
+    @BindView(R.id.buy)
+    LinearLayout buy;
+    @BindView(R.id.admin_rl)
+    RelativeLayout adminRl;
+    @BindView(R.id.video_view)
+    RelativeLayout videoView;
+    @BindView(R.id.member_rl)
+    RelativeLayout memberRl;
     private DialogUtils dialogUtils;
     ValueAnimator animator;
     private ViewPager viewPager;
@@ -116,7 +157,13 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     private RealmResults<AllUser> allCoachOrWorks;
     private ArrayList<AllUser> allCoachOrWorksList = new ArrayList<>();
     private LessonRecieve lesson;
-    int postion ;
+    int postion;
+    private int mWidth;
+    private int mHeight;
+    private int mFormat;
+    private Camera mCamera;
+    private ArgbPool argbPool = new ArgbPool();
+    FaceRecognize faceRecognize ;
     private void getListDate(final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
@@ -153,6 +200,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         });
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initData() {
         code_mumber.setFocusable(true);
@@ -165,14 +213,111 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
          */
         code_mumber.addTextChangedListener(new EditTextChangeListener());
     }
+
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public Camera setupCamera() {
+        // TODO Auto-generated method stub
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        try {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(mWidth, mHeight);
+            parameters.setPreviewFormat(mFormat);
+            mCamera.setDisplayOrientation(90);
+            for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+                Log.d(TAG, "SIZE:" + size.width + "x" + size.height);
+            }
+            for (Integer format : parameters.getSupportedPreviewFormats()) {
+                Log.d(TAG, "FORMAT:" + format);
+            }
+
+            List<int[]> fps = parameters.getSupportedPreviewFpsRange();
+            for (int[] count : fps) {
+                Log.d(TAG, "T:");
+                for (int data : count) {
+                    Log.d(TAG, "V=" + data);
+                }
+            }
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mCamera != null) {
+            mWidth = mCamera.getParameters().getPreviewSize().width;
+            mHeight = mCamera.getParameters().getPreviewSize().height;
+        }
+        return mCamera;
+    }
+
+    @Override
+    public void setupChanged(int format, int width, int height) {
+
+    }
+
+    @Override
+    public boolean startPreviewImmediately() {
+        return true;
+    }
+
+    @Override
+    public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
+        if(!isLessonin){
+            return null;
+        }
+        if(faceRecognize==null){
+            Toast.makeText(MainActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        int[] argb = argbPool.acquire(width, height);
+
+        if (argb == null || argb.length != width * height) {
+            argb = new int[width * height];
+        }
+        FaceDetector.yuvToARGB(data, width, height, argb, 0, 0);
+        ImageFrame frame = new ImageFrame();
+        frame.setArgb(argb);
+        frame.setWidth(width);
+        frame.setHeight(height);
+        frame.setPool(argbPool);
+        argbPool.release(argb);
+        int value = FaceSDKManager.getInstance().getFaceDetector().detect(frame);
+        // FaceSDKManager.getInstance().getFaceDetector().detectMultiFace(frame,5);
+        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceDetector().getTrackedFaces();
+        if (faces != null) {
+            Log.e("faceMulti", faces.length + "");
+        }
+        if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
+            asyncIdentity(frame, faces);
+            faces=null;
+        }
+        return null;
+    }
+
+    @Override
+    public void onBeforeRender(CameraFrameData data) {
+
+    }
+
+    @Override
+    public void onAfterRender(CameraFrameData data) {
+
+    }
+
     public class EditTextChangeListener implements TextWatcher {
         long lastTime;
+
         /**
          * 编辑框的内容发生改变之前的回调方法
          */
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
+
         /**
          * 编辑框的内容正在发生改变时的回调方法 >>用户正在输入
          * 我们可以在这里实时地 通过搜索匹配用户的输入
@@ -180,40 +325,41 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
+
         /**
          * 编辑框的内容改变以后,用户没有继续输入时 的回调方法
          */
         @Override
         public void afterTextChanged(Editable editable) {
 
-            String str=code_mumber.getText().toString();
+            String str = code_mumber.getText().toString();
             if (str.contains("\n")) {
-                if(!isLessonin){
+                if (!isLessonin) {
                     code_mumber.setText("");
                     return;
                 }
-                if(System.currentTimeMillis()-lastTime<1500){
+                if (System.currentTimeMillis() - lastTime < 1500) {
                     code_mumber.setText("");
                     return;
                 }
-                lastTime=System.currentTimeMillis();
-                Log.e( "afterTextChanged: ", str);
+                lastTime = System.currentTimeMillis();
+                Log.e("afterTextChanged: ", str);
                 //  entranceContronller.openDoorQr(code_mumber.getText().toString());
-                JSONObject object =null;
+                JSONObject object = null;
                 try {
-                    object= new JSONObject(code_mumber.getText().toString());
+                    object = new JSONObject(code_mumber.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (object==null){
+                if (object == null) {
                     return;
                 }
-                RequestBody requestBody=RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),object.toString());
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
                 ApiFactory.CourseInByQrcode(requestBody).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        onVeuenMsg(null,e.getMessage());
+                        onVeuenMsg(null, e.getMessage());
                     }
 
                     @Override
@@ -239,9 +385,26 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         return R.layout.activity_main;
     }
 
+    private void setCameraView() {
+        faceRecognize = new FaceRecognize(this);
+        // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
+        // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
+        // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
+        // 两张图片的识别需要使用相同的模型
+        faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
+        int mCameraRotate = 0;
+        boolean mCameraMirror = false;
+        mWidth = 640;
+        mHeight = 480;
+        mFormat = ImageFormat.NV21;
+        svCameraSurfaceview.setOnTouchListener(this);
+        surfaceView.setOnCameraListener(this);
+        surfaceView.setupGLSurafceView(svCameraSurfaceview, true, mCameraMirror, mCameraRotate);
+        surfaceView.debug_print_fps(false, false);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
-        hideToolbar();
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         userBeans = realm.where(GroupLessonUser.class).findAll();
         DeviceInfo deviceInfo = realm.where(DeviceInfo.class).findFirst();
@@ -298,11 +461,11 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                         });
                     } else {
                         final String workOrCoach = MacApplication.getVenueUtils().identifyNewImg(allCoachOrWorksList);
-                        if(workOrCoach!=null){
+                        if (workOrCoach != null) {
                             openDoor();
-                            handler.sendEmptyMessageDelayed(0,3000);
-                        }else {
-                            handler.sendEmptyMessageDelayed(0,3000);
+                            handler.sendEmptyMessageDelayed(0, 3000);
+                        } else {
+                            handler.sendEmptyMessageDelayed(0, 3000);
                             View view = View.inflate(MainActivity.this, R.layout.verify_fail, null);
                             dialogUtils.showVeuneFailDialog(view, getResources().getString(R.string.please_confirm_bind));
                         }
@@ -339,7 +502,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         if ("rk3399-mid".equals(deviceType)) {
             Gpio.set(gpiotext, 48);
         } else if ("rk3288".equals(deviceType)) {
-            Power.set_zysj_gpio_value(4,0);
+            Power.set_zysj_gpio_value(4, 0);
             //Power.set_zysj_gpio_value(4,1);
         }
         lesson = new LessonRecieve();
@@ -347,31 +510,55 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
         intentFilter.addAction(Constants.LESSON);
         registerReceiver(lesson, intentFilter);
         initData();
+        FaceSDKManager.getInstance().setKey("3MHH-YAFO-4RBL-XYBK");
+        FaceSDKManager.getInstance().init(this);
+        FaceEnvironment faceEnvironment = new FaceEnvironment();
+        FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
+        FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
+            @Override
+            public void initStart() {
+                Log.e(TAG, "initStart: ");
+            }
+
+            @Override
+            public void initSuccess() {
+                Log.e(TAG, "initSuccess: ");
+                setCameraView();
+            }
+
+            @Override
+            public void initFail(int errorCode, String msg) {
+                Log.e(TAG, "initFail: ");
+            }
+        });
+
     }
+
+    String TAG = "MainActivity";
+
     public class LessonRecieve extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String msg = intent.getStringExtra("msg");
-            String type  =null;
-            JSONObject object=null;
-            Log.e( "onReceive: ",msg );
-            Toast.makeText(MainActivity.this,msg,Toast.LENGTH_LONG).show();
+            String type = null;
+            JSONObject object = null;
+            Log.e("onReceive: ", msg);
             try {
                 object = new JSONObject(msg);
                 type = object.getString("msgType");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if("REFRESH_COURSE_LIST".equals(type)){
-             getListDate(postion);
-            }else if("REFRESH_COURSE_USER".equals(type)){
+            if ("REFRESH_COURSE_LIST".equals(type)) {
+                getListDate(postion);
+            } else if ("REFRESH_COURSE_USER".equals(type)) {
                 getGroupData();
-            }else if("ENTRANCE_GUARD".equals(type)){
+            } else if ("ENTRANCE_GUARD".equals(type)) {
                 try {
                     JSONObject data = object.getJSONObject("data");
                     String uuid = data.getString("uuid");
                     final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("uuid", uuid).findAll();
-                    for(int x=0;x<personIn.size();x++){
+                    for (int x = 0; x < personIn.size(); x++) {
                         final int finalX = x;
                         realm.executeTransaction(new Realm.Transaction() {
                             @Override
@@ -483,20 +670,20 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 Gpio.gpioInt(gpiotext);
                 Thread.sleep(400);
                 Gpio.set(gpiotext, 48);
-            TTSUtils.getInstance().speak("门已开");
+                TTSUtils.getInstance().speak("门已开");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Gpio.set(gpiotext, 49);
         } else if ("rk3288".equals(deviceType)) {
             try {
-                Power.set_zysj_gpio_value(4,0);
+                Power.set_zysj_gpio_value(4, 0);
                 Thread.sleep(400);
-           TTSUtils.getInstance().speak("门已开");
+                TTSUtils.getInstance().speak("门已开");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Power.set_zysj_gpio_value(4,1);
+            Power.set_zysj_gpio_value(4, 1);
         }
     }
 
@@ -507,7 +694,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    Log.e("handleMessage: ", msg.what+"");
+                    Log.e("handleMessage: ", msg.what + "");
                     dialogUtils.dissMiss();
                     animator.start();
                     break;
@@ -546,11 +733,98 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     protected void onPause() {
         super.onPause();
         animator.end();
-        isLessonin=false;
+        isLessonin = false;
     }
 
     boolean isLessonin = false;
+    private static final int IDENTITY_IDLE = 2;
+    private static final int IDENTITYING = 3;
+    private volatile int identityStatus = IDENTITY_IDLE;
+    private ExecutorService es = Executors.newSingleThreadExecutor();
+    private void asyncIdentity(final ImageFrame imageFrame, final FaceInfo[] faceInfos) {
+        if (identityStatus != IDENTITY_IDLE) {
+            return ;
+        }
 
+        es.submit(new Runnable() {
+
+            @Override
+            public void run() {
+                if (faceInfos == null || faceInfos.length == 0) {
+                    return;
+                }
+                identity(imageFrame, faceInfos[0]);
+
+
+            }
+        });
+    }
+    private void identity(ImageFrame imageFrame, FaceInfo faceInfo) {
+        identityStatus = IDENTITYING;
+
+        float raw = Math.abs(faceInfo.headPose[0]);
+        float patch = Math.abs(faceInfo.headPose[1]);
+        float roll = Math.abs(faceInfo.headPose[2]);
+        // 人脸的三个角度大于20不进行识别
+        if (raw > 20 || patch > 20 || roll > 20) {
+            identityStatus = IDENTITY_IDLE;
+            return;
+        }
+
+
+        long starttime = System.currentTimeMillis();
+        int[] argb = imageFrame.getArgb();
+        int rows = imageFrame.getHeight();
+        int cols = imageFrame.getWidth();
+        int[] landmarks = faceInfo.landmarks;
+
+        IdentifyRet identifyRet = null;
+        identifyRet = identity(argb,rows,cols,landmarks);
+
+        if (identifyRet != null) {
+
+            Log.e( "identity: ", identifyRet.getUserId()+">>>>>>>>"+ identifyRet.getScore());
+        }
+    }
+    String userIdOfMaxScore = "";
+    public IdentifyRet identity(int[] argbData, int rows, int cols, int[] landmarks) {
+        if (argbData == null ) {
+            identityStatus = IDENTITY_IDLE;
+            return null;
+        }
+        byte[] imageFrameFeature = new byte[2048];
+        int ret = faceRecognize.extractFeature(argbData, rows, cols, FaceSDK.ImgType.ARGB, imageFrameFeature, landmarks,
+                FaceSDK.RecognizeType.RECOGNIZE_LIVE);
+       userIdOfMaxScore="";
+        float identifyScore = 0;
+        Realm realm = Realm.getDefaultInstance();
+        Log.e(TAG, "identity: "+System.currentTimeMillis());
+        RealmResults<UserFace> all = realm.where(UserFace.class).findAll();
+
+        Iterator<UserFace> iterator = all.iterator();
+
+        while (iterator.hasNext()) {
+            UserFace next = iterator.next();
+
+            byte[] feature = HexUtil.hexStringToByte(next.getFeature());
+            final float score = FaceSDKManager.getInstance().getFaceFeature().getFaceFeatureDistance(
+                    feature, imageFrameFeature);
+            if (score > identifyScore) {
+                identifyScore = score;
+                userIdOfMaxScore = next.getUserId();
+
+            }
+        }
+        Log.e(TAG, "identity: "+System.currentTimeMillis());
+        identityStatus = IDENTITY_IDLE;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this,userIdOfMaxScore,Toast.LENGTH_SHORT).show();
+            }
+        });
+        return new IdentifyRet(userIdOfMaxScore, identifyScore);
+    }
     protected void SendMsgToTcp(String msg) {
         nettyClientBootstrap.startNetty(msg);
         Log.e("SendMsgToTcp: ", msg);
@@ -580,6 +854,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
+                videoView.setVisibility(View.VISIBLE);
                 isLessonin = true;
                 animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
@@ -591,6 +866,7 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
                 initGroup();
                 break;
             case R.id.choose_lesson:
+               videoView.setVisibility(View.INVISIBLE);
                 isLessonin = false;
                 animator.end();
                 getListDate(0);
@@ -653,6 +929,6 @@ public class MainActivity extends AppBarActivity implements DialogCancelListener
     @Override
     public void OnRefreshListener(int pos) {
         getListDate(pos);
-        this.postion =pos;
+        this.postion = pos;
     }
 }

@@ -2,72 +2,99 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_function_bg"
+    android:background="@drawable/cabinet_bg"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
 
     <ImageView
-        android:layout_width="@dimen/w309"
-        android:layout_height="@dimen/h107"
-        android:layout_marginTop="@dimen/h64"
-        android:src="@drawable/handy_logo" />
-
-
-    <ImageView
         android:layout_width="@dimen/w530"
         android:layout_height="@dimen/h135"
-        android:layout_marginTop="@dimen/h64"
+        android:layout_marginTop="@dimen/h180"
         android:src="@drawable/ic_function_english" />
 
 
     <LinearLayout
-        android:layout_width="@dimen/w632"
-        android:layout_height="@dimen/h363"
+        android:layout_width="@dimen/function_width"
+        android:layout_height="@dimen/function_height"
         android:layout_marginLeft="@dimen/w41"
         android:layout_marginRight="@dimen/w41"
         android:layout_marginTop="@dimen/h191"
         android:background="@drawable/bg_white_rectangle_corner_r20"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-        <TextView
+        <LinearLayout
             android:id="@+id/privateEduLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/h52"
-            android:drawableTop="@drawable/ic_private_education_course"
-            android:text="@string/private_edu"
-            android:textColor="@color/color_black_333333"
-            android:textSize="@dimen/w30" />
+            android:orientation="vertical">
 
+            <ImageView
+                android:layout_width="@dimen/function_image"
+                android:layout_height="@dimen/function_image"
+                android:src="@drawable/ic_private_education_course" />
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_main"
+                android:drawablePadding="@dimen/h52"
+                android:text="@string/private_edu"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w30" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/openLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/w80"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:orientation="vertical">
 
-            android:layout_marginRight="@dimen/w80"
-            android:drawablePadding="@dimen/h52"
-            android:drawableTop="@drawable/ic_open"
-            android:text="@string/open_string"
-            android:textColor="@color/color_black_333333"
-            android:textSize="@dimen/w30" />
+            <ImageView
+                android:layout_width="@dimen/function_image"
+                android:layout_height="@dimen/function_image"
+                android:src="@drawable/ic_open" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_main"
+                android:drawablePadding="@dimen/h52"
+                android:text="@string/open_string"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w30" />
 
-        <TextView
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/rentingCabinetLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/h52"
-            android:drawableTop="@drawable/ic_renting_cabinet"
-            android:text="@string/renting_cabinet"
-            android:textColor="@color/color_black_333333"
-            android:textSize="@dimen/w30" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/function_image"
+                android:layout_height="@dimen/function_image"
+                android:src="@drawable/ic_renting_cabinet" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_main"
+                android:drawablePadding="@dimen/h52"
+                android:text="@string/renting_cabinet"
+                android:textColor="@color/color_black_333333"
+                android:textSize="@dimen/w30" />
+
+        </LinearLayout>
 
 
     </LinearLayout>

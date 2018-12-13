@@ -42,6 +42,8 @@ import com.zitech.framework.utils.ViewUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
@@ -83,7 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             String type  =null;
             JSONObject object=null;
             Log.e( "onReceive: ",msg );
-            Toast.makeText(BaseActivity.this,msg,Toast.LENGTH_LONG).show();
             try {
                object = new JSONObject(msg);
                 type = object.getString("msgType");
@@ -118,6 +119,24 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                         }
                     });
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if("APP_REBOOT".equals(type)){
+                try {
+                    final RealmResults<AllUser> personIn = realm.where(AllUser.class).equalTo("isIn", 1).findAll();
+
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            while (personIn.size()>0){
+                                personIn.get(0).setIsIn(0);
+                            }
+                        }
+                    });
+
+                    Runtime.getRuntime().exec("su -c reboot");
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

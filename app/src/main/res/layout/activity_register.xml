@@ -111,7 +111,7 @@
                 android:layout_width="@dimen/text_big_width_main"
                 android:layout_height="@dimen/text_height_main"
                 android:background="@drawable/border_lesson"
-                android:visibility="gone"
+
                 android:orientation="horizontal">
 
                 <TextView
@@ -228,9 +228,8 @@
                     android:layout_width="@dimen/code_image_view_width"
                     android:layout_height="@dimen/code_image_view_height"
                     android:layout_alignParentStart="true"
-                    android:layout_alignTop="@+id/key_board"
-                    android:src="@drawable/qcode_image"
-                    />
+                    android:layout_below="@+id/code_intro"
+                    android:src="@drawable/qcode_image" />
 
                 <TextView
                     android:layout_width="@dimen/keyboard_width"
@@ -255,6 +254,13 @@
                     android:layout_marginEnd="17dp"
                     android:visibility="gone"
                     >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/bind_veune_container"
+
+                        >
+
 
                     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/venue_image"
@@ -313,7 +319,82 @@
                         />
 
                 </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/bind_face_container"
+                        android:visibility="gone"
+                        >
+                        <RelativeLayout
+                            android:layout_width="700px"
+                            android:layout_height="@dimen/circleProgressBar_width"
+                            android:layout_marginTop="@dimen/margin_main"
+                            android:layout_marginBottom="@dimen/margin_main"
+                            android:layout_centerHorizontal="true"
+                            >
+                            <com.link.cloud.widget.CameraSurfaceView
+                                android:id="@+id/surfaceView"
+                                android:layout_width="1dp"
+                                android:layout_height="1dp"/>
 
+                            <com.link.cloud.widget.CameraGLSurfaceView
+                                android:layout_centerHorizontal="true"
+                                android:id="@+id/sv_camera_surfaceview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                />
+                            <com.link.cloud.widget.ClipView
+                                android:id="@+id/clipView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                />
+                        </RelativeLayout>
+
+                        <com.dinuscxj.progressbar.CircleProgressBar
+                            android:id="@+id/custom_progress_face"
+                            android:layout_width="@dimen/circleProgressBar_width"
+                            android:layout_height="@dimen/circleProgressBar_width"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="@dimen/margin_main"
+                            android:layout_marginTop="@dimen/margin_main"
+                            android:background="@drawable/border_progress"
+                            app:progress_background_color="@color/translate"
+                            app:progress_end_color="@color/red"
+                            app:progress_start_color="@color/red"
+                            app:progress_start_degree="-180"
+                            app:progress_stroke_width="3dp"
+                            app:style="solid_line" />
+
+                        <TextView
+                            android:id="@+id/bind_face_intro"
+                            android:layout_width="@dimen/bind_intro_textView_width"
+                            android:layout_height="@dimen/bind_intro_textView_height"
+                            android:layout_below="@+id/custom_progress_face"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="@dimen/margin_main"
+                            android:layout_marginTop="@dimen/margin_main"
+                            android:background="@drawable/border_red_10px"
+                            android:gravity="center"
+                            android:text="@string/right_face"
+                            android:textColor="@color/red"
+                            android:textSize="@dimen/text_size_48" />
+
+                        <TextView
+                            android:id="@+id/bind_face_intro_below"
+                            android:layout_width="@dimen/keyboard_width"
+                            android:layout_height="@dimen/group_in_text_height"
+                            android:layout_below="@+id/bind_face_intro"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_main"
+                            android:background="@drawable/border_red_gradient"
+                            android:gravity="center"
+                            android:text="@string/confirm"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_36"
+
+                            />
+                    </RelativeLayout>
+                </RelativeLayout>
 
             <RelativeLayout
                 android:visibility="gone"

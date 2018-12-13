@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.link.cloud.Constants;
 import com.link.cloud.R;
 import com.link.cloud.api.bean.RentTimeBean;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.fragment.RentBuyFragment;
 import com.link.cloud.fragment.RentCabinetFragment;
 import com.link.cloud.fragment.RentInfoFragment;
@@ -20,7 +20,7 @@ import com.link.cloud.widget.PublicTitleView;
  * description：
  */
 @SuppressLint("Registered")
-public class RentingActivity extends AppBarActivity {
+public class RentingActivity extends BaseActivity {
     private PublicTitleView publicTitle;
 
 

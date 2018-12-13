@@ -19,6 +19,7 @@
     <dimen name="text_height_main">60px</dimen>
     <dimen name="text_width_main">265px</dimen>
     <dimen name="text_big_width_main">530px</dimen>
+    <dimen name="video_view_size">480px</dimen>
     <dimen name="card_view_width">850px</dimen>
     <dimen name="card_view_height">207px</dimen>
     <dimen name="card_imageView_height">169px</dimen>
@@ -70,9 +71,13 @@
     <dimen name="pre_lesson_day_width">108px</dimen>
     <dimen name="pre_lesson_day_height">220px</dimen>
     <dimen name="consume_ok">200px</dimen>
-    <dimen name="lesson_dialog_small_image_size">40px</dimen>
+    <dimen name="lesson_dialog_small_image_size">55px</dimen>
     <dimen name="lesson_dialog_use_width">252px</dimen>
-    <dimen name="lesson_dialog_use_height">45px</dimen>
+    <dimen name="lesson_dialog_use_height">88px</dimen>
+    <dimen name="function_width">948px</dimen>
+    <dimen name="function_height">545px</dimen>
+    <dimen name="function_image">188px</dimen>
+
 
 
 </resources>

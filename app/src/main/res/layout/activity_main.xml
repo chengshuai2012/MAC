@@ -12,6 +12,24 @@
         android:background="@drawable/handy_logo"
 
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_view_size"
+            android:id="@+id/video_view"
+            android:visibility="gone"
+            >
+        <com.link.cloud.widget.CameraSurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="1dp"
+            android:layout_height="1dp"/>
+
+        <com.link.cloud.widget.CameraGLSurfaceView
+
+            android:id="@+id/sv_camera_surfaceview"
+            android:layout_width="480px"
+            android:layout_height="match_parent"
+            />
+        </RelativeLayout>
         <EditText
             android:id="@+id/code_number"
             android:layout_width="1dp"

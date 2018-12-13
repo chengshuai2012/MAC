@@ -3,6 +3,7 @@ package com.link.cloud.activity;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.link.cloud.R;
@@ -17,9 +18,9 @@ import com.zitech.framework.utils.ViewUtils;
 public class FunctionalSelectionActivity extends BaseActivity {
 
 
-    private android.widget.TextView privateEduLayout;
-    private android.widget.TextView openLayout;
-    private android.widget.TextView rentingCabinetLayout;
+    private LinearLayout privateEduLayout;
+    private LinearLayout openLayout;
+    private LinearLayout rentingCabinetLayout;
     private android.widget.Button backLayout;
 
 
@@ -34,9 +35,9 @@ public class FunctionalSelectionActivity extends BaseActivity {
     }
 
     private void initView() {
-        privateEduLayout = (TextView) findViewById(R.id.privateEduLayout);
-        openLayout = (TextView) findViewById(R.id.openLayout);
-        rentingCabinetLayout = (TextView) findViewById(R.id.rentingCabinetLayout);
+        privateEduLayout = (LinearLayout) findViewById(R.id.privateEduLayout);
+        openLayout = (LinearLayout) findViewById(R.id.openLayout);
+        rentingCabinetLayout = (LinearLayout) findViewById(R.id.rentingCabinetLayout);
         backLayout = (Button) findViewById(R.id.backLayout);
 
 

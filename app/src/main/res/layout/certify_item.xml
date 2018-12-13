@@ -15,6 +15,7 @@
             android:textSize="@dimen/text_size_36"
             android:text="01"
             android:id="@+id/count"
+            android:gravity="center"
             android:background="@drawable/round_gray"
             android:layout_marginRight="@dimen/margin_main_middle"
             />

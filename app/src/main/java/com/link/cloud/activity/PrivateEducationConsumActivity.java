@@ -19,7 +19,7 @@ import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.response.CoachBean;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.widget.PublicTitleView;
 import com.zitech.framework.data.network.response.ApiResponse;
@@ -28,12 +28,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 @SuppressLint("Registered")
-public class PrivateEducationConsumActivity extends AppBarActivity implements PublicTitleView.onItemClickListener {
+public class PrivateEducationConsumActivity extends BaseActivity implements PublicTitleView.onItemClickListener {
     @BindView(R.id.bind_way)
     TextView bindWay;
     @BindView(R.id.venue_image)

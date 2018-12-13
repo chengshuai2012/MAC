@@ -1,6 +1,5 @@
 package com.link.cloud.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,23 +9,21 @@ import android.widget.TextView;
 import com.link.cloud.R;
 import com.link.cloud.adapter.LessonDayTimeAdapter;
 import com.link.cloud.adapter.LessonHourTimeAdapter;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.Days;
 import com.link.cloud.utils.LunarCalendar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.logging.Logger;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Created by 49488 on 2018/10/6.
  */
 
-public class PrePrivateLessonActivity extends AppBarActivity implements LessonDayTimeAdapter.OnItemClickListener, LessonHourTimeAdapter.OnItemClickListener {
+public class PrePrivateLessonActivity extends BaseActivity implements LessonDayTimeAdapter.OnItemClickListener, LessonHourTimeAdapter.OnItemClickListener {
     ArrayList<Days> days = new ArrayList<>();
     String[] week = new String[]{"六", "日", "一", "二", "三", "四", "五"};
     private static String[] lunarDay = {"初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",

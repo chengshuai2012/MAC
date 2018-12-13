@@ -108,6 +108,7 @@
     <string name="tel_intro_login">请在此输入手机号进行验证登录</string>
     <string name="confirm_bind">确认绑定</string>
     <string name="right_finger">请正确放置手指</string>
+    <string name="right_face">请对准面部识别</string>
     <string name="bind_right">绑定成功请开启你的健身之旅</string>
     <string name="now_card_num">当前手机号：159****5969</string>
     <string name="now_card_right">购买该卡可享受相应权力(查看使用规则)</string>
@@ -130,7 +131,7 @@
     <string name="pay_info">温馨提示：一经售出，此票恕不退款</string>
     <string name="zhifubao">支付宝</string>
     <string name="wechat_pay">微信支付</string>
-    <string name="handy_pay">汗滴充值卡</string>
+    <string name="handy_pay">充值卡</string>
     <string name="private_coach">私教</string>
     <string name="how_to_use">如    何    使   用</string>
     <string name="one_person">1人</string>
@@ -153,7 +154,7 @@
     <string name="return_time">归还时间</string>
     <string name="cabinet_position">柜号位置</string>
     <string name="buy_sing_come">单次入场券</string>
-    <string name="activate_card">汗的会员开卡</string>
+    <string name="activate_card">会员开卡</string>
     <string name="card_recharge">会员充值</string>
     <string name="single_buy_rules">1．本会所向会员免费提供WIFI、热水沐浴、沐浴用品、吹风机、体重秤、自助手机充电宝租借、休息区。\n2．会员会籍只限本人使用。\n3．会员单日单次入场使用费20元/次。\n4．当日预约私教课程及团操课程可免全日入场费，课程取消将自动扣除入场费。\n5．私教课程须提前至少24小时预约，取消需在上课前6小时，未取消及未上课系统自带扣除课时及费用。\n6．团操课程预约后，取消需在开课前2小时，未取消及未上课系统自带扣除课时及费用。\n7．团操课程开课后15分钟，会员不可进入课室上课，已缴纳费用无需退还。\n8．私教课程及团操课程收费需按照课程标准收费（详见各课程合同收费条款）</string>
     <string name="admission_ticket">入场券</string>
@@ -171,7 +172,7 @@
     <string name="wait_amoment">请求中,请稍后...</string>
     <string name="move_finger">请移开手指,再次放置</string>
     <string name="bind_ok">绑定成功</string>
-    <string name="handy_member">汗的会员卡</string>
+    <string name="handy_member">会员卡</string>
     <string name="error_tel">请输入正确的手机号</string>
     <string name="verify_has_send">验证码已发送</string>
     <string name="verify_first">请先获取验证码</string>
@@ -196,7 +197,7 @@
     <string name="yuan">￥</string>
     <string name="sure_other_pay">应付款:</string>
     <string name="sure_ali_pay">支付宝支付</string>
-    <string name="sure_handy_pay">汗的充值卡</string>
+    <string name="sure_handy_pay">充值卡</string>
     <string name="have_mun">已有</string>
     <string name="peoples_buy">人购买课程</string>
     <string name="verify_fail">验证失败</string>

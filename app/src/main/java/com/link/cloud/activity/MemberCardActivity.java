@@ -3,7 +3,7 @@ package com.link.cloud.activity;
 import android.os.Bundle;
 
 import com.link.cloud.R;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.fragment.MemberCardFragment;
 
 /**
@@ -11,7 +11,7 @@ import com.link.cloud.fragment.MemberCardFragment;
  * 邮箱：zar.l@qq.com
  * 会员开卡
  */
-public class MemberCardActivity extends AppBarActivity {
+public class MemberCardActivity extends BaseActivity {
     @Override
     protected void initViews() {
 

@@ -12,20 +12,14 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.link.cloud.Constants;
@@ -35,19 +29,15 @@ import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.LessonItemBean;
 import com.link.cloud.api.bean.PayBean;
-import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.request.EdituserRequest;
-import com.link.cloud.base.AppBarActivity;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.listener.DialogCancelListener;
-import com.link.cloud.listener.MessageListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.PublicTitleView;
 import com.orhanobut.logger.Logger;
 import com.zitech.framework.data.network.response.ApiResponse;
-import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 import com.zitech.framework.data.network.subscribe.ProgressSubscriber;
 import com.zitech.framework.utils.ToastMaster;
 
@@ -56,7 +46,6 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
-import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.RequestBody;
 
@@ -64,7 +53,7 @@ import okhttp3.RequestBody;
  * Created by OFX002 on 2018/9/26.
  */
 
-public class PreGroupLessonActivity extends AppBarActivity implements DialogCancelListener {
+public class PreGroupLessonActivity extends BaseActivity implements DialogCancelListener {
 
     @BindView(R.id.binding)
     TextView binding;
@@ -269,7 +258,7 @@ public class PreGroupLessonActivity extends AppBarActivity implements DialogCanc
                         }
                     }
                 } else {
-                    if (verify.length() < 4) {
+                    if (verify.length() < 6) {
                         try {
                             verify.append(((TextView) v).getText());
                             verifyCode.setText(verify.toString());

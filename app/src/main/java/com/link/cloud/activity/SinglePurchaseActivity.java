@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import com.link.cloud.R;
-import com.link.cloud.base.AppBarActivity;
+import com.link.cloud.base.BaseActivity;
 import com.link.cloud.fragment.OpenMembershipFragment;
 import com.link.cloud.fragment.RechargeFragment;
 import com.link.cloud.fragment.SingleBuyFragment;
@@ -21,7 +20,7 @@ import com.link.cloud.widget.PublicTitleView;
  * description：
  */
 @SuppressLint("Registered")
-public class SinglePurchaseActivity extends AppBarActivity {
+public class SinglePurchaseActivity extends BaseActivity {
 
     private RadioButton singBuy;
     private RadioButton activiteCard;
