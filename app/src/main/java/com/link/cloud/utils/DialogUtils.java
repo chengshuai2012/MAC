@@ -26,6 +26,7 @@ import com.link.cloud.adapter.Pay_GridView_Adapter_Black;
 import com.link.cloud.adapter.Pay_GridView_Adapter_Gray;
 import com.link.cloud.adapter.TipsAdapter;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.dataSourse.CoachInfo;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.listener.DialogCancelListener;
@@ -606,7 +607,7 @@ public class DialogUtils implements View.OnClickListener {
 
                 String fisrt = Utils.getMD5( builder.toString()).toUpperCase();
                 String second = Utils.getMD5(fisrt).toUpperCase();
-                ApiFactory.validatePassword(second).subscribe(new ProgressSubscriber<ApiResponse>(context) {
+                ApiFactory.validatePassword(second).subscribe(new BaseProgressSubscriber<ApiResponse>(context) {
                     @Override
                     public void onNext(ApiResponse apiResponse) {
                         super.onNext(apiResponse);

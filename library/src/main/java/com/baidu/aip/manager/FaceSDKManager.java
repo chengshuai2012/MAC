@@ -132,10 +132,11 @@ public class FaceSDKManager {
         boolean success = false;
         int status = FaceSDK.getAuthorityStatus();
         if (status == AndroidLicenser.ErrorCode.SUCCESS.ordinal()) {
+
             initStatus = SDK_INITED;
             success = true;
             faceDetector.setInitStatus(initStatus);
-            Log.e("FaceSDK", "授权成功");
+            Log.e("FaceSDK", "授权成功"+status);
             if (sdkInitListener != null) {
                 sdkInitListener.initSuccess();
             }

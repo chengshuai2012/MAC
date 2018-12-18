@@ -79,6 +79,16 @@ public class DeviceBean {
         private String branchName;
         private String deviceType;
         private String deviceModel;
+        private String baiduKey;
+
+        public String getBaiduKey() {
+            return baiduKey;
+        }
+
+        public void setBaiduKey(String baiduKey) {
+            this.baiduKey = baiduKey;
+        }
+
         private String deviceVersion;
         private Object pw;
 

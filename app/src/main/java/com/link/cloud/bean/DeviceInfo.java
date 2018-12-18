@@ -10,6 +10,15 @@ public class DeviceInfo extends RealmObject{
     String deviceId;
     String psw;
     String deviceType;
+    String baiduKey;
+
+    public String getBaiduKey() {
+        return baiduKey;
+    }
+
+    public void setBaiduKey(String baiduKey) {
+        this.baiduKey = baiduKey;
+    }
 
     public String getDeviceType() {
         return deviceType;

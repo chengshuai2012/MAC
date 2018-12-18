@@ -48,8 +48,12 @@ import com.link.cloud.adapter.GroupLesson_Adapter;
 import com.link.cloud.adapter.IndicatorViewAdapter;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
+import com.link.cloud.api.bean.AllUserFaceBean;
+import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.dataSourse.GroupLessonInResource;
+import com.link.cloud.api.dataSourse.UserList;
+import com.link.cloud.api.request.GetUserPages;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.DeviceInfo;
@@ -71,15 +75,20 @@ import com.shizhefei.view.indicator.RecyclerIndicatorView;
 import com.shizhefei.view.indicator.slidebar.SpringBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 import com.zitech.framework.data.network.response.ApiResponse;
+import com.zitech.framework.data.network.subscribe.NoProgressSubscriber;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,6 +173,11 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
     private Camera mCamera;
     private ArgbPool argbPool = new ArgbPool();
     FaceRecognize faceRecognize ;
+    private DeviceInfo deviceInfo;
+    int pageNum = 100;
+    int total = 0;
+    int local = 0;
+    private RealmResults allLocal;
     private void getListDate(final int pos) {
         ApiFactory.courseList().subscribe(new BaseProgressSubscriber<ApiResponse<List<LessonBean>>>(MainActivity.this) {
             @Override
@@ -293,7 +307,6 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         }
         if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
             asyncIdentity(frame, faces);
-            faces=null;
         }
         return null;
     }
@@ -386,12 +399,6 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
     }
 
     private void setCameraView() {
-        faceRecognize = new FaceRecognize(this);
-        // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
-        // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
-        // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
-        // 两张图片的识别需要使用相同的模型
-        faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
         int mCameraRotate = 0;
         boolean mCameraMirror = false;
         mWidth = 640;
@@ -407,7 +414,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
     protected void initViews() {
         dialogUtils = DialogUtils.getDialogUtils(this, this);
         userBeans = realm.where(GroupLessonUser.class).findAll();
-        DeviceInfo deviceInfo = realm.where(DeviceInfo.class).findFirst();
+        deviceInfo = realm.where(DeviceInfo.class).findFirst();
         deviceType = deviceInfo.getDeviceType();
         userBeans.addChangeListener(new RealmChangeListener<RealmResults<GroupLessonUser>>() {
             @Override
@@ -437,6 +444,10 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
                     final String uid = MacApplication.getVenueUtils().identifyNewImgUser(groupUsers);
                     if (uid != null) {
                         animator.end();
+                        if (TextUtils.isEmpty(courseReleasePkcode)){
+                            onVeuenMsg(null, getString(R.string.now_not_lesson));
+                            return;
+                        }
                         ApiFactory.admissionCourse(uid, courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
                             @Override
                             public void onStart() {
@@ -456,7 +467,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
                             public void onError(Throwable e) {
                                 super.onError(e);
                                 handler.removeMessages(0);
-                                onVeuenMsg(null, e.getMessage());
+                                onVeuenMsg(null, getString(R.string.network_unavailable));
                             }
                         });
                     } else {
@@ -510,27 +521,184 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         intentFilter.addAction(Constants.LESSON);
         registerReceiver(lesson, intentFilter);
         initData();
-        FaceSDKManager.getInstance().setKey("3MHH-YAFO-4RBL-XYBK");
-        FaceSDKManager.getInstance().init(this);
-        FaceEnvironment faceEnvironment = new FaceEnvironment();
-        FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
-        FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
+        Constants.baiduKey = realm.where(DeviceInfo.class).findFirst().getBaiduKey();
+        if(!TextUtils.isEmpty(Constants.baiduKey)){
+           getTotalFace();
+            setCameraView();
+            FaceSDKManager.getInstance().setKey(Constants.baiduKey);
+            FaceSDKManager.getInstance().init(this);
+            FaceEnvironment faceEnvironment = new FaceEnvironment();
+            FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
+            FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
+                @Override
+                public void initStart() {
+                    Log.e(TAG, "initStart: ");
+                }
+
+                @Override
+                public void initSuccess() {
+                    Log.e(TAG, "initSuccess: ");
+                    faceRecognize = new FaceRecognize(MainActivity.this);
+                    // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
+                    // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
+                    // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
+                    // 两张图片的识别需要使用相同的模型
+                    faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
+
+                }
+
+                @Override
+                public void initFail(int errorCode, String msg) {
+                    Log.e(TAG, "initFail: ");
+                }
+            });
+        }
+
+    }
+    private void getSingleFace(String uuid){
+
+        ApiFactory.getSingleFace(uuid).subscribe(new BaseProgressSubscriber<ApiResponse<UserFace>>(this) {
             @Override
-            public void initStart() {
-                Log.e(TAG, "initStart: ");
+            public void onError(Throwable e) {
+                super.onError(e);
             }
 
             @Override
-            public void initSuccess() {
-                Log.e(TAG, "initSuccess: ");
-                setCameraView();
+            public void onStart() {
+                super.onStart();
             }
 
             @Override
-            public void initFail(int errorCode, String msg) {
-                Log.e(TAG, "initFail: ");
+            public void onNext(final ApiResponse<UserFace> bindUserFaceApiResponse) {
+                super.onNext(bindUserFaceApiResponse);
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.copyToRealm(bindUserFaceApiResponse.getData());
+                    }
+                });
+            }
+
+            @Override
+            public void onCompleted() {
+                super.onCompleted();
             }
         });
+
+    }
+    private void courseIn(final String uid){
+        if (TextUtils.isEmpty(courseReleasePkcode)){
+            onVeuenMsg(null, getString(R.string.now_not_lesson));
+            return;
+        }
+        ApiFactory.admissionCourse(uid, courseReleasePkcode).subscribe(new BaseProgressSubscriber<ApiResponse>(MainActivity.this) {
+            @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onNext(ApiResponse apiResponse) {
+                super.onNext(apiResponse);
+                handler.removeMessages(0);
+                onVeuenMsg(uid, "");
+                getGroupData();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                handler.removeMessages(0);
+                onVeuenMsg(null, getString(R.string.network_unavailable));
+            }
+        });
+    }
+    private void getTotalFace() {
+        GetUserPages getUserPages = new GetUserPages();
+        getUserPages.setContent(deviceInfo.getDeviceId());
+        getUserPages.setPageNo(1);
+        getUserPages.setPageSize(pageNum);
+        ApiFactory.getUsersFace(getUserPages).subscribe(new BaseProgressSubscriber<ApiResponse<AllUserFaceBean>>(this) {
+            @Override
+            public void onStart() {
+                super.onStart();
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onNext(ApiResponse<AllUserFaceBean> allUserFaceBeanApiResponse) {
+                super.onNext(allUserFaceBeanApiResponse);
+                final AllUserFaceBean userList = allUserFaceBeanApiResponse.getData();
+                total = userList.getTotal();
+                allLocal = realm.where(UserFace.class).findAll();
+                local = allLocal.size();
+                Log.e("onNext: ", local + ">>>" + total);
+                if (local != total) {
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            allLocal.deleteAllFromRealm();
+                            realm.copyToRealm(userList.getData());
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCompleted() {
+                super.onCompleted();
+                if (local != total) {
+                    getAllData();
+                }
+            }
+        });
+    }
+    private void getAllData() {
+        int totalPage = total / pageNum + 1;
+        ExecutorService executorService = Executors.newFixedThreadPool(totalPage);
+        List<Future<Boolean>> futures = new ArrayList();
+        if (totalPage >= 2) {
+            for (int i = 2; i < totalPage; i++) {
+                final int finalI = i;
+                Callable<Boolean> task = new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        GetUserPages getUserPages = new GetUserPages();
+                        getUserPages.setContent(deviceInfo.getDeviceId());
+                        getUserPages.setPageNo(finalI);
+                        getUserPages.setPageSize(pageNum);
+                        ApiFactory.getUsersFace(getUserPages).subscribe(new NoProgressSubscriber<ApiResponse<AllUserFaceBean>>(MainActivity.this) {
+
+                            @Override
+                            public void onNext(ApiResponse<AllUserFaceBean> apiResponse) {
+                                final AllUserFaceBean userList = apiResponse.getData();
+                                realm.executeTransaction(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        realm.copyToRealm(userList.getData());
+                                    }
+                                });
+                            }
+                        });
+                        return true;
+                    }
+                };
+
+                futures.add(executorService.submit(task));
+            }
+        }
+        for (Future<Boolean> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        executorService.shutdown();
 
     }
 
@@ -571,6 +739,17 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }else if("GET_USERS_FACE".equals(type)){
+                JSONObject data = null;
+                try {
+                    data = object.getJSONObject("data");
+                    JSONArray uuids = data.getJSONArray("uuids");
+                    String uuid = (String) uuids.get(0);
+                    getSingleFace(uuid);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
 
@@ -806,12 +985,12 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         while (iterator.hasNext()) {
             UserFace next = iterator.next();
 
-            byte[] feature = HexUtil.hexStringToByte(next.getFeature());
+            byte[] feature = HexUtil.hexStringToByte(next.getFace());
             final float score = FaceSDKManager.getInstance().getFaceFeature().getFaceFeatureDistance(
                     feature, imageFrameFeature);
             if (score > identifyScore) {
                 identifyScore = score;
-                userIdOfMaxScore = next.getUserId();
+                userIdOfMaxScore = next.getUuid();
 
             }
         }
@@ -820,7 +999,7 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this,userIdOfMaxScore,Toast.LENGTH_SHORT).show();
+                courseIn(userIdOfMaxScore);
             }
         });
         return new IdentifyRet(userIdOfMaxScore, identifyScore);
@@ -854,7 +1033,10 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
                 manager.setTextColor(getResources().getColor(R.color.almost_white));
                 break;
             case R.id.lesson_in:
-                videoView.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(Constants.baiduKey)){
+                    videoView.setVisibility(View.VISIBLE);
+                }
+
                 isLessonin = true;
                 animator.start();
                 lessonIn.setBackground(getResources().getDrawable(R.drawable.border_red_half_right));
@@ -866,7 +1048,9 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
                 initGroup();
                 break;
             case R.id.choose_lesson:
-               videoView.setVisibility(View.INVISIBLE);
+                if(!TextUtils.isEmpty(Constants.baiduKey)){
+                    videoView.setVisibility(View.INVISIBLE);
+                }
                 isLessonin = false;
                 animator.end();
                 getListDate(0);

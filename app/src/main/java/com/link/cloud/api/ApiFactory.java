@@ -2,6 +2,9 @@ package com.link.cloud.api;
 
 import com.link.cloud.User;
 import com.link.cloud.api.bean.APPVersionBean;
+import com.link.cloud.api.bean.AllUserFaceBean;
+import com.link.cloud.api.bean.BindFaceRequest;
+import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
@@ -18,6 +21,7 @@ import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.api.response.PageResponse;
+import com.link.cloud.bean.UserFace;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 import com.zitech.framework.data.network.subscribe.SchedulersCompat;
@@ -170,6 +174,14 @@ public class ApiFactory {
     public static Observable<ApiResponse<UserList>> getUsers(GetUserPages request) {
         return getApiService().getUsers(User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
+    /**
+     * 用户人脸列表
+     *
+     * @return
+     */
+    public static Observable<ApiResponse<AllUserFaceBean>> getUsersFace(GetUserPages request) {
+        return getApiService().getUsersFace("app","faces",User.get().getToken(), request).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
 
     /**
      * 团课用户
@@ -226,7 +238,7 @@ public class ApiFactory {
     }
 
     /**
-     * 验证机器密码
+     * 私教课列表
      *
      * @return
      */
@@ -286,6 +298,19 @@ public class ApiFactory {
 
     public static Observable<ApiResponse<APPVersionBean>> getAppVersion() {
         return getApiService().getAppVersion("app", "appVersion", 1, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }
+    /**
+     * 绑定人脸
+     */
+
+    public static Observable<ApiResponse<BindUserFace>> bindUserFace(BindFaceRequest bindFaceRequest) {
+        return getApiService().BindUserFace("app", "addFaec", bindFaceRequest, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
+    }/**
+     * 获取单个人脸
+     */
+
+    public static Observable<ApiResponse<UserFace>> getSingleFace(String uuid) {
+        return getApiService().getSingleFace("app", "userFaces", uuid, User.get().getToken()).map(new HttpResultFunc()).compose(SchedulersCompat.applyIoSchedulers());
     }
 
 

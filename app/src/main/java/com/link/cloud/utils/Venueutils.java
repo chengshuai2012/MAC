@@ -68,7 +68,6 @@ public class Venueutils {
 
             } else {
 
-
             }
         }
         int state = mdDeviceBinder.getDeviceTouchState(0);
@@ -87,6 +86,7 @@ public class Venueutils {
             mdDeviceBinder.setDeviceLed(0, MdUsbService.getFvColorGREEN(), false);
             img = mdDeviceBinder.tryGrabImg(0);
             if (img == null) {
+                //todo
                 Logger.e("get img failed,please try again");
                 TTSUtils.getInstance().speak(context.getString(R.string.again_finger));
             }
@@ -100,11 +100,12 @@ public class Venueutils {
         String oneResult = ("quality return=" + quaRtn) + ",result=" + quaScore[0] + ",score=" + quaScore[1] + ",fLeakRatio=" + quaScore[2] + ",fPress=" + quaScore[3];
         int quality = (int) quaScore[0];
         if (quality != 0) {
-
+            //todo
+return;
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
         if (feature == null) {
-
+//todo
         } else {
             modOkProgress++;
             if (modOkProgress == 1) {//first model
@@ -155,8 +156,8 @@ public class Venueutils {
                         callBack.modelMsg(3,HexUtil.bytesToHexString(feature));
                         modelImgMng.setFeature3(feature);
                         modelImgMng.reset();
-                        mdDeviceBinder.closeDevice(0);
-                        bOpen = false;
+                        //mdDeviceBinder.closeDevice(0);
+                        //bOpen = false;
                     } else {//第三次建模从图片中取特征值无效
                         modOkProgress = 2;
                         if (++tipTimes[1] <= 3) {

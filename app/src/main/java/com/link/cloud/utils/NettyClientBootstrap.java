@@ -173,7 +173,7 @@ public class NettyClientBootstrap {
                     Log.e("channelRead0: ", "222");
                 }
             }
-            if ("REFRESH_COURSE_LIST".equals(type)||"REFRESH_COURSE_USER".equals(type)||"ENTRANCE_GUARD".equals(type)) {
+            if ("REFRESH_COURSE_LIST".equals(type)||"REFRESH_COURSE_USER".equals(type)||"ENTRANCE_GUARD".equals(type)||"GET_USERS_FACE".equals(type)) {
                 if (intent2 != null) {
                     intent2.setAction(Constants.LESSON);
                     intent2.putExtra("msg", msgObj);

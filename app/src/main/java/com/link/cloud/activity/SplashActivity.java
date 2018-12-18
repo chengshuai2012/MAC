@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
@@ -226,11 +227,18 @@ public class SplashActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onNext(ApiResponse<DeviceBean> response) {
+                public void onNext(final ApiResponse<DeviceBean> response) {
                     super.onNext(response);
                     User.get().setToken(response.getData().getToken());
                     allLocal = realm.where(AllUser.class).findAll();
                     local = allLocal.size();
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            deviceInfo.setBaiduKey(response.getData().getDeviceInfo().getBaiduKey());
+                            Constants.baiduKey = response.getData().getDeviceInfo().getBaiduKey();
+                        }
+                    });
                     getTotal();
                     getAppVersion();
                 }

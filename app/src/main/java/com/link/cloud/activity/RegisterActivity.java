@@ -34,10 +34,13 @@ import com.baidu.aip.manager.FaceSDKManager;
 import com.baidu.aip.utils.FeatureUtils;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
+import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
+import com.link.cloud.api.bean.BindFaceRequest;
+import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.BaseActivity;
@@ -58,6 +61,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -400,17 +404,60 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 if (ret == FaceDetector.NO_FACE_DETECTED) {
                     Log.e("aaaa","人脸太小（必须打于最小检测人脸minFaceSize），或者人脸角度太大，人脸不是朝上");
                 } else if (ret != -1) {
-                    final UserFace userFace = new UserFace();
-                    userFace.setFeature(HexUtil.bytesToHexString(bytes));
-                    userFace.setUserId(edituserRequest.getUuid());
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.executeTransaction(new Realm.Transaction() {
+                    final BindFaceRequest bindFaceRequest = new BindFaceRequest() ;
+                    long l = System.currentTimeMillis()+8*60*60*1000;
+                    SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Long time1=new Long(l);
+                    String d = format.format(time1);
+                    bindFaceRequest.setCreateTime(d);
+                    bindFaceRequest.setFace(HexUtil.bytesToHexString(bytes));
+                    bindFaceRequest.setFaceBase64(Utils.imageToBase64(filePath));
+                    bindFaceRequest.setId(edituserRequest.getId());
+                    bindFaceRequest.setMerchantId(edituserRequest.getMerchantId());
+                    bindFaceRequest.setPhone(edituserRequest.getPhone());
+                    bindFaceRequest.setUserType(edituserRequest.getUserType());
+                    bindFaceRequest.setUuid(edituserRequest.getUuid());
+                    Log.e(TAG, "run: "+">>>>>>>>>>>");
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void execute(Realm realm) {
-                            realm.copyToRealm(userFace);
+                        public void run() {
+                            ApiFactory.bindUserFace(bindFaceRequest).subscribe(new BaseProgressSubscriber<ApiResponse<BindUserFace>>(RegisterActivity.this) {
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e(TAG, "onError: "+e.getMessage());
+                                }
+
+                                @Override
+                                public void onStart() {
+                                    Log.e(TAG, "onStart: ");
+                                }
+
+                                @Override
+                                public void onNext(ApiResponse<BindUserFace> bindUserFaceApiResponse) {
+                                    bindMiddleTwo.setVisibility(View.INVISIBLE);
+                                    bindMiddleThree.setVisibility(View.VISIBLE);
+                                    registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+                                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+                                    cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
+                                    TTSUtils.getInstance().speak(getString(R.string.bind_ok));
+                                    int userType = edituserRequest.getUserType();
+                                    if (userType == 1) {
+                                        cardType.setText(getString(R.string.member_card));
+                                    } else if (userType == 2) {
+                                        cardType.setText(getString(R.string.coach_card));
+                                    } else if (userType == 3) {
+                                        cardType.setText(getString(R.string.worker_card));
+                                    }
+                                }
+
+                                @Override
+                                public void onCompleted() {
+                                    Log.e(TAG, "onCompleted: ");
+                                }
+                            });
                         }
                     });
-                    realm.close();
+
                 } else {
                     Log.e("aaaa","抽取特征失败");
                 }
@@ -561,6 +608,9 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 isTel = false;
                 break;
             case R.id.bind_face:
+                if(TextUtils.isEmpty(Constants.baiduKey)){
+                    return;
+                }
                 bindType = 2;
                 if(edituserRequest!=null){
                     setBindNext();

@@ -11,6 +11,7 @@ public class Constants {
     public static final String LESSON = "LESSON_CHANGE";
     public static final int TCP_PORT = 12125;
     public static final String LICENSE_NAME = "idl-license.face-android";
+    public static String baiduKey = "";
     public interface ActivityExtra {
 
 

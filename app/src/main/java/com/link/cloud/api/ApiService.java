@@ -1,6 +1,9 @@
 package com.link.cloud.api;
 
 import com.link.cloud.api.bean.APPVersionBean;
+import com.link.cloud.api.bean.AllUserFaceBean;
+import com.link.cloud.api.bean.BindFaceRequest;
+import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
@@ -17,6 +20,7 @@ import com.link.cloud.api.request.LessonPred;
 import com.link.cloud.api.request.PageRequest;
 import com.link.cloud.api.response.CoachBean;
 import com.link.cloud.api.response.PageResponse;
+import com.link.cloud.bean.UserFace;
 import com.zitech.framework.data.network.RetrofitClient;
 import com.zitech.framework.data.network.response.ApiResponse;
 
@@ -98,6 +102,15 @@ public interface ApiService {
     @POST(ApiConstants.GETUSERS)
     @Headers("Content-Type:" + RetrofitClient.JSON)
     Observable<ApiResponse<UserList>> getUsers(@Header("access-token") String token, @Body GetUserPages request);
+/**
+     * 分页获取人脸
+     *
+     * @param
+     * @return
+     */
+    @POST(ApiConstants.GETALLFACE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<AllUserFaceBean>> getUsersFace(@Path("app") String app, @Path("faces") String bindUser, @Header("access-token") String token, @Body GetUserPages request);
 
     /**
      * 修改指纹
@@ -283,7 +296,22 @@ public interface ApiService {
      */
     @POST(ApiConstants.BINDBYQRCOE)
     @Headers("Content-Type:" + RetrofitClient.JSON)
-    Observable<ApiResponse<EdituserRequest>> BindByQrcode(@Path("app") String app,@Path("bindUserByQrCode") String bindUserByQrCode, @Body RequestBody body, @Header("access-token") String token);    /**
+    Observable<ApiResponse<EdituserRequest>> BindByQrcode(@Path("app") String app,@Path("bindUserByQrCode") String bindUserByQrCode, @Body RequestBody body, @Header("access-token") String token);    /**  * 余额支付
+     *
+     * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @POST(ApiConstants.BINDFACE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<BindUserFace>> BindUserFace(@Path("app") String app, @Path("addFace") String addFace, @Body BindFaceRequest body, @Header("access-token") String token);    /**   *
+  * @param
+     * @returnscheduleReport "{app}/{prebuyPrivateCourse}/{courseReleasePkcode}/{level}";
+     * @see
+     */
+    @GET(ApiConstants.GETSINGLEFACE)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse<UserFace>> getSingleFace(@Path("app") String app, @Path("userFaces") String addFace, @Path("uuid") String uuid, @Header("access-token") String token);    /**
      * 获取单个用户
      *
      * @param

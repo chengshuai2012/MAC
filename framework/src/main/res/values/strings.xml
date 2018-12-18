@@ -4,6 +4,7 @@
     <!--  -->
     <!--  -->
     <string name="network_unavailable">网络连接失败，请检查您的网络</string>
+    <string name="now_not_lesson">当前无课</string>
     <string name="request_failed">服务器不给力了,过一会儿再试试</string>
     <!--  -->
     <string name="common_error_msg">加载失败，点击刷新重试</string>

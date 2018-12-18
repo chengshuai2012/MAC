@@ -84,6 +84,15 @@ public class ApiConstants {
     //下载App
     public static final String DOWNLOAD = "{app}/{downloadApp}/{appType}";
 
+    //绑定人脸
+    public static final String BINDFACE = "{app}/{addFace}";
+
+    //根据UUid获取人脸信息
+    public static final String GETSINGLEFACE = "{app}/{userFaces}/{uuid}";
+
+    //分页获取人脸信息
+    public static final String GETALLFACE = "{app}/{faces}";
+
 
 
 
