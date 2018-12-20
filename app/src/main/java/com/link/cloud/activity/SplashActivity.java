@@ -88,7 +88,7 @@ public class SplashActivity extends BaseActivity {
                     });
 
                 }else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
                     finish();
                 }
 
@@ -148,7 +148,7 @@ public class SplashActivity extends BaseActivity {
             }
         }
         executorService.shutdown();
-        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
         finish();
     }
     private void getAppVersion(){

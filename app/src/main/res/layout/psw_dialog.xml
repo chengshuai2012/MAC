@@ -17,6 +17,7 @@
     android:layout_height="@dimen/keyboard_edit_height"
     android:textSize="@dimen/text_size_30"
     android:gravity="center_vertical"
+    android:visibility="gone"
     android:text="@string/vuene_login"
     android:textColor="@color/dark_black"
     android:layout_alignParentRight="true"

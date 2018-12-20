@@ -5,12 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/bg_mian"
     tools:context="com.link.cloud.activity.MainActivity">
 
     <include layout="@layout/activity_top_view"
+        android:visibility="gone"
         >
 
     </include>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_top_register"
+        android:layout_marginTop="@dimen/margin_main"
+        android:layout_marginLeft="@dimen/margin_main"
+        >
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="@dimen/height_top_register"
+            android:layout_height="@dimen/height_top_register"
+
+            android:layout_marginRight="@dimen/margin_main"
+            android:background="@drawable/border_red_gradient_round"
+            android:gravity="center"
+            android:text="@string/back_home"
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/text_size_30" />
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/text_width_main"
+            android:layout_height="@dimen/text_height_main"
+            android:layout_marginRight="@dimen/margin_main"
+            android:layout_marginTop="@dimen/margin_main"
+            android:background="@drawable/border_member"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:id="@+id/manager_ll"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/member"
+                style="@style/TextView_Top_Main"
+                android:background="@drawable/border_red"
+                android:text="@string/member"
+                android:textColor="@color/almost_white" />
+
+            <TextView
+                android:id="@+id/manager"
+                style="@style/TextView_Top_Main"
+                android:text="@string/manager"
+                android:textColor="@color/text_gray" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,6 +63,7 @@
         android:orientation="vertical">
         <EditText
             android:id="@+id/code_number"
+            android:visibility="gone"
             android:layout_width="1dp"
             android:layout_height="1dp" />
         <RelativeLayout
@@ -28,6 +74,7 @@
             android:paddingLeft="@dimen/margin_left_register">
 
             <LinearLayout
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -74,17 +121,7 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/back"
-                android:layout_width="@dimen/height_top_register"
-                android:layout_height="@dimen/height_top_register"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_main"
-                android:background="@drawable/border_red_gradient_round"
-                android:gravity="center"
-                android:text="@string/back_home"
-                android:textColor="@color/almost_white"
-                android:textSize="@dimen/text_size_30" />
+
 
         </RelativeLayout>
 
@@ -98,6 +135,7 @@
             <TextView
                 android:id="@+id/bind_way"
                 android:layout_width="@dimen/text_width_main"
+                android:visibility="gone"
                 android:layout_height="@dimen/text_height_main"
                 android:layout_marginRight="@dimen/margin_main"
                 android:background="@drawable/border_red_gradient"
@@ -111,7 +149,7 @@
                 android:layout_width="@dimen/text_big_width_main"
                 android:layout_height="@dimen/text_height_main"
                 android:background="@drawable/border_lesson"
-
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <TextView
@@ -138,9 +176,12 @@
             >
 
             <RelativeLayout
+
                 android:id="@+id/bind_middle_one"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:paddingLeft="@dimen/margin_left_register">
 
 
@@ -149,7 +190,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_main_middle"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -169,19 +211,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/bind_way_two"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/key_board"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/margin_main_middle"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/bind_way_2"
-                        android:textColor="@color/red"
-                        android:textSize="@dimen/text_size_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -201,9 +239,11 @@
                     android:layout_marginBottom="@dimen/margin_main_middle"
                     android:text="@string/code_intro"
                     android:textColor="@color/dark_black"
-                    android:textSize="@dimen/text_size_22" />
+                    android:textSize="@dimen/text_size_22"
+                    android:visibility="gone" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tel_intro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -219,8 +259,8 @@
                     layout="@layout/keyborad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/confirm_bind"
-                    android:layout_below="@+id/tel_intro">
+                    android:layout_below="@+id/tel_intro"
+                    android:layout_centerHorizontal="true">
 
                 </include>
 
@@ -229,21 +269,22 @@
                     android:layout_height="@dimen/code_image_view_height"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/code_intro"
-                    android:src="@drawable/qcode_image" />
+                    android:src="@drawable/qcode_image"
+                    android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/confirm_bind"
                     android:layout_width="@dimen/keyboard_width"
                     android:layout_height="@dimen/keyboard_edit_height"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_below="@+id/key_board"
                     android:layout_marginRight="@dimen/margin_main"
                     android:layout_marginTop="@dimen/margin_main"
                     android:background="@drawable/border_red_gradient"
                     android:gravity="center"
                     android:text="@string/confirm_bind"
-                    android:id="@+id/confirm_bind"
-                    android:textSize="@dimen/text_size_36"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_36" />
             </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/bind_middle_two"

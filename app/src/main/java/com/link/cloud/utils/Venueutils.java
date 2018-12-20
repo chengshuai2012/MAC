@@ -98,14 +98,15 @@ public class Venueutils {
         float[] quaScore = {0f, 0f, 0f, 0f};
         int quaRtn = MdUsbService.qualityImgEx(img, quaScore);
         String oneResult = ("quality return=" + quaRtn) + ",result=" + quaScore[0] + ",score=" + quaScore[1] + ",fLeakRatio=" + quaScore[2] + ",fPress=" + quaScore[3];
+        Log.e("workModel: ", oneResult+"");
         int quality = (int) quaScore[0];
         if (quality != 0) {
-            //todo
-return;
+            TTSUtils.getInstance().speak(context.getString(R.string.image_fail));
+            return;
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
         if (feature == null) {
-//todo
+
         } else {
             modOkProgress++;
             if (modOkProgress == 1) {//first model

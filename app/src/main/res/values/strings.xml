@@ -82,7 +82,7 @@
     <string name="should_pay">应付￥89.00</string>
     <string name="pay_time">剩余支付时间：</string>
     <string name="pre">上一步</string>
-    <string name="back_home">返回首页</string>
+    <string name="back_home">返回</string>
     <string name="venue_ok">验证成功</string>
     <string name="back_system">返回系统设置</string>
     <string name="back_app">返回程序主页</string>
@@ -167,6 +167,7 @@
     <string name="rent_times">租用时间：</string>
     <string name="rent_location">租用位置：</string>
     <string name="again_finger">请移开手指,再次放置...</string>
+    <string name="image_fail">采图不合格,请移开手指,再次放置...</string>
     <string name="no_manager">抱歉您非管理员</string>
     <string name="same_finger">验证错误，请放置同一根手指</string>
     <string name="wait_amoment">请求中,请稍后...</string>

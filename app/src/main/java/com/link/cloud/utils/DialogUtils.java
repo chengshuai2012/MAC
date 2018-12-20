@@ -281,7 +281,7 @@ public class DialogUtils implements View.OnClickListener {
         dialog.show();
         Window window = dialog.getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(770, 869);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(570, 800);
         inputTel = view.findViewById(R.id.input_tel);
         TextView bind_keypad_0 = view.findViewById(R.id.bind_keypad_0);
         TextView bind_keypad_1 = view.findViewById(R.id.bind_keypad_1);

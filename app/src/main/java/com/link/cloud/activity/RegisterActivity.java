@@ -46,6 +46,8 @@ import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
 import com.link.cloud.bean.UserFace;
+import com.link.cloud.listener.DialogCancelListener;
+import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.HexUtil;
 import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
@@ -78,7 +80,11 @@ import okhttp3.RequestBody;
  * Created by OFX002 on 2018/9/21.
  */
 
-public class RegisterActivity extends BaseActivity implements View.OnTouchListener, CameraSurfaceView.OnCameraListener {
+public class RegisterActivity extends BaseActivity implements View.OnTouchListener, CameraSurfaceView.OnCameraListener, DialogCancelListener {
+    @BindView(R.id.member)
+    TextView member;
+    @BindView(R.id.manager)
+    TextView manager;
     @BindView(R.id.register_introduce_one)
     TextView registerIntroduceOne;
     @BindView(R.id.register_introduce_two)
@@ -186,7 +192,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
     private int mWidth;
     private int mHeight;
     private int mFormat;
-
+    DialogUtils dialogUtils;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         customProgress.setProgressFormatter(null);
@@ -194,6 +200,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
         customProgressFace.setProgressFormatter(null);
         customProgressFace.setMax(100);
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
+        dialogUtils=DialogUtils.getDialogUtils(this,this);
         initData();
         setCameraView();
     }
@@ -282,6 +289,19 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
 
     }
 
+    @Override
+    public void dialogCancel() {
+        member.setBackground(getResources().getDrawable(R.drawable.border_red));
+        manager.setBackground(null);
+        member.setTextColor(getResources().getColor(R.color.almost_white));
+        manager.setTextColor(getResources().getColor(R.color.text_gray));
+    }
+
+    @Override
+    public void onVenuePay() {
+
+    }
+
 
     public class EditTextChangeListener implements TextWatcher {
         long lastTime;
@@ -363,7 +383,16 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                         bindVenueIntro.setText(getResources().getString(R.string.right_finger));
                     }
                     if (progress == 99) {
-                        finish();
+                        isSendVerify =false;
+                        edituserRequest=null;
+                        bindMiddleTwo.setVisibility(View.INVISIBLE);
+                        bindMiddleThree.setVisibility(View.INVISIBLE);
+                        bindMiddleOne.setVisibility(View.VISIBLE);
+                        verify.delete(0, verify.length());
+                        tel.delete(0,tel.length());
+                        verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                        inputTel.setText(getResources().getString(R.string.please_input_tel));
+                        animator.cancel();
                     }
                 }
             }
@@ -381,7 +410,16 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 if (customProgressFace != null) {
                     customProgressFace.setProgress(progress);
                     if (progress == 99) {
-                        finish();
+                        isSendVerify =false;
+                        verify.delete(0, verify.length());
+                        tel.delete(0,tel.length());
+                        verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                        inputTel.setText(getResources().getString(R.string.please_input_tel));
+                        edituserRequest=null;
+                        bindMiddleTwo.setVisibility(View.INVISIBLE);
+                        bindMiddleThree.setVisibility(View.INVISIBLE);
+                        bindMiddleOne.setVisibility(View.VISIBLE);
+                        animator.cancel();
                     }
                 }
             }
@@ -474,11 +512,37 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick({R.id.bind_keypad_0, R.id.bind_keypad_1, R.id.bind_keypad_2, R.id.bind_keypad_3, R.id.bind_keypad_4, R.id.bind_keypad_5, R.id.bind_keypad_6, R.id.bind_keypad_7, R.id.bind_keypad_8,
-            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send, R.id.bind_face, R.id.bind_veune,R.id.bind_face_intro_below})
+            R.id.bind_keypad_9, R.id.bind_keypad_ok, R.id.bind_keypad_delect, R.id.confirm_bind, R.id.bind_venue_intro, R.id.back, R.id.input_tel, R.id.verify_code, R.id.send, R.id.bind_face, R.id.bind_veune,R.id.bind_face_intro_below
+    ,R.id.member,R.id.manager})
     public void OnClick(View v) {
         switch (v.getId()) {
+            case R.id.member:
+                member.setBackground(getResources().getDrawable(R.drawable.border_red));
+                manager.setBackground(null);
+                member.setTextColor(getResources().getColor(R.color.almost_white));
+                manager.setTextColor(getResources().getColor(R.color.text_gray));
+                break;
+            case R.id.manager:
+                View view = View.inflate(RegisterActivity.this, R.layout.psw_dialog, null);
+                dialogUtils.showPsdDialog(view);
+                manager.setBackground(getResources().getDrawable(R.drawable.border_red));
+                member.setBackground(null);
+                member.setTextColor(getResources().getColor(R.color.text_gray));
+                manager.setTextColor(getResources().getColor(R.color.almost_white));
+                break;
             case R.id.back:
-                finish();
+                isSendVerify =false;
+                edituserRequest=null;
+                bindMiddleTwo.setVisibility(View.INVISIBLE);
+                bindMiddleThree.setVisibility(View.INVISIBLE);
+                bindMiddleOne.setVisibility(View.VISIBLE);
+                verify.delete(0, verify.length());
+                tel.delete(0,tel.length());
+                verifyCode.setText(getResources().getString(R.string.please_input_verify));
+                inputTel.setText(getResources().getString(R.string.please_input_tel));
+                if(animator!=null){
+                    animator.cancel();
+                }
                 break;
             case R.id.bind_keypad_0:
             case R.id.bind_keypad_1:
@@ -750,7 +814,16 @@ private void setCameraView(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            finish();
+            isSendVerify =false;
+            edituserRequest=null;
+            bindMiddleTwo.setVisibility(View.INVISIBLE);
+            bindMiddleThree.setVisibility(View.INVISIBLE);
+            bindMiddleOne.setVisibility(View.VISIBLE);
+            verify.delete(0, verify.length());
+            tel.delete(0,tel.length());
+            verifyCode.setText(getResources().getString(R.string.please_input_verify));
+            inputTel.setText(getResources().getString(R.string.please_input_tel));
+            animator.cancel();
         }
     };
 }

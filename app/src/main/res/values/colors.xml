@@ -16,7 +16,7 @@
     <color name="orange">#1cb8ab</color>
     <color name="dark_gray">#999999</color>
     <color name="text_red">#1cb8ab</color>
-    <color name="colorbutton">#333333</color>
+    <color name="colorbutton">#fff</color>
     <color name="color_black_333333">#333333</color>
     <color name="color_gray_999999">#999999</color>
     <color name="textColorPrimaryDark">#000000</color>
