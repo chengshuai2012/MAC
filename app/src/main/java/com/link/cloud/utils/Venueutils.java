@@ -5,11 +5,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.link.cloud.R;
 import com.link.cloud.bean.AllUser;
@@ -50,7 +50,7 @@ public class Venueutils {
     private final static float MODEL_SCORE_THRESHOLD = 0.4f;
 
     public interface VenueCallBack {
-        void modelMsg(int state, String msg);
+        void modelMsg(int state, String msg, Bitmap bitmap);
     }
 
     public void initVenue(Context context, VenueCallBack callBack, Boolean bOpen) {
@@ -88,9 +88,8 @@ public class Venueutils {
             }
             lastTouchState = 3;
             mdDeviceBinder.setDeviceLed(0, MdUsbService.getFvColorGREEN(), false);
-            img = mdDeviceBinder.tryGrabImg(0);
+            img = mdDeviceBinder.tryGetBestImg(5);
             if (img == null) {
-                //todo
                 Logger.e("get img failed,please try again");
                 TTSUtils.getInstance().speak(context.getString(R.string.again_finger));
             }
@@ -102,9 +101,10 @@ public class Venueutils {
         float[] quaScore = {0f, 0f, 0f, 0f};
         int quaRtn = MdUsbService.qualityImgEx(img, quaScore);
         String oneResult = ("quality return=" + quaRtn) + ",result=" + quaScore[0] + ",score=" + quaScore[1] + ",fLeakRatio=" + quaScore[2] + ",fPress=" + quaScore[3];
+        Bitmap bitmap = MdUsbService.chg2VisibleBmp(img);
         int quality = (int) quaScore[0];
         if (quality != 0) {
-            TTSUtils.getInstance().speak(context.getString(R.string.image_fail));
+            callBack.modelMsg(1, context.getString(R.string.image_fail),bitmap);
             return;
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
@@ -117,7 +117,7 @@ public class Venueutils {
                 tipTimes[1] = 0;
                 modelImgMng.setImg1(img);
                 modelImgMng.setFeature1(feature);
-                callBack.modelMsg(1, context.getString(R.string.again_finger));
+                callBack.modelMsg(1, context.getString(R.string.again_finger),bitmap);
             } else if (modOkProgress == 2) {//second model
                 ret = MdUsbService.fvSearchFeature(modelImgMng.getFeature1(), 1, img, pos, score);
                 if (ret && score[0] > MODEL_SCORE_THRESHOLD) {
@@ -127,26 +127,26 @@ public class Venueutils {
                         tipTimes[1] = 0;
                         modelImgMng.setImg2(img);
                         modelImgMng.setFeature2(feature);
-                        callBack.modelMsg(1, context.getString(R.string.again_finger));
+                        callBack.modelMsg(1, context.getString(R.string.again_finger),bitmap);
                     } else {//第二次建模从图片中取特征值无效
                         modOkProgress = 1;
                         if (++tipTimes[0] <= 3) {
-                            callBack.modelMsg(2, context.getString(R.string.same_finger));
+                            callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
 
                         } else {//连续超过3次放了不同手指则忽略此次建模重来
                             modOkProgress = 0;
                             modelImgMng.reset();
-                            callBack.modelMsg(2, context.getString(R.string.same_finger));
+                            callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                         }
                     }
                 } else {
                     modOkProgress = 1;
                     if (++tipTimes[0] <= 3) {
-                        callBack.modelMsg(2, context.getString(R.string.same_finger));
+                        callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                     } else {//连续超过3次放了不同手指则忽略此次建模重来
                         modOkProgress = 0;
                         modelImgMng.reset();
-                        callBack.modelMsg(2, context.getString(R.string.same_finger));
+                        callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                     }
                 }
             } else if (modOkProgress == 3) {//third model
@@ -157,7 +157,7 @@ public class Venueutils {
                         tipTimes[0] = 0;
                         tipTimes[1] = 0;
                         modelImgMng.setImg3(img);
-                        callBack.modelMsg(3, HexUtil.bytesToHexString(feature));
+                        callBack.modelMsg(3, HexUtil.bytesToHexString(feature),bitmap);
                         modelImgMng.setFeature3(feature);
                         modelImgMng.reset();
                         //mdDeviceBinder.closeDevice(0);
@@ -165,17 +165,17 @@ public class Venueutils {
                     } else {//第三次建模从图片中取特征值无效
                         modOkProgress = 2;
                         if (++tipTimes[1] <= 3) {
-                            callBack.modelMsg(2, context.getString(R.string.same_finger));
+                            callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                         }
                     }
                 } else {
                     modOkProgress = 2;
                     if (++tipTimes[1] <= 3) {
-                        callBack.modelMsg(2, context.getString(R.string.same_finger));
+                        callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                     } else {//连续超过3次放了不同手指则忽略此次建模重来
                         modOkProgress = 0;
                         modelImgMng.reset();
-                        callBack.modelMsg(2, context.getString(R.string.same_finger));
+                        callBack.modelMsg(2, context.getString(R.string.same_finger),bitmap);
                     }
                 }
             } else {

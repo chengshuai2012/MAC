@@ -703,10 +703,13 @@ private void setCameraView(){
 
 
     @Override
-    public void modelMsg(int state, String msg) {
+    public void modelMsg(int state, String msg,Bitmap bitmap) {
         Log.e("modelMsg: ", state + ">>>>>>>>>");
         TTSUtils.getInstance().speak(msg);
         if (state == 3) {
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
             animator.cancel();
             bindVenueIntro.setText(getResources().getString(R.string.wait_amoment));
             BindFinger bindFinger = new BindFinger();
@@ -739,9 +742,15 @@ private void setCameraView(){
         }
         if (state == 2) {
             bindVenueIntro.setText(getResources().getString(R.string.same_finger));
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
         }
         if (state == 1) {
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
         }
     }
 
