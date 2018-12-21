@@ -625,6 +625,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 }
                 break;
             case R.id.confirm_bind:
+                setBindNext();
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
                     if (TextUtils.isEmpty(code)) {
@@ -767,10 +768,13 @@ private void setCameraView(){
 
 
     @Override
-    public void modelMsg(int state, String msg) {
+    public void modelMsg(int state, String msg,Bitmap bitmap) {
         Log.e("modelMsg: ", state + ">>>>>>>>>");
         TTSUtils.getInstance().speak(msg);
         if (state == 3) {
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
             animator.cancel();
             bindVenueIntro.setText(getResources().getString(R.string.wait_amoment));
             BindFinger bindFinger = new BindFinger();
@@ -802,9 +806,15 @@ private void setCameraView(){
 
         }
         if (state == 2) {
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
             bindVenueIntro.setText(getResources().getString(R.string.same_finger));
         }
         if (state == 1) {
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
         }
     }
