@@ -625,7 +625,6 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 }
                 break;
             case R.id.confirm_bind:
-                setBindNext();
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
                     if (TextUtils.isEmpty(code)) {
