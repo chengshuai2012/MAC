@@ -187,25 +187,28 @@ public class Venueutils {
 
     }
 
-    List<AllUser> subListPeople = new ArrayList<>();
-
     public String identifyNewImg(final List<AllUser> peoples) {
         final int nThreads = peoples.size() / 1000 + 1;
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         List<Future<String>> futures = new ArrayList();
         for (int i = 0; i < nThreads; i++) {
+            List<AllUser> subListPeople = new ArrayList<>();
             if (i == nThreads - 1) {
                 subListPeople = peoples.subList(1000 * i, peoples.size());
             } else {
                 subListPeople = peoples.subList(1000 * i, 1000 * (i + 1));
             }
+
+            final List<AllUser> finalSubListPeople = subListPeople;
             Callable<String> task = new Callable<String>() {
                 @Override
                 public String call() throws Exception {
+                    int[] pos = new int[1];
+                    float[] score = new float[1];
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
                     int position = 0;
-                    for (AllUser userBean : subListPeople) {
+                    for (AllUser userBean : finalSubListPeople) {
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;
@@ -229,6 +232,7 @@ public class Venueutils {
         }
         for (Future<String> future : futures) {
             try {
+                Log.d("future=", future.get() + "");
                 if (!TextUtils.isEmpty(future.get())) {
                     return future.get();
                 }
@@ -242,26 +246,29 @@ public class Venueutils {
         return null;
     }
 
-    List<GroupLessonUser> subListUser = new ArrayList<>();
 
     public String identifyNewImgUser(final ArrayList<GroupLessonUser> peoples) {
         final int nThreads = peoples.size() / 1000 + 1;
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         List<Future<String>> futures = new ArrayList();
         for (int i = 0; i < nThreads; i++) {
+            List<GroupLessonUser> subListUser = new ArrayList<>();
             if (i == nThreads - 1) {
                 subListUser = peoples.subList(1000 * i, peoples.size());
             } else {
                 subListUser = peoples.subList(1000 * i, 1000 * (i + 1));
             }
 
+            final List<GroupLessonUser> finalSubListUser = subListUser;
             Callable<String> task = new Callable<String>() {
                 @Override
                 public String call() throws Exception {
                     StringBuffer sb = new StringBuffer();
                     String[] uids = new String[1000];
+                    int[] pos = new int[1];
+                    float[] score = new float[1];
                     int position = 0;
-                    for (GroupLessonUser userBean : subListUser) {
+                    for (GroupLessonUser userBean : finalSubListUser) {
                         sb.append(userBean.getFingerprint());
                         uids[position] = userBean.getUuid();
                         position++;
