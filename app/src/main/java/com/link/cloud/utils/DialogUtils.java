@@ -614,6 +614,7 @@ public class DialogUtils implements View.OnClickListener {
                         ((BaseActivity) context).showActivity(SettingActivity.class);
                         listener.dialogCancel();
                         dialog.dismiss();
+                        builder.delete(0,builder.length());
                     }
                 });
 
@@ -640,6 +641,7 @@ public class DialogUtils implements View.OnClickListener {
     public void dissMiss() {
         if (dialog.isShowing()) {
             dialog.dismiss();
+            builder.delete(0,builder.length());
         }
     }
     public boolean isShowing() {

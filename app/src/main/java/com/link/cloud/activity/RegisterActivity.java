@@ -37,6 +37,7 @@ import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.link.cloud.Constants;
 import com.link.cloud.MacApplication;
 import com.link.cloud.R;
+import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.BindFaceRequest;
@@ -49,6 +50,7 @@ import com.link.cloud.bean.UserFace;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
 import com.link.cloud.utils.HexUtil;
+import com.link.cloud.utils.NettyClientBootstrap;
 import com.link.cloud.utils.TTSUtils;
 import com.link.cloud.utils.Utils;
 import com.link.cloud.widget.CameraFrameData;
@@ -66,6 +68,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
@@ -217,11 +220,20 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
          */
         code_mumber.addTextChangedListener(new EditTextChangeListener());
     }
-
+    NettyClientBootstrap nettyClientBootstrap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
+        nettyClientBootstrap = new NettyClientBootstrap(RegisterActivity.this, Constants.TCP_PORT, Constants.TCP_URL, "{\"data\":{},\"msgType\":\"HEART_BEAT\",\"token\":\"" + User.get().getToken() + "\"}");
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                nettyClientBootstrap.start();
+            }
+        };
+        service.execute(runnable);
         ButterKnife.bind(this);
     }
 
@@ -375,6 +387,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 if (customProgress != null) {
                     customProgress.setProgress(progress);
                     int state = MacApplication.getVenueUtils().getState();
+                    Log.e("getState: ",state+"" );
                     if (state == 3) {
                         MacApplication.getVenueUtils().workModel();
                         animator.setCurrentPlayTime(0);
@@ -625,6 +638,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 }
                 break;
             case R.id.confirm_bind:
+                setBindNext();
                 if (isSendVerify) {
                     String code = verifyCode.getText().toString();
                     if (TextUtils.isEmpty(code)) {
@@ -768,7 +782,7 @@ private void setCameraView(){
 
     @Override
     public void modelMsg(int state, String msg,Bitmap bitmap) {
-        Log.e("modelMsg: ", state + ">>>>>>>>>");
+        Log.e("modelMsg: ", state + ">>>>>>>>>"+msg);
         TTSUtils.getInstance().speak(msg);
         if (state == 3) {
             if(bitmap!=null){

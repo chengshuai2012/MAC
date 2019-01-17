@@ -92,9 +92,10 @@ public class Venueutils {
             img = mdDeviceBinder.tryGetBestImg(5);
             if (img == null) {
                 Logger.e("get img failed,please try again");
-                TTSUtils.getInstance().speak(context.getString(R.string.again_finger));
+                callBack.modelMsg(1, context.getString(R.string.image_fail),null);
             }
         }
+
         return state;
     }
 
@@ -102,6 +103,7 @@ public class Venueutils {
         float[] quaScore = {0f, 0f, 0f, 0f};
         int quaRtn = MdUsbService.qualityImgEx(img, quaScore);
         String oneResult = ("quality return=" + quaRtn) + ",result=" + quaScore[0] + ",score=" + quaScore[1] + ",fLeakRatio=" + quaScore[2] + ",fPress=" + quaScore[3];
+        Log.e("workModel: ",oneResult );
         Bitmap bitmap = MdUsbService.chg2VisibleBmp(img);
         int quality = (int) quaScore[0];
         if (quality != 0) {
@@ -110,7 +112,7 @@ public class Venueutils {
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
         if (feature == null) {
-
+            callBack.modelMsg(1, context.getString(R.string.image_fail),bitmap);
         } else {
             modOkProgress++;
             if (modOkProgress == 1) {//first model
