@@ -92,7 +92,7 @@ public class Venueutils {
             img = mdDeviceBinder.tryGetBestImg(5);
             if (img == null) {
                 Logger.e("get img failed,please try again");
-                callBack.modelMsg(1, context.getString(R.string.image_fail),null);
+                callBack.modelMsg(4, context.getString(R.string.image_fail),null);
             }
         }
 
@@ -107,12 +107,12 @@ public class Venueutils {
         Bitmap bitmap = MdUsbService.chg2VisibleBmp(img);
         int quality = (int) quaScore[0];
         if (quality != 0) {
-            callBack.modelMsg(1, context.getString(R.string.image_fail),bitmap);
+            callBack.modelMsg(4, context.getString(R.string.image_fail),bitmap);
             return;
         }
         byte[] feature = MdUsbService.extractImgModel(img, null, null);
         if (feature == null) {
-            callBack.modelMsg(1, context.getString(R.string.image_fail),bitmap);
+            callBack.modelMsg(4, context.getString(R.string.image_fail),bitmap);
         } else {
             modOkProgress++;
             if (modOkProgress == 1) {//first model

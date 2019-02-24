@@ -398,6 +398,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                     if (progress == 99) {
                         isSendVerify =false;
                         edituserRequest=null;
+                        MacApplication.getVenueUtils().modelImgMng.reset();
                         bindMiddleTwo.setVisibility(View.INVISIBLE);
                         bindMiddleThree.setVisibility(View.INVISIBLE);
                         bindMiddleOne.setVisibility(View.VISIBLE);
@@ -546,6 +547,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
             case R.id.back:
                 isSendVerify =false;
                 edituserRequest=null;
+                MacApplication.getVenueUtils().modelImgMng.reset();
                 bindMiddleTwo.setVisibility(View.INVISIBLE);
                 bindMiddleThree.setVisibility(View.INVISIBLE);
                 bindMiddleOne.setVisibility(View.VISIBLE);
@@ -829,6 +831,12 @@ private void setCameraView(){
             }
             bindVenueIntro.setText(getResources().getString(R.string.again_finger));
         }
+        if (state == 4) {
+            if(bitmap!=null){
+                venueImage.setImageBitmap(bitmap);
+            }
+            bindVenueIntro.setText(getResources().getString(R.string.image_fail));
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -838,6 +846,7 @@ private void setCameraView(){
             super.handleMessage(msg);
             isSendVerify =false;
             edituserRequest=null;
+            MacApplication.getVenueUtils().modelImgMng.reset();
             bindMiddleTwo.setVisibility(View.INVISIBLE);
             bindMiddleThree.setVisibility(View.INVISIBLE);
             bindMiddleOne.setVisibility(View.VISIBLE);
