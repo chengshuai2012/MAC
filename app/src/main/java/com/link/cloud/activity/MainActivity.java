@@ -30,12 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.aip.FaceDetector;
+import com.baidu.aip.FaceSDKManager;
 import com.baidu.aip.ImageFrame;
-import com.baidu.aip.entity.IdentifyRet;
 import com.baidu.aip.face.ArgbPool;
-import com.baidu.aip.manager.FaceDetector;
-import com.baidu.aip.manager.FaceEnvironment;
-import com.baidu.aip.manager.FaceSDKManager;
 import com.baidu.idl.facesdk.FaceInfo;
 import com.baidu.idl.facesdk.FaceRecognize;
 import com.baidu.idl.facesdk.FaceSDK;
@@ -280,34 +278,34 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
 
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
-        if(!isLessonin){
-            return null;
-        }
-        if(faceRecognize==null){
-            Toast.makeText(MainActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        int[] argb = argbPool.acquire(width, height);
-
-        if (argb == null || argb.length != width * height) {
-            argb = new int[width * height];
-        }
-        FaceDetector.yuvToARGB(data, width, height, argb, 0, 0);
-        ImageFrame frame = new ImageFrame();
-        frame.setArgb(argb);
-        frame.setWidth(width);
-        frame.setHeight(height);
-        frame.setPool(argbPool);
-        argbPool.release(argb);
-        int value = FaceSDKManager.getInstance().getFaceDetector().detect(frame);
-        // FaceSDKManager.getInstance().getFaceDetector().detectMultiFace(frame,5);
-        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceDetector().getTrackedFaces();
-        if (faces != null) {
-            Log.e("faceMulti", faces.length + "");
-        }
-        if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
-            asyncIdentity(frame, faces);
-        }
+//        if(!isLessonin){
+//            return null;
+//        }
+//        if(faceRecognize==null){
+//            Toast.makeText(MainActivity.this,"人脸识别初始化失败",Toast.LENGTH_SHORT).show();
+//            return null;
+//        }
+//        int[] argb = argbPool.acquire(width, height);
+//
+//        if (argb == null || argb.length != width * height) {
+//            argb = new int[width * height];
+//        }
+//        FaceDetector.yuvToARGB(data, width, height, argb, 0, 0);
+//        ImageFrame frame = new ImageFrame();
+//        frame.setArgb(argb);
+//        frame.setWidth(width);
+//        frame.setHeight(height);
+//        frame.setPool(argbPool);
+//        argbPool.release(argb);
+//        int value = FaceSDKManager.getInstance().getFaceDetector().detect(frame);
+//        // FaceSDKManager.getInstance().getFaceDetector().detectMultiFace(frame,5);
+//        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceDetector().getTrackedFaces();
+//        if (faces != null) {
+//            Log.e("faceMulti", faces.length + "");
+//        }
+//        if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
+//            asyncIdentity(frame, faces);
+//        }
         return null;
     }
 
@@ -521,38 +519,38 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         intentFilter.addAction(Constants.LESSON);
         registerReceiver(lesson, intentFilter);
         initData();
-        Constants.baiduKey = realm.where(DeviceInfo.class).findFirst().getBaiduKey();
-        if(!TextUtils.isEmpty(Constants.baiduKey)){
-           getTotalFace();
-            setCameraView();
-            FaceSDKManager.getInstance().setKey(Constants.baiduKey);
-            FaceSDKManager.getInstance().init(this);
-            FaceEnvironment faceEnvironment = new FaceEnvironment();
-            FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
-            FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
-                @Override
-                public void initStart() {
-                    Log.e(TAG, "initStart: ");
-                }
-
-                @Override
-                public void initSuccess() {
-                    Log.e(TAG, "initSuccess: ");
-                    faceRecognize = new FaceRecognize(MainActivity.this);
-                    // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
-                    // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
-                    // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
-                    // 两张图片的识别需要使用相同的模型
-                    faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
-
-                }
-
-                @Override
-                public void initFail(int errorCode, String msg) {
-                    Log.e(TAG, "initFail: ");
-                }
-            });
-        }
+//        Constants.baiduKey = realm.where(DeviceInfo.class).findFirst().getBaiduKey();
+//        if(!TextUtils.isEmpty(Constants.baiduKey)){
+//           getTotalFace();
+//            setCameraView();
+//            FaceSDKManager.getInstance().setKey(Constants.baiduKey);
+//            FaceSDKManager.getInstance().init(this);
+//            FaceEnvironment faceEnvironment = new FaceEnvironment();
+//            FaceSDKManager.getInstance().getFaceDetector().setFaceEnvironment(faceEnvironment);
+//            FaceSDKManager.getInstance().setSdkInitListener(new FaceSDKManager.SdkInitListener() {
+//                @Override
+//                public void initStart() {
+//                    Log.e(TAG, "initStart: ");
+//                }
+//
+//                @Override
+//                public void initSuccess() {
+//                    Log.e(TAG, "initSuccess: ");
+//                    faceRecognize = new FaceRecognize(MainActivity.this);
+//                    // RECOGNIZE_LIVE普通生活照、视频帧识别模型（包含特征抽取）
+//                    // RECOGNIZE_ID_PHOTO 身份证芯片模型（包含特征抽取）
+//                    // RECOGNIZE_NIR 近红外图片识别模型（包含特征抽取）
+//                    // 两张图片的识别需要使用相同的模型
+//                    faceRecognize.initModel(FaceSDK.RecognizeType.RECOGNIZE_LIVE);
+//
+//                }
+//
+//                @Override
+//                public void initFail(int errorCode, String msg) {
+//                    Log.e(TAG, "initFail: ");
+//                }
+//            });
+//        }
 
     }
     private void getSingleFace(String uuid){
@@ -939,75 +937,75 @@ public class MainActivity extends BaseActivity implements DialogCancelListener, 
         });
     }
     private void identity(ImageFrame imageFrame, FaceInfo faceInfo) {
-        identityStatus = IDENTITYING;
-
-        float raw = Math.abs(faceInfo.headPose[0]);
-        float patch = Math.abs(faceInfo.headPose[1]);
-        float roll = Math.abs(faceInfo.headPose[2]);
-        // 人脸的三个角度大于20不进行识别
-        if (raw > 20 || patch > 20 || roll > 20) {
-            identityStatus = IDENTITY_IDLE;
-            return;
-        }
-
-
-        long starttime = System.currentTimeMillis();
-        int[] argb = imageFrame.getArgb();
-        int rows = imageFrame.getHeight();
-        int cols = imageFrame.getWidth();
-        int[] landmarks = faceInfo.landmarks;
-
-        IdentifyRet identifyRet = null;
-        identifyRet = identity(argb,rows,cols,landmarks);
-
-        if (identifyRet != null) {
-
-            Log.e( "identity: ", identifyRet.getUserId()+">>>>>>>>"+ identifyRet.getScore());
-        }
+//        identityStatus = IDENTITYING;
+//
+//        float raw = Math.abs(faceInfo.headPose[0]);
+//        float patch = Math.abs(faceInfo.headPose[1]);
+//        float roll = Math.abs(faceInfo.headPose[2]);
+//        // 人脸的三个角度大于20不进行识别
+//        if (raw > 20 || patch > 20 || roll > 20) {
+//            identityStatus = IDENTITY_IDLE;
+//            return;
+//        }
+//
+//
+//        long starttime = System.currentTimeMillis();
+//        int[] argb = imageFrame.getArgb();
+//        int rows = imageFrame.getHeight();
+//        int cols = imageFrame.getWidth();
+//        int[] landmarks = faceInfo.landmarks;
+//
+//        IdentifyRet identifyRet = null;
+//        identifyRet = identity(argb,rows,cols,landmarks);
+//
+//        if (identifyRet != null) {
+//
+//            Log.e( "identity: ", identifyRet.getUserId()+">>>>>>>>"+ identifyRet.getScore());
+//        }
     }
     String userIdOfMaxScore = "";
-    public IdentifyRet identity(int[] argbData, int rows, int cols, int[] landmarks) {
-        if (argbData == null ) {
-            identityStatus = IDENTITY_IDLE;
-            return null;
-        }
-        byte[] imageFrameFeature = new byte[2048];
-        int ret = faceRecognize.extractFeature(argbData, rows, cols, FaceSDK.ImgType.ARGB, imageFrameFeature, landmarks,
-                FaceSDK.RecognizeType.RECOGNIZE_LIVE);
-       userIdOfMaxScore="";
-        float identifyScore = 0;
-        Realm realm = Realm.getDefaultInstance();
-        Log.e(TAG, "identity: "+System.currentTimeMillis());
-        RealmResults<UserFace> all = realm.where(UserFace.class).findAll();
-
-        Iterator<UserFace> iterator = all.iterator();
-
-        while (iterator.hasNext()) {
-            UserFace next = iterator.next();
-
-            byte[] feature = HexUtil.hexStringToByte(next.getFace());
-            final float score = FaceSDKManager.getInstance().getFaceFeature().getFaceFeatureDistance(
-                    feature, imageFrameFeature);
-            if (score > identifyScore) {
-                identifyScore = score;
-                userIdOfMaxScore = next.getUuid();
-
-            }
-        }
-        Log.e(TAG, "identity: "+System.currentTimeMillis());
-        identityStatus = IDENTITY_IDLE;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                courseIn(userIdOfMaxScore);
-            }
-        });
-        return new IdentifyRet(userIdOfMaxScore, identifyScore);
-    }
-    protected void SendMsgToTcp(String msg) {
-        nettyClientBootstrap.startNetty(msg);
-        Log.e("SendMsgToTcp: ", msg);
-    }
+//    public IdentifyRet identity(int[] argbData, int rows, int cols, int[] landmarks) {
+//        if (argbData == null ) {
+//            identityStatus = IDENTITY_IDLE;
+//            return null;
+//        }
+//        byte[] imageFrameFeature = new byte[2048];
+//        int ret = faceRecognize.extractFeature(argbData, rows, cols, FaceSDK.ImgType.ARGB, imageFrameFeature, landmarks,
+//                FaceSDK.RecognizeType.RECOGNIZE_LIVE);
+//       userIdOfMaxScore="";
+//        float identifyScore = 0;
+//        Realm realm = Realm.getDefaultInstance();
+//        Log.e(TAG, "identity: "+System.currentTimeMillis());
+//        RealmResults<UserFace> all = realm.where(UserFace.class).findAll();
+//
+//        Iterator<UserFace> iterator = all.iterator();
+//
+//        while (iterator.hasNext()) {
+//            UserFace next = iterator.next();
+//
+//            byte[] feature = HexUtil.hexStringToByte(next.getFace());
+//            final float score = FaceSDKManager.getInstance().getFaceFeature().getFaceFeatureDistance(
+//                    feature, imageFrameFeature);
+//            if (score > identifyScore) {
+//                identifyScore = score;
+//                userIdOfMaxScore = next.getUuid();
+//
+//            }
+//        }
+//        Log.e(TAG, "identity: "+System.currentTimeMillis());
+//        identityStatus = IDENTITY_IDLE;
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                courseIn(userIdOfMaxScore);
+//            }
+//        });
+//        return new IdentifyRet(userIdOfMaxScore, identifyScore);
+//    }
+//    protected void SendMsgToTcp(String msg) {
+//        nettyClientBootstrap.startNetty(msg);
+//        Log.e("SendMsgToTcp: ", msg);
+//    }
 
     @OnClick({R.id.member, R.id.manager, R.id.lesson_in, R.id.choose_lesson, R.id.buy, R.id.lesson_consume, R.id.register})
     public void onClick(View v) {

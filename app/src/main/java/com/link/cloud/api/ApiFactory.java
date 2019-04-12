@@ -8,6 +8,7 @@ import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.RequestBindFace;
 import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.dataSourse.CoachInfo;
@@ -33,6 +34,7 @@ import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import rx.Observable;

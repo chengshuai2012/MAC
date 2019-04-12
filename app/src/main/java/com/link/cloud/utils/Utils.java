@@ -77,6 +77,7 @@ import rx.functions.Action1;
  * Created by ludaiqian on 16/7/7.
  */
 public class Utils extends com.zitech.framework.utils.Utils {
+
     public static int getVersion(Context context)// 获取版本号
     {
         try {

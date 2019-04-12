@@ -69,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         this.setContentView(this.getLayoutId());
         realm= Realm.getDefaultInstance();
         bind = ButterKnife.bind(this);
-        MacApplication.getVenueUtils().initVenue(this, this, false);
+       MacApplication.getVenueUtils().initVenue(this, this, false);
         initViews();
 
     }

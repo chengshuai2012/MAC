@@ -22,6 +22,9 @@ public class ApiConstants {
     //课程列表
     public static final String COURSELIST = "{app}/{courseList}";
 
+    //人脸注册
+    public static final String FACEADD = "/devicePlatformCallback/addFacePdl";
+
     //修改指纹
     public static final String EDITUSER = "app/addFingerprints";
 

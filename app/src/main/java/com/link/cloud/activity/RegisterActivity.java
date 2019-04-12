@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -28,10 +29,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.aip.entity.ARGBImg;
-import com.baidu.aip.manager.FaceDetector;
-import com.baidu.aip.manager.FaceSDKManager;
-import com.baidu.aip.utils.FeatureUtils;
+import com.baidu.aip.FaceDetector;
+import com.baidu.aip.FaceSDKManager;
+import com.baidu.aip.ImageFrame;
+
+import com.baidu.aip.face.ArgbPool;
+import com.baidu.aip.face.FaceCropper;
+
+import com.baidu.idl.facesdk.FaceInfo;
+import com.baidu.idl.facesdk.FaceSDK;
+import com.baidu.idl.facesdk.FaceTracker;
 import com.dinuscxj.progressbar.CircleProgressBar;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.link.cloud.Constants;
@@ -39,13 +46,16 @@ import com.link.cloud.MacApplication;
 import com.link.cloud.R;
 import com.link.cloud.User;
 import com.link.cloud.api.ApiFactory;
+import com.link.cloud.api.ApiFactoryPD;
 import com.link.cloud.api.BaseProgressSubscriber;
 import com.link.cloud.api.bean.BindFaceRequest;
 import com.link.cloud.api.bean.BindUserFace;
+import com.link.cloud.api.bean.RequestBindFace;
 import com.link.cloud.api.request.BindFinger;
 import com.link.cloud.api.request.EdituserRequest;
 import com.link.cloud.base.BaseActivity;
 import com.link.cloud.bean.AllUser;
+import com.link.cloud.bean.DeviceInfo;
 import com.link.cloud.bean.UserFace;
 import com.link.cloud.listener.DialogCancelListener;
 import com.link.cloud.utils.DialogUtils;
@@ -65,6 +75,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,6 +207,9 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
     private int mHeight;
     private int mFormat;
     DialogUtils dialogUtils;
+    DeviceInfo deviceInfo;
+    private String deviceId;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void initViews() {
         customProgress.setProgressFormatter(null);
@@ -205,6 +219,11 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
         registerIntroduceTwo.setTextColor(getResources().getColor(R.color.red));
         dialogUtils=DialogUtils.getDialogUtils(this,this);
         initData();
+        deviceInfo = realm.where(DeviceInfo.class).findFirst();
+        if(deviceInfo!=null){
+            deviceId = deviceInfo.getDeviceId();
+        }
+
         setCameraView();
     }
 
@@ -284,10 +303,133 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
     public boolean startPreviewImmediately() {
         return true;
     }
+    private void saveFace(FaceInfo faceInfo, ImageFrame imageFrame) {
+        final Bitmap bitmap = FaceCropper.getFace(imageFrame.getArgb(), faceInfo, imageFrame.getWidth());
+        // 注册来源保存到注册人脸目录
+        File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+        // 压缩人脸图片至300 * 300，减少网络传输时间
+        resize(bitmap, file, 300, 300);
 
+
+    }
+    public  void resize(Bitmap bitmap, File outputFile, int maxWidth, int maxHeight) {
+        try {
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+            // 图片大于最大高宽，按大的值缩放
+            if (bitmapWidth > maxHeight || bitmapHeight > maxWidth) {
+                float widthScale = maxWidth * 1.0f / bitmapWidth;
+                float heightScale = maxHeight * 1.0f / bitmapHeight;
+
+                float scale = Math.min(widthScale, heightScale);
+                Matrix matrix = new Matrix();
+                matrix.postScale(scale, scale);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmapWidth, bitmapHeight, matrix, false);
+            }
+
+            // save image
+            FileOutputStream out = new FileOutputStream(outputFile);
+            try {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                String base64 = Utils.imageToBase64(Environment.getExternalStorageDirectory() + "/register.jpg");
+                RequestBindFace requestBindFace = new RequestBindFace();
+                requestBindFace.setFaceBase64(base64);
+                requestBindFace.setPhone(edituserRequest.getPhone());
+                requestBindFace.setDeviceId(deviceId);
+
+
+                ApiFactoryPD.faceAdd(requestBindFace).subscribe(new BaseProgressSubscriber<ApiResponse>(RegisterActivity.this) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+
+                    @Override
+                    protected void dismissProgressDialog() {
+                        super.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onNext(ApiResponse apiResponse) {
+                        super.onNext(apiResponse);
+                        bindMiddleTwo.setVisibility(View.INVISIBLE);
+                        bindMiddleThree.setVisibility(View.VISIBLE);
+                        registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+                        registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+                        cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
+                        TTSUtils.getInstance().speak(getString(R.string.bind_ok));
+                        int userType = edituserRequest.getUserType();
+                        if (userType == 1) {
+                            cardType.setText(getString(R.string.member_card));
+                        } else if (userType == 2) {
+                            cardType.setText(getString(R.string.coach_card));
+                        } else if (userType == 3) {
+                            cardType.setText(getString(R.string.worker_card));
+                        }
+                        handler.sendEmptyMessageDelayed(5, 3000);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        super.onCompleted();
+                    }
+                });
+                // entranceContronller.checkYuanguFace(first.getDeviceNo(),first.getDeviceId(),Environment.getExternalStorageDirectory()+"/register.jpg");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private ArgbPool argbPool = new ArgbPool();
+    long start = 0;
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
-        clone = data.clone();
+        int[] argb = argbPool.acquire(width, height);
+
+        if (argb == null || argb.length != width * height) {
+            argb = new int[width * height];
+        }
+        FaceDetector.yuvToARGB(data, width, height, argb, 0, 0);
+
+        ImageFrame frame = new ImageFrame();
+        frame.setArgb(argb);
+        frame.setWidth(width);
+        frame.setHeight(height);
+        frame.setPool(argbPool);
+        argbPool.release(argb);
+        int value = FaceSDKManager.getInstance().getFaceTracker(this)
+                .prepare_max_face_data_for_verify(frame.getArgb(), frame.getHeight(), frame.getWidth(),
+                        FaceSDK.ImgType.ARGB.ordinal(), FaceTracker.ActionType.RECOGNIZE.ordinal());
+//         value = FaceSDKManager.getInstance().detect(frame.getArgb(), frame.getWidth(), frame.getHeight());
+        FaceInfo[] faces = FaceSDKManager.getInstance().getFaceTracker(this).get_TrackedFaceInfo();
+
+        if (faces != null) {
+            Log.e("faceMulti", faces.length + "");
+        }
+        if (value == FaceTracker.ErrCode.OK.ordinal() && faces != null) {
+            if(System.currentTimeMillis()-start<4000){
+                return null;
+            }
+            start =System.currentTimeMillis();
+            File file= new File(Environment.getExternalStorageDirectory()+"/register.jpg");
+            if(file.exists()){
+                file.delete();
+            }
+            saveFace(faces[0],frame);
+        }
         return null;
     }
 
@@ -441,81 +583,81 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
         animator.setDuration(40000);
         animator.start();
     }
-    private void register(final String filePath) {
-
-        Executors.newSingleThreadExecutor().submit(new Runnable() {
-
-            @Override
-            public void run() {
-                ARGBImg argbImg = FeatureUtils.getARGBImgFromPath(filePath);
-                byte[] bytes = new byte[2048];
-                int ret = 0;
-                Log.e(TAG, "run: "+ret);
-                ret = FaceSDKManager.getInstance().getFaceFeature().faceFeature(argbImg, bytes, 50);
-                Log.e(TAG, "run: "+ret);
-                if (ret == FaceDetector.NO_FACE_DETECTED) {
-                    Log.e("aaaa","人脸太小（必须打于最小检测人脸minFaceSize），或者人脸角度太大，人脸不是朝上");
-                } else if (ret != -1) {
-                    final BindFaceRequest bindFaceRequest = new BindFaceRequest() ;
-                    long l = System.currentTimeMillis()+8*60*60*1000;
-                    SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Long time1=new Long(l);
-                    String d = format.format(time1);
-                    bindFaceRequest.setCreateTime(d);
-                    bindFaceRequest.setFace(HexUtil.bytesToHexString(bytes));
-                    bindFaceRequest.setFaceBase64(Utils.imageToBase64(filePath));
-                    bindFaceRequest.setId(edituserRequest.getId());
-                    bindFaceRequest.setMerchantId(edituserRequest.getMerchantId());
-                    bindFaceRequest.setPhone(edituserRequest.getPhone());
-                    bindFaceRequest.setUserType(edituserRequest.getUserType());
-                    bindFaceRequest.setUuid(edituserRequest.getUuid());
-                    Log.e(TAG, "run: "+">>>>>>>>>>>");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ApiFactory.bindUserFace(bindFaceRequest).subscribe(new BaseProgressSubscriber<ApiResponse<BindUserFace>>(RegisterActivity.this) {
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e(TAG, "onError: "+e.getMessage());
-                                }
-
-                                @Override
-                                public void onStart() {
-                                    Log.e(TAG, "onStart: ");
-                                }
-
-                                @Override
-                                public void onNext(ApiResponse<BindUserFace> bindUserFaceApiResponse) {
-                                    bindMiddleTwo.setVisibility(View.INVISIBLE);
-                                    bindMiddleThree.setVisibility(View.VISIBLE);
-                                    registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
-                                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
-                                    cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
-                                    TTSUtils.getInstance().speak(getString(R.string.bind_ok));
-                                    int userType = edituserRequest.getUserType();
-                                    if (userType == 1) {
-                                        cardType.setText(getString(R.string.member_card));
-                                    } else if (userType == 2) {
-                                        cardType.setText(getString(R.string.coach_card));
-                                    } else if (userType == 3) {
-                                        cardType.setText(getString(R.string.worker_card));
-                                    }
-                                }
-
-                                @Override
-                                public void onCompleted() {
-                                    Log.e(TAG, "onCompleted: ");
-                                }
-                            });
-                        }
-                    });
-
-                } else {
-                    Log.e("aaaa","抽取特征失败");
-                }
-            }
-        });
-    }
+//    private void register(final String filePath) {
+//
+//        Executors.newSingleThreadExecutor().submit(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                ARGBImg argbImg = FeatureUtils.getARGBImgFromPath(filePath);
+//                byte[] bytes = new byte[2048];
+//                int ret = 0;
+//                Log.e(TAG, "run: "+ret);
+//                ret = FaceSDKManager.getInstance().getFaceFeature().faceFeature(argbImg, bytes, 50);
+//                Log.e(TAG, "run: "+ret);
+//                if (ret == FaceDetector.NO_FACE_DETECTED) {
+//                    Log.e("aaaa","人脸太小（必须打于最小检测人脸minFaceSize），或者人脸角度太大，人脸不是朝上");
+//                } else if (ret != -1) {
+//                    final BindFaceRequest bindFaceRequest = new BindFaceRequest() ;
+//                    long l = System.currentTimeMillis()+8*60*60*1000;
+//                    SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                    Long time1=new Long(l);
+//                    String d = format.format(time1);
+//                    bindFaceRequest.setCreateTime(d);
+//                    bindFaceRequest.setFace(HexUtil.bytesToHexString(bytes));
+//                    bindFaceRequest.setFaceBase64(Utils.imageToBase64(filePath));
+//                    bindFaceRequest.setId(edituserRequest.getId());
+//                    bindFaceRequest.setMerchantId(edituserRequest.getMerchantId());
+//                    bindFaceRequest.setPhone(edituserRequest.getPhone());
+//                    bindFaceRequest.setUserType(edituserRequest.getUserType());
+//                    bindFaceRequest.setUuid(edituserRequest.getUuid());
+//                    Log.e(TAG, "run: "+">>>>>>>>>>>");
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            ApiFactory.bindUserFace(bindFaceRequest).subscribe(new BaseProgressSubscriber<ApiResponse<BindUserFace>>(RegisterActivity.this) {
+//                                @Override
+//                                public void onError(Throwable e) {
+//                                    Log.e(TAG, "onError: "+e.getMessage());
+//                                }
+//
+//                                @Override
+//                                public void onStart() {
+//                                    Log.e(TAG, "onStart: ");
+//                                }
+//
+//                                @Override
+//                                public void onNext(ApiResponse<BindUserFace> bindUserFaceApiResponse) {
+//                                    bindMiddleTwo.setVisibility(View.INVISIBLE);
+//                                    bindMiddleThree.setVisibility(View.VISIBLE);
+//                                    registerIntroduceFive.setTextColor(getResources().getColor(R.color.red));
+//                                    registerIntroduceThree.setTextColor(getResources().getColor(R.color.text_register));
+//                                    cardNum.setText(getResources().getString(R.string.now_card) + edituserRequest.getPhone());
+//                                    TTSUtils.getInstance().speak(getString(R.string.bind_ok));
+//                                    int userType = edituserRequest.getUserType();
+//                                    if (userType == 1) {
+//                                        cardType.setText(getString(R.string.member_card));
+//                                    } else if (userType == 2) {
+//                                        cardType.setText(getString(R.string.coach_card));
+//                                    } else if (userType == 3) {
+//                                        cardType.setText(getString(R.string.worker_card));
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onCompleted() {
+//                                    Log.e(TAG, "onCompleted: ");
+//                                }
+//                            });
+//                        }
+//                    });
+//
+//                } else {
+//                    Log.e("aaaa","抽取特征失败");
+//                }
+//            }
+//        });
+//    }
     StringBuilder verify = new StringBuilder();
     StringBuilder tel = new StringBuilder();
 
@@ -687,9 +829,6 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                 isTel = false;
                 break;
             case R.id.bind_face:
-                if(TextUtils.isEmpty(Constants.baiduKey)){
-                    return;
-                }
                 bindType = 2;
                 if(edituserRequest!=null){
                     setBindNext();
@@ -725,7 +864,7 @@ public class RegisterActivity extends BaseActivity implements View.OnTouchListen
                         }
                         FileOutputStream fileOutputStream=new FileOutputStream(file.getAbsolutePath());
                         bitmap.compress(Bitmap.CompressFormat.JPEG,85,fileOutputStream);
-                        register(file.getAbsolutePath());
+                       // register(file.getAbsolutePath());
                         // saveData(bitmap);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();

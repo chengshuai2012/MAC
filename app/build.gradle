@@ -5,7 +5,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.link.cloud"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 3
         versionName "3.0"
@@ -51,6 +51,7 @@ dependencies {
     implementation files('libs/dom4j-1.6.1.jar')
     implementation files('libs/Msc.jar')
     implementation files('libs/zysj_gpio.jar')
-    compile project(path: ':library')
+    compile project(path: ':facesdk')
+
     compile 'com.guo.android_extend:android-extend:1.0.5'
 }

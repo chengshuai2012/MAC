@@ -7,6 +7,7 @@ import com.link.cloud.api.bean.BindUserFace;
 import com.link.cloud.api.bean.DeviceBean;
 import com.link.cloud.api.bean.LessonBean;
 import com.link.cloud.api.bean.PrivateEduBean;
+import com.link.cloud.api.bean.RequestBindFace;
 import com.link.cloud.api.bean.SingleUser;
 import com.link.cloud.api.bean.UserBindBean;
 import com.link.cloud.api.dataSourse.CoachInfo;
@@ -79,6 +80,16 @@ public interface ApiService {
     @POST(ApiConstants.ADMISSIONCOURSE)
     @Headers("Content-Type:" + RetrofitClient.FORM)
     Observable<ApiResponse> admissionCourse(@Path("app") String app, @Path("courseAdmission") String admissionCourse, @Path("uuid") String uid, @Path("courseReleasePkcode") String cid, @Header("access-token") String token);
+ /**
+     * 团课入场
+     *
+     * @param
+     * @return
+     * @see {app}/{admissionCourse}/{uid}/{cid}
+     */
+    @POST(ApiConstants.FACEADD)
+    @Headers("Content-Type:" + RetrofitClient.JSON)
+    Observable<ApiResponse> faceAdd(@Body RequestBindFace requestBindFace);
 
 
     /**

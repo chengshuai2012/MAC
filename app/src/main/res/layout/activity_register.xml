@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/bg_mian"
     tools:context="com.link.cloud.activity.MainActivity">
-
+    <!--android:background="@drawable/bg_mian"-->
     <include layout="@layout/activity_top_view"
         android:visibility="gone"
         >
@@ -68,7 +68,7 @@
             android:layout_height="1dp" />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_top_register"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_main_middle"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/margin_left_register">
@@ -77,6 +77,8 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:orientation="vertical">
 
                 <TextView
@@ -96,14 +98,15 @@
                     <TextView
                         android:id="@+id/register_introduce_one"
                         style="@style/TextView_Register_top"
+                        android:text="@string/register_introduce_one"
                         android:visibility="gone"
-                        android:text="@string/register_introduce_one" />
+                         />
 
                     <TextView
                         android:id="@+id/register_introduce_two"
                         style="@style/TextView_Register_top"
                         android:layout_marginLeft="@dimen/margin_main_middle"
-                        android:text="@string/register_introduce_two" />
+                        android:text="@string/register_introduce_one" />
 
                     <TextView
                         android:id="@+id/register_introduce_three"
@@ -149,12 +152,13 @@
                 android:layout_width="@dimen/text_big_width_main"
                 android:layout_height="@dimen/text_height_main"
                 android:background="@drawable/border_lesson"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/bind_veune"
                     style="@style/TextView_Top_Main"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/choose_bind_way"
                     android:background="@drawable/border_red_half_left"
                     android:text="@string/bind_veune"
                     android:textColor="@color/almost_white" />
@@ -421,6 +425,7 @@
                             android:textSize="@dimen/text_size_48" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/bind_face_intro_below"
                             android:layout_width="@dimen/keyboard_width"
                             android:layout_height="@dimen/group_in_text_height"
